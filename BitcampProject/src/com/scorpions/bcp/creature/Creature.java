@@ -1,5 +1,6 @@
 package com.scorpions.bcp.creature;
 
+import java.awt.Point;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.TreeMap;
@@ -18,6 +19,7 @@ public abstract class Creature implements Interactable, Serializable {
 	private TreeMap<String, Integer> stats;
 	private TreeMap<String, String> skillBase;
 	private ArrayList<Item> inventory;
+	private Point location;
 	
 	public Creature(int strength, int dexterity, int constitution,
 			int intelligence, int wisdom, int charisma, String name) {
@@ -124,5 +126,11 @@ public abstract class Creature implements Interactable, Serializable {
 	
 	public String getName(){
 		return this.name;
+	}
+	public void setLocation(Point p) {
+		this.location = p;
+	}
+	public Point getLocation() {
+		return location;
 	}
 }
