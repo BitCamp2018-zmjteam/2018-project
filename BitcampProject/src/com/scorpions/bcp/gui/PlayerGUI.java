@@ -118,6 +118,7 @@ public class PlayerGUI extends JFrame implements KeyListener {
 			} else {
 				Map<String, Object> dirMap = new HashMap<String, Object>();
 				dirMap.put("direction", TileDirection.fromString(dir));
+				dirMap.put("playerid", client.getPlayer().getUUID().toString());
 				client.sendRequest(new Request(RequestType.PLAYER_MOVE, dirMap));
 			}
 		} else if (cmd.equals("interact")) {

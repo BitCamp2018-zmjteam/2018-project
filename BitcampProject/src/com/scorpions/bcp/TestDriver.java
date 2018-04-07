@@ -33,20 +33,19 @@ public class TestDriver {
 		String ip = JOptionPane.showInputDialog(null, "Enter the DMs IP address:", "Connect To DM",
 
 				JOptionPane.QUESTION_MESSAGE);
-		/*
+
 		try {
 			InetAddress addr = InetAddress.getByName(ip);
 			client.connect(addr, 3252);
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
-		}*/
+		}
 	}
 
 	public static void launchDMGUI() {
 		Game game = new Game();
 		GameServer server = new GameServer(game);
 		DMGUI dmGUI = new DMGUI(server);
-		server.start();
 	}
 
 	public static void setGUI() {
