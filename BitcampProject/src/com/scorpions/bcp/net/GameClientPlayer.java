@@ -12,6 +12,7 @@ import java.util.Map;
 
 import com.scorpions.bcp.creature.Player;
 import com.scorpions.bcp.gui.PlayerGUI;
+import com.scorpions.bcp.world.Tile;
 
 public class GameClientPlayer {
 
@@ -87,19 +88,29 @@ public class GameClientPlayer {
 		return null;
 	}
 
-	protected void evalResponse(Response r) {
+	protected void evalResponse(Response r) { //Replace String with other type if needed for player ids
 		switch (r.getType()) {
 		case PLAYER_ACCEPT:
 			System.out.println(((Point) r.getValues().get("location")).toString());
 		case GAME_INFO:
+			Map<String,Player> playerMap = (Map<String,Player>)r.getValues().get("playerMap");
+			String selfID = (String)r.getValues().get("selfId");
 			break;
 		case INTERACT_RESPONSE:
+			boolean success = (Boolean)r.getValues().get("success");
+			Object result = r.getValues().get("result");
+			if (success)
+				
 			break;
 		case PLAYER_KICK:
 			break;
 		case PLAYER_MOVE:
+			String playerID = (String)r.getValues().get("playerId");
+			Point location = (Point)r.getValues().get("location");
 			break;
 		case WORLD_INFO:
+			Tile[][] area = ((Tile[][])r.getValues().get("area"));
+			Point offset = (Point)r.getValues().get("offset");
 			break;
 		default:
 			break;
