@@ -16,8 +16,14 @@ public class Game {
 
 	
 	
+	public boolean registerListener(Listener l) {
+		return true;
+	}
 	
-	
+	public void queueEvent(Event e) {
+		//todo
+	}
+
 	public static Game getGame() {
 		return null;
 	}
