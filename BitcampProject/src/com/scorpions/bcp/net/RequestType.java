@@ -1,6 +1,8 @@
 package com.scorpions.bcp.net;
 
-public enum RequestType {
+import java.io.Serializable;
+
+public enum RequestType implements Serializable {
 
 	PLAYER_JOIN,PLAYER_LEAVE,WORLD_INFO,PLAYER_MOVE,PLAYER_INTERACT;
 	

@@ -1,6 +1,8 @@
 package com.scorpions.bcp.net;
 
-public enum ResponseType {
+import java.io.Serializable;
+
+public enum ResponseType implements Serializable {
 
 	PLAYER_ACCEPT(false), WORLD_INFO(false), PLAYER_MOVE(true),GAME_INFO(false),INTERACT_RESPONSE(false);
 

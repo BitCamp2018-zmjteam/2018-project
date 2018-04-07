@@ -82,5 +82,9 @@ public class ConnectedClient extends Thread {
 	private Object receive() throws ClassNotFoundException, IOException, TimeoutException {
 		return clientIn.readObject();
 	}
+	
+	public void send(Response s) throws IOException {
+		clientOut.writeObject(s);
+	}
 
 }
