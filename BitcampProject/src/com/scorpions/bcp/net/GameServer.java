@@ -28,11 +28,19 @@ public class GameServer {
 			Thread clientAccepter = new Thread() {
 				@Override
 				public void run() {
+					System.out.println("Started client watcher");
 					while (running) {
+						System.out.println("in loop");
 						try {
+							System.out.println("try accept");
 							Socket newSocket = socket.accept();
+							System.out.println("accepted - - trying cleint");
 							ConnectedClient cc = new ConnectedClient(newSocket, s);
+							System.out.println("finish client");
 							clients.add(cc);
+							System.out.println("Accepted client");
+							cc.start();
+							System.out.println("Client start");
 						} catch (IOException e) {
 							if (socket.isClosed()) {
 								// okay
@@ -46,8 +54,8 @@ public class GameServer {
 				}
 			};
 
+			running = true;
 			clientAccepter.start();
-
 			// game loop thing
 			final int nsPerTick = (int) 1e9 / 20;
 			double timePassed = 0;
@@ -69,7 +77,7 @@ public class GameServer {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
+		
 	}
 	
 	public void queueStop() {
@@ -95,14 +103,17 @@ public class GameServer {
 
 	public void disconnected(ConnectedClient c) {
 		this.clients.remove(c);
+		System.out.println("Removed " + c);
 	}
 	
 	public void kick(ConnectedClient c) {
 		c.end("Kicked");
+		System.out.println("Kicked " + c);
 	}
 	
 	public void kick(ConnectedClient c, String reason) {
 		c.end(reason);
+		System.out.println("Kicked " + c + " -- " + reason);
 	}
 
 	public boolean containsClient(ConnectedClient c) {
