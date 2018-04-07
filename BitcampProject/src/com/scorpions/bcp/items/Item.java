@@ -7,6 +7,7 @@ public class Item {
 	public Item(String name, int bP, int sP) {
 		this.buyPrice = bP;
 		this.sellPrice = sP;
+		this.name = name;
 	}
 	
 	public int getBuyPrice() {
@@ -19,6 +20,10 @@ public class Item {
 	
 	public String getName() {
 		return this.name;
+	}
+	
+	public void setDesc(String desc) {
+		this.description = desc;
 	}
 	
 	public String getDesc() {

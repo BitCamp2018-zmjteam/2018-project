@@ -71,7 +71,6 @@ public class Creature {
 		skillBase.put("Sleight of Hand", "DEX");
 		skillBase.put("Stealth", "DEX");
 		skillBase.put("Survival", "WIS");
-		
 	}
 	
 	public int getStat(String stat) {
@@ -107,4 +106,11 @@ public class Creature {
 		this.gp += amount;
 	}	
 	
+	public void setProf(int prof) {
+		this.prof = prof;
+	}
+	
+	public void addItem(Item item) {
+		inventory.add(item);
+	}
 }
