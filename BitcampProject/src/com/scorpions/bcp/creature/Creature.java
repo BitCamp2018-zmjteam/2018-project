@@ -24,6 +24,8 @@ public abstract class Creature implements Interactable {
 		
 		inventory = new ArrayList<Item>();
 		skillProf = new TreeMap<String, Boolean>();
+		stats = new TreeMap<>();
+		skillBase = new TreeMap<>();
 		initMaps(strength, dexterity, constitution, intelligence, wisdom, charisma);
 	}
 	
