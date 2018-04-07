@@ -3,6 +3,7 @@ package com.scorpions.bcp;
 import java.util.ArrayList;
 
 import com.scorpions.bcp.creature.Player;
+import com.scorpions.bcp.event.Event;
 
 /**
  * The dialog tree that players can interact with
@@ -12,15 +13,39 @@ import com.scorpions.bcp.creature.Player;
 public class DialogTree {
 	//base is the starting line "i.e. How can I help you today?"
 	private SpeechItem base;
+	private String flag;
+	private boolean outrage;
 	public DialogTree(String base) {
 		this.base=new SpeechItem(base);
 	}
+	/**
+	 * Make a new DialogTree item
+	 * @param base the initial line of dialog
+	 * @param flag a flag required/prohibiting conversation
+	 * @param outrage if true, flag prohibits conversation
+	 */
+	public DialogTree(String base, String flag, boolean outrage) {
+		this.base = new SpeechItem(base);
+		this.flag = flag;
+		this.outrage = outrage;
+	}
+	/**
+	 * Check flag to start
+	 * @author Morgan
+	 * @param p the player to check
+	 * @return true if the conversation can start (two cases)
+	 * <br>1. The character requires a flag and has it
+	 * <br>2. The character prohibits a flag and the character doesn't have it
+	 */
+	public boolean canStart(Player p) {
+		return p.hasFlag(flag) ^ outrage;
+	}
 	//How DM moves down the tree to add stuff
-	public class Iterator {
+	public class DMIterator {
 		//TODO - Add options for DM to add/change/remove dialog options
 		//TODO - Possibly - Add way for DM to interfere with running conversation
 		private SpeechItem sp;
-		public Iterator() {
+		public DMIterator() {
 			sp = base;
 		}
 		public boolean addSpeechOption(String option) {
@@ -31,7 +56,7 @@ public class DialogTree {
 			sp.addSpeechOption(option, npcResponse);
 			return true;
 		}
-		public boolean addSpeechOption(String option, PlayerInteraction npcResponse) {
+		public boolean addSpeechOption(String option, Event npcResponse) {
 			sp.addSpeechOption(option, npcResponse);
 			return true;
 		}
@@ -83,7 +108,7 @@ public class DialogTree {
 	 *
 	 */
 	private SpeechItem endConvo = new SpeechItem("Goodbye");
-	private class SpeechItem implements PlayerInteraction {
+	private class SpeechItem extends Event {
 		private String base; //What the NPC says
 		private ArrayList<PlayerSpeechItem> playerOptions; //What the player can say in response
 		public SpeechItem(String base) {
@@ -107,7 +132,7 @@ public class DialogTree {
 		public void addSpeechOption(String playerOption,String npcResponse) {
 			playerOptions.add(new PlayerSpeechItem(playerOption, new SpeechItem(npcResponse)));
 		}
-		public void addSpeechOption(String playerOption,PlayerInteraction npcResponse) {
+		public void addSpeechOption(String playerOption,Event npcResponse) {
 			playerOptions.add(new PlayerSpeechItem(playerOption, npcResponse));
 		}
 		//Show the dialog tree, allow selection
@@ -126,8 +151,8 @@ public class DialogTree {
 	 */
 	public class PlayerSpeechItem {
 		String playerSays; //What the player said
-		PlayerInteraction npcResponse; //NPC's response
-		public PlayerSpeechItem(String player, PlayerInteraction npc) {
+		Event npcResponse; //NPC's response
+		public PlayerSpeechItem(String player, Event npc) {
 			playerSays = player;
 			npcResponse = npc;
 		}
