@@ -23,10 +23,54 @@ public class DialogTree {
 		public Iterator() {
 			sp = base;
 		}
+		public boolean addSpeechOption(String option) {
+			sp.addSpeechOption(option);
+			return true;
+		}
+		public boolean addSpeechOption(String option, String npcResponse) {
+			sp.addSpeechOption(option, npcResponse);
+			return true;
+		}
+		public boolean addSpeechOption(String option, PlayerInteraction npcResponse) {
+			sp.addSpeechOption(option, npcResponse);
+			return true;
+		}
+		public boolean removeSpeechOption(int index) {
+			sp.removePlayerOption(index);
+			return true;
+		}
+		public boolean clearPlayerOptions() {
+			sp.clearPlayerOptions();
+			return true;
+		}
+		public boolean changeBaseDialog(String s) {
+			sp.changeBaseDialog(s);
+			return true;
+		}
+		//Descend a level into the conversation
+		public boolean goDown(int index) {
+			if (sp.playerOptions.size() >= index) { //Out of range
+				System.err.println("playerOptions not that long (DT01)");
+				return false;
+			} else if (sp.playerOptions.get(index).npcResponse == null) { //There is no NPC response yet
+				System.err.println("NPC response not present (DT02)");
+				return false;
+			} else if (!(sp.playerOptions.get(index).npcResponse instanceof SpeechItem)) { //NPC's response isn't a speechItem
+				System.err.println("NPC response not a SpeechItem (DT03)");
+				return false;
+			} else { //DM can go down to this level
+				try {
+					sp = (SpeechItem) sp.playerOptions.get(index).npcResponse;
+				} catch (ClassCastException e) {
+					System.err.println("The NPC's response is not a SpeechItem (This error should not happen) (DT04)");
+				}
+				return true;
+			}
+		}
 		//Show current level of dialog
 		public String toString() {
 			String output="";
-			for (PlayerSpeechItem p : sp.getAllOptions()) {
+			for (PlayerSpeechItem p : sp.playerOptions) {
 				//TODO - Concatenate the various options to the output string
 			}
 			return output;
@@ -34,6 +78,7 @@ public class DialogTree {
 	}
 	/**
 	 * NPC talks, player answers (as a PlayerSpeechOption)
+	 * If there are no items in playerOptions, then conversation ends once the NPC says their line
 	 * @author Morgan
 	 *
 	 */
@@ -72,9 +117,6 @@ public class DialogTree {
 					//Placeholder - Output the options that can be shown to that player
 				}
 			}
-		}
-		public ArrayList<PlayerSpeechItem> getAllOptions() {
-			return playerOptions;
 		}
 	}
 	/**
