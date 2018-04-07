@@ -164,3 +164,4 @@ public class GameClientPlayer {
 	public Player getPlayer() {
 		return p;
 	}
+}

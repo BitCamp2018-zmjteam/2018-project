@@ -8,10 +8,9 @@ import com.scorpions.bcp.net.GameServer;
 
 public class DMGUI extends JFrame {
 	private JTabbedPane panel;
-	private JPanel main, npcs, world;
+	private JPanel main, npcs, world, players, items;
 	private int width, height;
 	private GameServer server;
-
 	public DMGUI(GameServer server) {
 		super("DM Screen");
 		
@@ -27,10 +26,14 @@ public class DMGUI extends JFrame {
 		main = new JPanel();
 		npcs = new JPanel();
 		world = new JPanel();
+		players = new JPanel();
+		items = new JPanel();
 		
 		panel.addTab("Main", main);
 		panel.addTab("NPCs", npcs);
 		panel.addTab("World", world);
+		panel.addTab("Players", players);
+		panel.addTab("Items", items);
 		this.add(panel);
 		
 		this.setSize(width, height);

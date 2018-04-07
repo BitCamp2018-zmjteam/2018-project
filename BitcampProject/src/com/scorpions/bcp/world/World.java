@@ -1,5 +1,6 @@
 package com.scorpions.bcp.world;
 
+import java.io.File;
 import java.io.Serializable;
 
 public class World implements Serializable {
@@ -92,5 +93,14 @@ public class World implements Serializable {
 			}
 		}
 		worldTiles = newTiles;
+	}
+	
+	
+	public static World fromFile(File f) {
+		return null;
+	}
+	
+	public boolean exportWorld(File f) {
+		return true;
 	}
 }
