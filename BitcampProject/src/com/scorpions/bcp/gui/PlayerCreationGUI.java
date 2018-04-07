@@ -11,6 +11,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import com.scorpions.bcp.TestDriver;
 import com.scorpions.bcp.creature.Player;
 
 public class PlayerCreationGUI extends JFrame implements ActionListener {
@@ -23,7 +24,7 @@ public class PlayerCreationGUI extends JFrame implements ActionListener {
 	private String[] races = { "Human", "High-Elf", "Dwarf", "Half-Elf" };
 	private String[] roles = { "Paladin", "Rogue", "Wizard", "Fighter" };
 	private JButton finish;
-
+	private Player player;
 	public PlayerCreationGUI() {
 		super("Create a character");
 
@@ -115,6 +116,7 @@ public class PlayerCreationGUI extends JFrame implements ActionListener {
 		this.setVisible(true);
 	}
 
+	
 	@Override
 	public void actionPerformed(ActionEvent event) {
 		int strInt = 0, dexInt = 0, conInt = 0, intInt = 0, wisInt = 0, chaInt = 0;
@@ -134,16 +136,19 @@ public class PlayerCreationGUI extends JFrame implements ActionListener {
 				} else if (nameField.getText().trim().equals("")) {
 					JOptionPane.showMessageDialog(null, "You must enter a name.", "Error", JOptionPane.INFORMATION_MESSAGE);
 				} else {
-					Player player = new Player(strInt, dexInt, conInt, intInt, wisInt, chaInt, nameField.getText().trim(),
+					player = new Player(strInt, dexInt, conInt, intInt, wisInt, chaInt, nameField.getText().trim(),
 							(String) raceChoice.getSelectedItem(), (String) roleChoice.getSelectedItem());
-					String ip = JOptionPane.showInputDialog(null, "Enter the DMs IP address:", "Connect To DM",
-							JOptionPane.QUESTION_MESSAGE);
+					this.setVisible(false);
+					TestDriver.launchPlayerGUI(player);
 				}
 				
 			} catch (NumberFormatException e) {
 				JOptionPane.showMessageDialog(null, "Invalid stats, please enter valid numbers from 1-20.", "Error",
 						JOptionPane.INFORMATION_MESSAGE);
 			}
+			
+			
+			
 		}
 
 	}

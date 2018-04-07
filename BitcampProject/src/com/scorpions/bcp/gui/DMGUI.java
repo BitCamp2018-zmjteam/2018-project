@@ -4,14 +4,23 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 
+import com.scorpions.bcp.net.GameServer;
+
 public class DMGUI extends JFrame {
 	private JTabbedPane panel;
 	private JPanel main, npcs;
 	private int width, height;
-	public DMGUI() {
+	private GameServer server;
+
+	public DMGUI(GameServer server) {
 		super("DM Screen");
 		
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+		
+		this.server = server;
+		
+
 		
 		width = 1200;
 		height = 675;
