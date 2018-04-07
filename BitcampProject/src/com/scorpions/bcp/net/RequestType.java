@@ -30,7 +30,7 @@ public enum RequestType implements Serializable {
 	 *     - PLAYER_MOVE
 	 * PLAYER_INTERACT:
 	 *   request map:
-	 *     - location: x,y pair
+	 *     - name: 
 	 *     - interactedPos: x,y pair
 	 *     - interactType: TILE, CREATURE
 	 *   response type:

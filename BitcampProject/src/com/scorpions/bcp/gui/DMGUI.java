@@ -19,9 +19,7 @@ public class DMGUI extends JFrame {
 
 		
 		this.server = server;
-		
 
-		
 		width = 1200;
 		height = 675;
 		
