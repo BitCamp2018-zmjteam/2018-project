@@ -17,9 +17,19 @@ public class DialogTree {
 	}
 	//How DM moves down the tree to add stuff
 	public class Iterator {
+		//TODO - Add options for DM to add/change/remove dialog options
+		//TODO - Possibly - Add way for DM to interfere with running conversation
 		private SpeechItem sp;
 		public Iterator() {
 			sp = base;
+		}
+		//Show current level of dialog
+		public String toString() {
+			String output="";
+			for (PlayerSpeechItem p : sp.getAllOptions()) {
+				//TODO - Concatenate the various options to the output string
+			}
+			return output;
 		}
 	}
 	/**
@@ -34,6 +44,18 @@ public class DialogTree {
 		public SpeechItem(String base) {
 			this.base=base;
 		}
+		public void changeBaseDialog(String base) {
+			this.base = base;
+		}
+		public void clearPlayerOptions() {
+			playerOptions.clear();
+		}
+		public void removePlayerOption(int index) {
+			playerOptions.remove(index);
+		}
+		/*
+		 * Various options the DM can use to build the conversation
+		 */
 		public void addSpeechOption(String playerOption) {
 			playerOptions.add(new PlayerSpeechItem(playerOption, endConvo));
 		}
@@ -51,6 +73,9 @@ public class DialogTree {
 				}
 			}
 		}
+		public ArrayList<PlayerSpeechItem> getAllOptions() {
+			return playerOptions;
+		}
 	}
 	/**
 	 * Player talks, NPC answers (as a SpeechItem/other playerInteraction)
@@ -63,6 +88,9 @@ public class DialogTree {
 		public PlayerSpeechItem(String player, PlayerInteraction npc) {
 			playerSays = player;
 			npcResponse = npc;
+		}
+		public void changePlayerSays(String ps) {
+			playerSays = ps;
 		}
 		public void addNPCResponse(SpeechItem npc) {
 			npcResponse = npc;
