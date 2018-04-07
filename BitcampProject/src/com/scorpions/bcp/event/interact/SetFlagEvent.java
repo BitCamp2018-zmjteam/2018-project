@@ -1,7 +1,8 @@
-package com.scorpions.bcp.event;
+package com.scorpions.bcp.event.interact;
 
 import com.scorpions.bcp.Game;
 import com.scorpions.bcp.creature.Player;
+import com.scorpions.bcp.event.Event;
 
 public class SetFlagEvent extends Event {
 	Player p;

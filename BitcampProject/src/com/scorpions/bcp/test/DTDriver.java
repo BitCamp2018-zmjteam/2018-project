@@ -8,8 +8,8 @@ import com.scorpions.bcp.Game;
 import com.scorpions.bcp.creature.NPC;
 import com.scorpions.bcp.creature.Player;
 import com.scorpions.bcp.event.Event;
-import com.scorpions.bcp.event.SetFlagEvent;
-import com.scorpions.bcp.event.TradeOpenEvent;
+import com.scorpions.bcp.event.interact.SetFlagEvent;
+import com.scorpions.bcp.event.interact.TradeOpenEvent;
 
 public class DTDriver {
 	public static void main(String[] args) {
