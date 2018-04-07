@@ -89,7 +89,7 @@ public class GameClientPlayer {
 		return null;
 	}
 
-	protected void evalResponse(Response r) { //Replace String with other type if needed for player ids
+	protected void evalResponse(Response r) {
 		switch (r.getType()) {
 		case PLAYER_ACCEPT:
 			System.out.println(((Point) r.getValues().get("location")).toString());
