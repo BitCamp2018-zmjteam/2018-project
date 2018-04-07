@@ -2,13 +2,19 @@ package com.scorpions.bcp;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 
+import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 
+import com.scorpions.bcp.creature.Player;
 import com.scorpions.bcp.gui.DMGUI;
 import com.scorpions.bcp.gui.PlayerCreationGUI;
 import com.scorpions.bcp.gui.PlayerGUI;
 import com.scorpions.bcp.gui.StartupGUI;
+import com.scorpions.bcp.net.GameClientPlayer;
+import com.scorpions.bcp.net.GameServer;
 
 public class TestDriver {
 	public static void main(String args[]) {
@@ -20,12 +26,25 @@ public class TestDriver {
 		PlayerCreationGUI create = new PlayerCreationGUI();
 	}
 	
-	public static void launchPlayerGUI() {
+	public static void launchPlayerGUI(Player p) {
 		PlayerGUI playerGUI = new PlayerGUI();
+		String ip = JOptionPane.showInputDialog(null, "Enter the DMs IP address:", "Connect To DM",
+				JOptionPane.QUESTION_MESSAGE);
+		try {
+			InetAddress addr = InetAddress.getByName(ip);
+			GameClientPlayer client = new GameClientPlayer(p, playerGUI);
+			client.connect(addr, 3252);
+		}
+		catch(UnknownHostException e) {
+			System.out.println("FUCK");
+		}
 	}
 	
 	public static void launchDMGUI() {
-		DMGUI dmGUI = new DMGUI();
+		Game game = new Game();
+		GameServer server = new GameServer(game);
+		DMGUI dmGUI = new DMGUI(server);
+		server.start();
 	}
 	
 	public static void setGUI() {

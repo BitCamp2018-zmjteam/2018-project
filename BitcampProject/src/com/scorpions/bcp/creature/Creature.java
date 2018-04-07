@@ -1,12 +1,15 @@
 package com.scorpions.bcp.creature;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.TreeMap;
 
 import com.scorpions.bcp.items.Item;
 import com.scorpions.bcp.world.Interactable;
 
-public abstract class Creature implements Interactable {
+public abstract class Creature implements Interactable, Serializable {
+
+	private static final long serialVersionUID = 5068550098409037271L;
 	private int gp;
 	private int creatureSize;
 	private int prof;

@@ -108,5 +108,9 @@ public class GameServer {
 	public boolean containsClient(ConnectedClient c) {
 		return clients.contains(c);
 	}
+	
+	public Game getGame() {
+		return this.game;
+	}
 
 }

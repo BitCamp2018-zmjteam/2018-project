@@ -10,6 +10,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
+import com.scorpions.bcp.net.GameClientPlayer;
+
 public class PlayerGUI extends JFrame implements KeyListener {
 	private static final long serialVersionUID = -5100004801987415763L;
 	private JPanel panel;
@@ -17,13 +19,13 @@ public class PlayerGUI extends JFrame implements KeyListener {
 	private JTextField input;
 	private JTextArea log;
 	private JScrollPane scroll;
-
+	
 	public PlayerGUI() {
 		super("Player");
-
+		
 		width = 800;
 		height = 450;
-
+		
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		panel = new JPanel();
@@ -40,12 +42,16 @@ public class PlayerGUI extends JFrame implements KeyListener {
 		panel.add(input);
 		
 		scroll.setLocation(0, 0);
+		
 		scroll.setSize(width-6, height - 75);
 		log.setSize(scroll.getSize());
 		log.setEditable(false);
+		log.setColumns(20);
+		log.setLineWrap(true);
+		log.setWrapStyleWord(true);
+		
 		input.setLocation(0, height - 75);
 		input.setSize(width, 50);
-
 		input.addKeyListener(this);
 
 		this.add(panel);
