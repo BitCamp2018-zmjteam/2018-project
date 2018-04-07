@@ -2,6 +2,8 @@ package com.scorpions.bcp.creature;
 
 import java.util.ArrayList;
 
+import com.scorpions.bcp.world.Interactable;
+
 public class Player extends Creature {
 	private ArrayList<String> flags;
 	private String race, role;
@@ -9,7 +11,7 @@ public class Player extends Creature {
 		super(strength, dexterity, constitution, intelligence, wisdom, charisma, name);
 		flags = new ArrayList<>();
 		this.race = race;
-		this.role = role
+		this.role = role;
 	}
   //Stub methods - add flags later
 	public boolean hasFlag(String flag) {
@@ -22,5 +24,10 @@ public class Player extends Creature {
 	@Override
 	public String toString() {
 		return this.name + ", the " + this.race + " " + this.role;
+	}
+	@Override
+	public void interact(Interactable i) {
+		// TODO Auto-generated method stub
+		
 	}
 }

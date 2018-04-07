@@ -13,25 +13,25 @@ import javax.swing.JTextField;
 
 import com.scorpions.bcp.creature.Player;
 
-public class PlayerCreationGUI extends JFrame implements ActionListener{
+public class PlayerCreationGUI extends JFrame implements ActionListener {
 	private static final long serialVersionUID = 2347827406606169493L;
 	private JPanel panel;
 	private int width, height;
 	private JTextField strField, dexField, conField, intField, wisField, chaField, nameField;
 	private JLabel str, dex, con, intel, wis, cha, name;
 	private JComboBox<String> raceChoice, roleChoice;
-	private String[] races = {"Human", "High-Elf", "Dwarf", "Half-Elf"};
-	private String[] roles = {"Paladin", "Rogue", "Wizard", "Fighter"};
+	private String[] races = { "Human", "High-Elf", "Dwarf", "Half-Elf" };
+	private String[] roles = { "Paladin", "Rogue", "Wizard", "Fighter" };
 	private JButton finish;
-	
+
 	public PlayerCreationGUI() {
 		super("Create a character");
-	
+
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		
+
 		width = 400;
 		height = 600;
-		
+
 		panel = new JPanel();
 		strField = new JTextField();
 		dexField = new JTextField();
@@ -50,10 +50,10 @@ public class PlayerCreationGUI extends JFrame implements ActionListener{
 		raceChoice = new JComboBox<String>(races);
 		roleChoice = new JComboBox<String>(roles);
 		finish = new JButton("OK");
-		
+
 		finish.setActionCommand("Done");
 		finish.addActionListener(this);
-		
+
 		panel.add(strField);
 		panel.add(dexField);
 		panel.add(conField);
@@ -71,7 +71,7 @@ public class PlayerCreationGUI extends JFrame implements ActionListener{
 		panel.add(nameField);
 		panel.add(name);
 		panel.add(finish);
-		
+
 		str.setLocation(50, 5);
 		str.setSize(150, 100);
 		strField.setLocation(190, 35);
@@ -97,9 +97,9 @@ public class PlayerCreationGUI extends JFrame implements ActionListener{
 		chaField.setLocation(190, 285);
 		chaField.setSize(100, 30);
 		raceChoice.setLocation(50, 335);
-		raceChoice.setSize(200, 30);
+		raceChoice.setSize(200, 40);
 		roleChoice.setLocation(50, 385);
-		roleChoice.setSize(200, 30);
+		roleChoice.setSize(200, 40);
 		nameField.setLocation(130, 445);
 		nameField.setSize(200, 30);
 		name.setLocation(50, 415);
@@ -107,7 +107,7 @@ public class PlayerCreationGUI extends JFrame implements ActionListener{
 		finish.setLocation(150, 500);
 		finish.setSize(100, 40);
 		panel.setLayout(null);
-		
+
 		this.add(panel);
 		this.setSize(width, height);
 		this.setLocation((1920 - width) / 2, (1080 - height) / 2);
@@ -118,7 +118,7 @@ public class PlayerCreationGUI extends JFrame implements ActionListener{
 	@Override
 	public void actionPerformed(ActionEvent event) {
 		int strInt = 0, dexInt = 0, conInt = 0, intInt = 0, wisInt = 0, chaInt = 0;
-		if(event.getActionCommand().equals("Player")) {
+		if (event.getActionCommand().equals("Done")) {
 			try {
 				strInt = Integer.parseInt(strField.getText());
 				dexInt = Integer.parseInt(dexField.getText());
@@ -126,26 +126,26 @@ public class PlayerCreationGUI extends JFrame implements ActionListener{
 				intInt = Integer.parseInt(intField.getText());
 				wisInt = Integer.parseInt(wisField.getText());
 				chaInt = Integer.parseInt(chaField.getText());
-			}
-			catch(NumberFormatException e) {
+				
+				if (strInt > 20 || strInt < 0 || dexInt > 20 || dexInt < 0 || conInt > 20 || conInt < 0 || intInt > 20
+						|| intInt < 0 || wisInt > 20 || wisInt < 0 || chaInt < 0 || chaInt > 20) {
+					JOptionPane.showMessageDialog(null, "Invalid stats, please enter valid numbers from 1-20.", "Error",
+							JOptionPane.INFORMATION_MESSAGE);
+				} else if (nameField.getText().trim().equals("")) {
+					JOptionPane.showMessageDialog(null, "You must enter a name.", "Error", JOptionPane.INFORMATION_MESSAGE);
+				} else {
+					Player player = new Player(strInt, dexInt, conInt, intInt, wisInt, chaInt, nameField.getText().trim(),
+							(String) raceChoice.getSelectedItem(), (String) roleChoice.getSelectedItem());
+					String ip = JOptionPane.showInputDialog(null, "Enter the DMs IP address:", "Connect To DM",
+							JOptionPane.QUESTION_MESSAGE);
+				}
+				
+			} catch (NumberFormatException e) {
 				JOptionPane.showMessageDialog(null, "Invalid stats, please enter valid numbers from 1-20.", "Error",
 						JOptionPane.INFORMATION_MESSAGE);
 			}
-			if(strInt > 20 || strInt < 0 || dexInt > 20 || dexInt < 0 || conInt > 20 || conInt < 0 || intInt > 20 || intInt < 0 || wisInt > 20 || wisInt < 0 || chaInt < 0 || chaInt > 20) {
-				JOptionPane.showMessageDialog(null, "Invalid stats, please enter valid numbers from 1-20.", "Error",
-						JOptionPane.INFORMATION_MESSAGE);
-			}
-			if(nameField.getText().trim().equals("")) {
-				JOptionPane.showMessageDialog(null, "You must enter a name.", "Error",
-						JOptionPane.INFORMATION_MESSAGE);
-			}
-			
-			Player player = new Player(strInt, dexInt, conInt, intInt, wisInt, chaInt, nameField.getText().trim(), (String) raceChoice.getSelectedItem(), (String) roleChoice.getSelectedItem());
-			String ip = JOptionPane.showInputDialog(null, "Enter the DMs IP address:", "Connect To DM", JOptionPane.QUESTION_MESSAGE);
-
-			
 		}
-		
+
 	}
-	
+
 }
