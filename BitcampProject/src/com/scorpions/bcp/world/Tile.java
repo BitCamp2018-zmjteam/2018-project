@@ -55,6 +55,20 @@ public class Tile {
 		return this.interactions;
 	}
 	
+	public Creature setCreature(Creature c) {
+		Creature lastCreature = this.currentCreature;
+		this.currentCreature = c;
+		return lastCreature;
+	}
+	
+	/**
+	 * Set navigable
+	 * @param n
+	 */
+	public void setNavigable(boolean n) {
+		this.navigable = n;
+	}
+	
 	@Override
 	public String toString() {
 		return "TILE (" + currentCreature + ") [Interactions: " + this.interactions.size() +"]";
