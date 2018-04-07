@@ -100,18 +100,30 @@ public class GameClientPlayer {
 		case INTERACT_RESPONSE:
 			boolean success = (Boolean)r.getValues().get("success");
 			Object result = r.getValues().get("result");
-			if (success)
-				
+			System.out.print("Interaction ");
+			System.out.print(success?"succeeded":"failed");
+			if (result != null)
+				System.out.println(" ("+result.toString()+")");
+			else
+				System.out.println("");
 			break;
 		case PLAYER_KICK:
 			break;
 		case PLAYER_MOVE:
 			UUID playerID = (UUID)r.getValues().get("playerId");
 			Point location = (Point)r.getValues().get("location");
+			System.out.println("You are now at ("+location.getX()+","+location.getY()+").");
 			break;
 		case WORLD_INFO:
 			Tile[][] area = ((Tile[][])r.getValues().get("area"));
 			Point offset = (Point)r.getValues().get("offset");
+			for (Tile[] row : area) {
+				for (Tile t : row) {
+					System.out.print(t.isNavigable()?" ":t.getCreature()==null?"X":"@");
+				}
+				System.out.println();
+			}
+			System.out.println("You are at ("+offset.getX()+","+offset.getY()+")");
 			break;
 		default:
 			break;
