@@ -1,9 +1,5 @@
 package com.scorpions.bcp.world;
 
-import java.util.HashSet;
-import java.util.Set;
-
-import com.scorpions.bcp.Interaction;
 import com.scorpions.bcp.creature.Creature;
 
 public class Tile {
@@ -12,7 +8,6 @@ public class Tile {
 	
 	private Creature currentCreature;
 	private boolean navigable;
-	private Set<Interaction> interactions;
 	
 	/**
 	 * Create a new tile with a creature present
@@ -22,7 +17,6 @@ public class Tile {
 	public Tile(boolean navigable, Creature occupier) {
 		this.currentCreature = occupier;
 		this.navigable = navigable;
-		this.interactions = new HashSet<Interaction>();
 	}
 	
 	/**
@@ -32,7 +26,6 @@ public class Tile {
 	public Tile(boolean navigable) {
 		this.currentCreature = null;
 		this.navigable = navigable;
-		this.interactions = new HashSet<Interaction>();
 	}
 	
 	public Creature getCreature() {
@@ -43,23 +36,13 @@ public class Tile {
 		return this.navigable;
 	}
 	
-	public boolean isInteractable() {
-		return this.interactions.size() > 0;
-	}
-	
-	public void addInteraction(Interaction i) {
-		this.interactions.add(i);
-	}
-	
-	public Set<Interaction> getInteractions() {
-		return this.interactions;
-	}
 	
 	public Creature setCreature(Creature c) {
 		Creature lastCreature = this.currentCreature;
 		this.currentCreature = c;
 		return lastCreature;
 	}
+	
 	
 	/**
 	 * Set navigable
@@ -71,7 +54,7 @@ public class Tile {
 	
 	@Override
 	public String toString() {
-		return "TILE (" + currentCreature + ") [Interactions: " + this.interactions.size() +"]";
+		return "TILE (" + currentCreature + ")";
 	}
 	
 }

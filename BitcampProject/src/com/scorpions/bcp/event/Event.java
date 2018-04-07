@@ -26,6 +26,10 @@ public abstract class Event {
 		done = true;
 	}
 	
+	public void setCancelled(boolean c) {
+		this.cancelled = c;
+	}
+	
 	protected abstract void enact(Game g);
 	
 	public boolean complete() {

@@ -3,8 +3,12 @@ package com.scorpions.bcp;
 public class Driver {
 
 	public static void main(String[] args) {
-		System.out.println("FUCK!");
-
+		Game g = new Game();
+		g.queueEvent(new TestEvent());
+		g.eventCycle();
+		g.queueEvent(new TestEvent());
+		g.registerListener(new TestListener());
+		g.eventCycle();
 	}
 
 }

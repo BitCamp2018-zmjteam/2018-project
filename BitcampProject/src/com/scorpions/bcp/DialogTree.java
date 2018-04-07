@@ -160,6 +160,7 @@ public class DialogTree {
 	 *
 	 */
 	private SpeechItem endConvo = new SpeechItem("Goodbye");
+
 	private class SpeechItem extends Event {
 		private String base; //What the NPC says
 		protected ArrayList<PlayerSpeechItem> playerOptions; //What the player can say in response
@@ -234,7 +235,6 @@ public class DialogTree {
 			return super.show();
 		}
 	}
-	
 	/**
 	 * Player talks, NPC answers (as a SpeechItem/other playerInteraction)
 	 * @author Morgan
