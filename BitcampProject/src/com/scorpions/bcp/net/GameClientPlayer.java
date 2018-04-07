@@ -42,14 +42,6 @@ public class GameClientPlayer {
 					sendGreeting();
 					while(connected) {
 						try {
-							while(inStream.available() == 0) {
-								try {
-									Thread.sleep(10);
-									System.out.println(inStream.available());
-								} catch (InterruptedException e) {
-									e.printStackTrace();
-								}
-							}
 							Response r = readResponse();
 							if(r!=null) {
 								evalResponse(r);
@@ -75,13 +67,11 @@ public class GameClientPlayer {
 		Map<String,Object> greetingMap = new HashMap<String,Object>();
 		greetingMap.put("player", p);
 		this.sendRequest(new Request(RequestType.PLAYER_JOIN, greetingMap));
-		System.out.println("greeting");
 	}
 	
 	
 	protected Response readResponse() throws ClassNotFoundException, IOException  {
 		Object o = inStream.readObject();
-		System.out.println("READ thing");
 		if(o instanceof Response) {
 			return (Response)o;
 		} 
@@ -89,7 +79,6 @@ public class GameClientPlayer {
 	}
 	
 	protected void evalResponse(Response r) {
-		System.out.println(r.getType() + " SHITFUCK");
 		switch(r.getType()) {
 		case PLAYER_ACCEPT:
 			System.out.println(((Point)r.getValues().get("location")).toString());
@@ -112,7 +101,6 @@ public class GameClientPlayer {
 		try {
 			outStream.writeObject(s);
 			outStream.flush();
-			System.out.println("SENT A MOTHERFUCKING REQUEST");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
