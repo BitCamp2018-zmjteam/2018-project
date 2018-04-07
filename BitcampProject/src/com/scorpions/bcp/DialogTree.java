@@ -160,12 +160,6 @@ public class DialogTree {
 			return output;
 		}
 	}
-	/**
-	 * NPC talks, player answers (as a PlayerSpeechOption)
-	 * If there are no items in playerOptions, then conversation ends once the NPC says their line
-	 * @author Morgan
-	 *
-	 */
 	private SpeechItem endConvo = new SpeechItem("Goodbye");
 
 	public SpeechItem makeSpeechItem(String s) {
@@ -175,10 +169,13 @@ public class DialogTree {
 	public ExtendedSpeechItem makeExtendedSpeechItem(Event[] e) {
 		return new ExtendedSpeechItem("",e);
 	}
+	/**
+	 * NPC talks, player answers (as a PlayerSpeechOption)
+	 * If there are no items in playerOptions, then conversation ends once the NPC says their line
+	 * @author Morgan
+	 *
+	 */
 	private class SpeechItem extends Event {
-		/**
-		 * 
-		 */
 		private static final long serialVersionUID = 6551357719201392186L;
 		private String base; //What the NPC says
 		protected ArrayList<PlayerSpeechItem> playerOptions; //What the player can say in response
