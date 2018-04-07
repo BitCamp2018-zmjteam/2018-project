@@ -24,6 +24,9 @@ public class GameClientPlayer {
 	private ObjectInputStream inStream;
 	private ObjectOutputStream outStream;
 	private PlayerGUI gui;
+	
+	private Point loc;
+	private UUID uuid;
 
 	public GameClientPlayer(Player p) {
 		this.p = p;
@@ -96,6 +99,7 @@ public class GameClientPlayer {
 		case GAME_INFO:
 			Map<UUID,Player> playerMap = (Map<UUID,Player>)r.getValues().get("playerMap");
 			UUID selfID = (UUID)r.getValues().get("selfId");
+			uuid = selfID;
 			break;
 		case INTERACT_RESPONSE:
 			boolean success = (Boolean)r.getValues().get("success");
@@ -113,17 +117,19 @@ public class GameClientPlayer {
 			UUID playerID = (UUID)r.getValues().get("playerId");
 			Point location = (Point)r.getValues().get("location");
 			System.out.println("You are now at ("+location.getX()+","+location.getY()+").");
+			loc = location;
 			break;
 		case WORLD_INFO:
 			Tile[][] area = ((Tile[][])r.getValues().get("area"));
 			Point offset = (Point)r.getValues().get("offset");
 			for (Tile[] row : area) {
 				for (Tile t : row) {
-					System.out.print(t.isNavigable()?" ":t.getCreature()==null?"X":"@");
+					System.out.print(t.getCreature()==null?t.isNavigable()?" ":"#":"@");
 				}
 				System.out.println();
 			}
 			System.out.println("You are at ("+offset.getX()+","+offset.getY()+")");
+			loc = offset;
 			break;
 		default:
 			break;
