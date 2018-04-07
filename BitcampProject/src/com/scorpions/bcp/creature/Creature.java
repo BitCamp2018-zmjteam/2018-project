@@ -1,54 +1,116 @@
 package com.scorpions.bcp.creature;
 
+import java.util.ArrayList;
+import java.util.TreeMap;
+
+import com.scorpions.bcp.items.Item;
+
 public class Creature {
-	private int strength, dexterity, constitution, intelligence, wisdom, charisma;
+	private int gp;
+	private int creatureSize;
+	private int prof;
+	private TreeMap<String, Boolean> skillProf;
+	private TreeMap<String, Integer> stats;
+	private TreeMap<String, String> skillBase;
+	private ArrayList<Item> inventory;
 	
 	public Creature(int strength, int dexterity, int constitution,
 			int intelligence, int wisdom, int charisma) {
-		this.strength=strength;
-		this.dexterity=dexterity;
-		this.constitution=constitution;
-		this.intelligence=intelligence;
-		this.wisdom=wisdom;
-		this.charisma=charisma;
+		
+		gp = 0;
+		
+		prof = 2;
+		
+		inventory = new ArrayList<Item>();
+		skillProf = new TreeMap<String, Boolean>();
+		initMaps(strength, dexterity, constitution, intelligence, wisdom, charisma);
 	}
 	
-	public int getStr() {
-		return strength;
-	}
-	public int getDex() {
-		return dexterity;
-	}
-	public int getCon() {
-		return constitution;
-	}
-	public int getInt() {
-		return intelligence;
-	}
-	public int getWis() {
-		return wisdom;
-	}
-	public int getCha() {
-		return charisma;
+	public void initMaps(int str, int dex, int con, int intel, int wis, int cha) {
+		stats.put("STR", str);
+		stats.put("DEX", dex);
+		stats.put("CON", con);
+		stats.put("INT", intel);
+		stats.put("WIS", wis);
+		stats.put("CHA", cha);
+		
+		skillProf.put("Acrobatics", false);
+		skillProf.put("Animal Handling", false);
+		skillProf.put("Arcana", false);
+		skillProf.put("Athletics", false);
+		skillProf.put("Deception", false);
+		skillProf.put("History", false);
+		skillProf.put("Insight", false);
+		skillProf.put("Intimidation", false);
+		skillProf.put("Investigation", false);
+		skillProf.put("Medicine", false);
+		skillProf.put("Nature", false);
+		skillProf.put("Perception", false);
+		skillProf.put("Performance", false);
+		skillProf.put("Persuasion", false);
+		skillProf.put("Religion", false);
+		skillProf.put("Sleight of Hand", false);
+		skillProf.put("Stealth", false);
+		skillProf.put("Survival", false);
+		
+		skillBase.put("Acrobatics", "DEX");
+		skillBase.put("Animal Handling", "WIS");
+		skillBase.put("Arcana", "INT");
+		skillBase.put("Athletics", "STR");
+		skillBase.put("Deception", "CHA");
+		skillBase.put("History", "INT");
+		skillBase.put("Insight", "WIS");
+		skillBase.put("Intimidation", "CHA");
+		skillBase.put("Investigation", "INT");
+		skillBase.put("Medicine", "WIS");
+		skillBase.put("Nature", "INT");
+		skillBase.put("Perception", "WIS");
+		skillBase.put("Performance", "CHA");
+		skillBase.put("Persuasion", "CHA");
+		skillBase.put("Religion", "INT");
+		skillBase.put("Sleight of Hand", "DEX");
+		skillBase.put("Stealth", "DEX");
+		skillBase.put("Survival", "WIS");
 	}
 	
-	public int getStrMod() {
-		return (int) Math.floor((strength-10)/2);
-	}
-	public int getDexMod() {
-		return (int) Math.floor((dexterity-10)/2);
-	}
-	public int getConMod() {
-		return (int) Math.floor((constitution-10)/2);
-	}
-	public int getIntMod() {
-		return (int) Math.floor((intelligence-10)/2);
-	}
-	public int getWisMod() {
-		return (int) Math.floor((wisdom-10)/2);
-	}
-	public int getChaMod() {
-		return (int) Math.floor((charisma-10)/2);
+	public int getStat(String stat) {
+		return stats.get(stat);
 	}
 	
+	public int getStatMod(String stat) {
+		return (int) Math.floor((stats.get(stat)-10)/2);
+	}
+	
+	
+	public void changeStat(String stat, int amount) {
+		if(stats.containsKey(stat)) {
+			stats.put(stat, stats.get(stat) + amount);
+		}
+		else {
+			System.out.println("Error when adjusting stat: " + stat);
+		}
+	}
+	
+	public int getSkillMod(String skill) {
+		if(skillProf.get(skill)) {
+			return prof + stats.get(skillBase.get(skill));
+		}
+		return stats.get(skillBase.get(skill));
+	}
+	
+	public int getPassiveSkill(String skill) {
+		return 10 + getSkillMod(skill);
+	}
+	
+	public void changeGP(int amount) {
+		this.gp += amount;
+	}	
+	
+	public void setProf(int prof) {
+		this.prof = prof;
+	}
+	
+	public void addItem(Item item) {
+		inventory.add(item);
+	}
 }
