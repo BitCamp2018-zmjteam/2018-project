@@ -5,12 +5,21 @@ import java.awt.Font;
 
 import javax.swing.UIManager;
 
+import com.scorpions.bcp.gui.PlayerGUI;
 import com.scorpions.bcp.gui.StartupGUI;
 
 public class TestDriver {
 	public static void main(String args[]) {
 		setGUI();
 		StartupGUI start = new StartupGUI();
+	}
+	
+	public static void launchPlayerGUI() {
+		PlayerGUI playerGUI = new PlayerGUI();
+	}
+	
+	public static void launchDMGUI() {
+		
 	}
 	
 	public static void setGUI() {
@@ -37,9 +46,14 @@ public class TestDriver {
 		UIManager.put("TextField.background", myWhite);
 		UIManager.put("TextField.foreground", Color.BLACK);
 		UIManager.put("TextField.font", myFont);
-		
+		UIManager.put("TextArea.background", myBrown);
+		UIManager.put("TextArea.foreground", myWhite);
+		UIManager.put("TextArea.font", myFont2);
+		UIManager.put("ScrollPane.background", myBrown);
 		UIManager.put("Label.background", myBrown);
 		UIManager.put("Label.foreground", myWhite);
 		UIManager.put("Label.font", myFont2);
+		UIManager.put("ScrollBar.foreground", myWhite);
+		UIManager.put("ScrollBar.background", myWhite);
 	}
 }
