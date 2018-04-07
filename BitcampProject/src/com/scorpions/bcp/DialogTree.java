@@ -60,8 +60,8 @@ public class DialogTree {
 		
 		SpeechItem s = base;
 		System.out.println(s.show());
+		Scanner sc = new Scanner(System.in);
 		do {
-			Scanner sc = new Scanner(System.in);
 			int choice = sc.nextInt();
 			if (s.playerOptions.size() > choice) {
 				if (s.playerOptions.get(choice).getResponse(p) instanceof SpeechItem) {
@@ -74,7 +74,7 @@ public class DialogTree {
 				}
 			}
 		} while (!s.playerOptions.isEmpty());
-		System.out.println(s.base);
+		sc.close();
 	}
 	/**How DM moves down the tree to add stuff
 	 * 
@@ -161,12 +161,6 @@ public class DialogTree {
 			return output;
 		}
 	}
-	/**
-	 * NPC talks, player answers (as a PlayerSpeechOption)
-	 * If there are no items in playerOptions, then conversation ends once the NPC says their line
-	 * @author Morgan
-	 *
-	 */
 	private SpeechItem endConvo = new SpeechItem("Goodbye");
 
 	public SpeechItem makeSpeechItem(String s) {
@@ -176,10 +170,13 @@ public class DialogTree {
 	public ExtendedSpeechItem makeExtendedSpeechItem(Event[] e) {
 		return new ExtendedSpeechItem("",e);
 	}
+	/**
+	 * NPC talks, player answers (as a PlayerSpeechOption)
+	 * If there are no items in playerOptions, then conversation ends once the NPC says their line
+	 * @author Morgan
+	 *
+	 */
 	private class SpeechItem extends Event {
-		/**
-		 * 
-		 */
 		private static final long serialVersionUID = 6551357719201392186L;
 		private String base; //What the NPC says
 		protected ArrayList<PlayerSpeechItem> playerOptions; //What the player can say in response
@@ -333,7 +330,8 @@ public class DialogTree {
 		}
 		public Event getResponse(Player p) {
 			int skillMod = p.getSkillMod(skill);
-			return outcomes.get(Math.random()*20+skillMod);
+			int outcome = (int)(Math.random()*19+skillMod+1); //1-20, weighted by skill
+			return outcomes.get(outcome);
 		}
 	}
 }

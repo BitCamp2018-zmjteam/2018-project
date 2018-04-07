@@ -98,9 +98,9 @@ public abstract class Creature implements Interactable {
 	
 	public int getSkillMod(String skill) {
 		if(skillProf.get(skill)) {
-			return prof + stats.get(skillBase.get(skill));
+			return prof + getStatMod(skillBase.get(skill));
 		}
-		return stats.get(skillBase.get(skill));
+		return getStatMod(skillBase.get(skill));
 	}
 	
 	public int getPassiveSkill(String skill) {
