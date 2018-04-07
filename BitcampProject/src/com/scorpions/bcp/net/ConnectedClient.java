@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.net.SocketException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeoutException;
@@ -49,7 +50,7 @@ public class ConnectedClient extends Thread {
 			} catch (IOException e) {
 				// skip
 				// end connection
-				e.printStackTrace();
+				if(!(e instanceof SocketException)) e.printStackTrace();
 				if (!clientSocket.isClosed()) {
 					try {
 						clientSocket.close();
@@ -84,7 +85,7 @@ public class ConnectedClient extends Thread {
 				if(received instanceof Request) {
 					System.out.println("REAL REQUEST");
 					Request r = (Request)received;
-					System.out.print("TYPE: " + r.getType());
+					System.out.println("TYPE: " + r.getType());
 					switch(r.getType()) {
 					case PLAYER_INTERACT:
 						break;
@@ -116,7 +117,7 @@ public class ConnectedClient extends Thread {
 		return this.clientSocket;
 	}
 
-	private Object receive() throws ClassNotFoundException, IOException, TimeoutException {
+	private Object receive() throws ClassNotFoundException, IOException, TimeoutException, SocketException {
 		System.out.println("READ START");
 		return clientIn.readObject();
 	}
