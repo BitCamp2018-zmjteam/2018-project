@@ -9,8 +9,8 @@ import com.scorpions.bcp.world.Interactable;
  */
 public class NPC extends Creature {
 	private DialogTree d;
-	public NPC(int strength, int dexterity, int constitution, int intelligence, int wisdom, int charisma, DialogTree d) {
-		super(strength, dexterity, constitution, intelligence, wisdom, charisma);
+	public NPC(int strength, int dexterity, int constitution, int intelligence, int wisdom, int charisma, DialogTree d, String name) {
+		super(strength, dexterity, constitution, intelligence, wisdom, charisma, name);
 		this.d = d;
 	}
 	public DialogTree getDialogTree() {
@@ -24,5 +24,10 @@ public class NPC extends Creature {
 		if (i instanceof Player)
 			if (d.canStart((Player) i))
 				d.converse((Player) i);
+	}
+	@Override
+	public void interact(Interactable i) {
+		// TODO Auto-generated method stub
+		
 	}
 }

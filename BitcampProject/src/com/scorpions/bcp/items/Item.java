@@ -1,6 +1,12 @@
 package com.scorpions.bcp.items;
 
-public class Item {
+import java.io.Serializable;
+
+public class Item implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -3019201253157273072L;
 	private int buyPrice, sellPrice;
 	private String name, description;
 	

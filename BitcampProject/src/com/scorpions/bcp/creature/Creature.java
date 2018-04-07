@@ -10,13 +10,14 @@ public abstract class Creature implements Interactable {
 	private int gp;
 	private int creatureSize;
 	private int prof;
+	protected String name;
 	private TreeMap<String, Boolean> skillProf;
 	private TreeMap<String, Integer> stats;
 	private TreeMap<String, String> skillBase;
 	private ArrayList<Item> inventory;
 	
 	public Creature(int strength, int dexterity, int constitution,
-			int intelligence, int wisdom, int charisma) {
+			int intelligence, int wisdom, int charisma, String name) {
 		
 		gp = 0;
 		
@@ -26,6 +27,7 @@ public abstract class Creature implements Interactable {
 		skillProf = new TreeMap<String, Boolean>();
 		stats = new TreeMap<>();
 		skillBase = new TreeMap<>();
+		this.name = name;
 		initMaps(strength, dexterity, constitution, intelligence, wisdom, charisma);
 	}
 	
@@ -115,5 +117,9 @@ public abstract class Creature implements Interactable {
 	
 	public void addItem(Item item) {
 		inventory.add(item);
+	}
+	
+	public String getName(){
+		return this.name;
 	}
 }
