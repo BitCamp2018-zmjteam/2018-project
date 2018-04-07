@@ -60,5 +60,10 @@ public class TestDriver {
 		UIManager.put("Label.font", myFont2);
 		UIManager.put("ScrollBar.foreground", myWhite);
 		UIManager.put("ScrollBar.background", myWhite);
+		UIManager.put("ComboBox.background", myBrown);
+		UIManager.put("ComboBox.foreground", myWhite);
+		UIManager.put("ComboBox.font", myFont2);
+		UIManager.put("ComboBox.selectionBackground", myWhite);
+		UIManager.put("ComboBox.selectionForeground", myBrown);
 	}
 }
