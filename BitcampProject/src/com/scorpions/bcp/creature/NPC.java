@@ -25,9 +25,4 @@ public class NPC extends Creature {
 			if (d.canStart((Player) i))
 				d.converse((Player) i);
 	}
-	@Override
-	public void interact(Interactable i) {
-		// TODO Auto-generated method stub
-		
-	}
 }
