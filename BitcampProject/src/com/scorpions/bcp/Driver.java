@@ -1,4 +1,4 @@
-package com.example;
+package com.scorpions.bcp;
 
 public class Driver {
 

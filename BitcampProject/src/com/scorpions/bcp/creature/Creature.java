@@ -1,4 +1,4 @@
-package com.example;
+package com.scorpions.bcp.creature;
 
 public class Creature {
 	private int strength, dexterity, constitution, intelligence, wisdom, charisma;
