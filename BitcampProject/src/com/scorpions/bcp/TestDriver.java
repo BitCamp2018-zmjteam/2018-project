@@ -65,5 +65,8 @@ public class TestDriver {
 		UIManager.put("ComboBox.font", myFont2);
 		UIManager.put("ComboBox.selectionBackground", myWhite);
 		UIManager.put("ComboBox.selectionForeground", myBrown);
+		UIManager.put("TabbedPane.foreground", myWhite);
+		UIManager.put("TabbedPane.background", myBrown);
+		UIManager.put("TabbedPane.font", myFont2);
 	}
 }
