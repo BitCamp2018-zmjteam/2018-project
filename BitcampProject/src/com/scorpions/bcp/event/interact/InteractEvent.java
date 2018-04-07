@@ -6,6 +6,10 @@ import com.scorpions.bcp.world.Interactable;
 
 public abstract class InteractEvent extends Event {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 3751070048052623581L;
 	protected final Interactable initiator, receiver;
 	
 	public InteractEvent(Interactable actor, Interactable acted) {

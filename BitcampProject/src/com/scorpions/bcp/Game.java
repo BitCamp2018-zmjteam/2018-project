@@ -64,7 +64,7 @@ public class Game {
 		}
 	}
 	
-	protected void eventCycle() {
+	public void eventCycle() {
 		queueLocked = true;
 		for(Event e : eventQueue) {
 			for(RegisteredListener l : listeners) {

@@ -1,9 +1,15 @@
 package com.scorpions.bcp.event;
 
+import java.io.Serializable;
+
 import com.scorpions.bcp.Game;
 
-public abstract class Event {
+public abstract class Event implements Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -7327815579969339862L;
 	protected boolean cancelled;
 	protected boolean done;
 	

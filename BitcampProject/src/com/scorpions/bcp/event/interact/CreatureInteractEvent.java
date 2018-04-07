@@ -5,6 +5,11 @@ import com.scorpions.bcp.world.Interactable;
 
 public class CreatureInteractEvent extends InteractEvent {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 509685714222715428L;
+
 	public CreatureInteractEvent(Creature actor, Interactable acted) {
 		super(actor, acted);
 	}

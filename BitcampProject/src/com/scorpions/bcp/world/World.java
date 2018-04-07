@@ -1,7 +1,13 @@
 package com.scorpions.bcp.world;
 
-public class World {
+import java.io.Serializable;
 
+public class World implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -4342858946362283595L;
 	private Tile[][] worldTiles;
 	
 	public World(int width, int height) {

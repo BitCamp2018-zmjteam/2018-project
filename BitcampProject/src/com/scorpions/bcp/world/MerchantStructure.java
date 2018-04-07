@@ -1,9 +1,15 @@
 package com.scorpions.bcp.world;
 
+import java.io.Serializable;
+
 import com.scorpions.bcp.creature.Creature;
 
-public class MerchantStructure implements Structure {
+public class MerchantStructure implements Structure, Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -7598988355432847006L;
 	private Creature merchant;
 	private Tile[][] structureTiles;
 	private TileDirection openingDirection;

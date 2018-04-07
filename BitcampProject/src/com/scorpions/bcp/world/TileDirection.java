@@ -1,5 +1,7 @@
 package com.scorpions.bcp.world;
 
-public enum TileDirection {
+import java.io.Serializable;
+
+public enum TileDirection implements Serializable {
 	TOP,RIGHT,BOTTOM,LEFT;
 }

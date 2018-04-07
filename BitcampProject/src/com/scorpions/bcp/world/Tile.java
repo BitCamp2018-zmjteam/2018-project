@@ -1,11 +1,17 @@
 package com.scorpions.bcp.world;
 
+import java.io.Serializable;
+
 import com.scorpions.bcp.creature.Creature;
 
-public class Tile {
+public class Tile implements Serializable {
 	
 	//Tile has nothing because on its own it is nothing
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 2770188295999462483L;
 	private Creature currentCreature;
 	private boolean navigable;
 	
