@@ -1,6 +1,7 @@
 package com.scorpions.bcp;
 
 import java.util.ArrayList;
+import java.util.Scanner;
 
 import com.scorpions.bcp.creature.Player;
 import com.scorpions.bcp.event.Event;
@@ -16,8 +17,10 @@ public class DialogTree {
 	private String flag;
 	private boolean outrage;
 	private Player converser;
-	public DialogTree(String base) {
+	private Game wholeGame;
+	public DialogTree(String base,Game wholeGame) {
 		this.base=new SpeechItem(base);
+		this.wholeGame = wholeGame;
 	}
 	/**
 	 * Make a new DialogTree item
@@ -51,7 +54,22 @@ public class DialogTree {
 	 */
 	public void converse(Player p) { //TODO - add more conversation interaction
 		converser = p;
-		System.out.println(base.show());
+		
+		SpeechItem s = base;
+		do {
+			Scanner sc = new Scanner(System.in);
+			System.out.println(base.show());
+			int choice = sc.nextInt();
+			if (s.playerOptions.size() > choice) {
+				if (s.playerOptions.get(choice).npcResponse instanceof SpeechItem) {
+					s = (SpeechItem)s.playerOptions.get(choice).npcResponse;
+				} else {
+					System.out.println(s.playerOptions.get(choice));
+					wholeGame.queueEvent(s.playerOptions.get(choice).npcResponse);
+					break;
+				}
+			}
+		} while (!s.playerOptions.isEmpty());
 	}
 	/**How DM moves down the tree to add stuff
 	 * 
@@ -139,7 +157,7 @@ public class DialogTree {
 	private SpeechItem endConvo = new SpeechItem("Goodbye");
 	private class SpeechItem extends Event {
 		private String base; //What the NPC says
-		private ArrayList<PlayerSpeechItem> playerOptions; //What the player can say in response
+		protected ArrayList<PlayerSpeechItem> playerOptions; //What the player can say in response
 		public SpeechItem(String base) {
 			playerOptions = new ArrayList<>();
 			this.base=base;
@@ -177,10 +195,11 @@ public class DialogTree {
 		//Show the dialog tree, allow selection
 		protected String show() {
 			String output = base + "\n----------\n";
+			int i = 0;
 			for (PlayerSpeechItem p : playerOptions) {
 				if (p.canShow(converser)) {
 					//Placeholder - Output the options that can be shown to that player
-					output += p.toString() + "\n";
+					output += "[" + i + "] " + p.toString() + "\n";
 					
 				}
 			}
@@ -190,11 +209,29 @@ public class DialogTree {
 		protected void enact(Game g) {} //SpeechItem is a subclass of Event for generality purposes
 	}
 	
+	/**
+	 * A SpeechItem that triggers an event when the speechItem is reached
+	 * @author Morgan
+	 *
+	 */
 	private class ExtendedSpeechItem extends SpeechItem {
 		Event trigger; //Event triggered on start of esi
 		public ExtendedSpeechItem(String base, Event trigger) {
 			super(base);
 			this.trigger = trigger;
+		}
+		protected String show() {
+			wholeGame.queueEvent(trigger);
+			String output = base + "\n----------\n";
+			int i = 0;
+			for (PlayerSpeechItem p : playerOptions) {
+				if (p.canShow(converser)) {
+					//Placeholder - Output the options that can be shown to that player
+					output += "[" + i + "] " + p.toString() + "\n";
+					
+				}
+			}
+			return output;
 		}
 	}
 	
