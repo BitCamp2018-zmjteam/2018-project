@@ -3,6 +3,8 @@ package com.scorpions.bcp.gui;
 import java.awt.Frame;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -11,6 +13,9 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 import com.scorpions.bcp.net.GameClientPlayer;
+import com.scorpions.bcp.net.Request;
+import com.scorpions.bcp.net.RequestType;
+import com.scorpions.bcp.world.TileDirection;
 
 public class PlayerGUI extends JFrame implements KeyListener {
 	private static final long serialVersionUID = -5100004801987415763L;
@@ -88,14 +93,57 @@ public class PlayerGUI extends JFrame implements KeyListener {
 		if (arg0.getKeyChar() == KeyEvent.VK_ENTER && !input.getText().trim().equals("")) {
 			String line = input.getText().trim();
 			input.setText("");
-			if (log.getText().trim().equals("")) {
-				log.setText("> " + line);
-			} else {
-				log.setText(log.getText() + "\n> " + line);
-			}
-
+			parseInput(line);
 		}
 
 	}
 
+	public void parseInput(String input) {
+		String[] cmds = input.split(" ");
+		if (cmds.length <= 1) {
+			updateLog("Invalid input");
+			return;
+		}
+
+		String cmd = cmds[0].toLowerCase().trim();
+		if (cmd.equals("move")) {
+			if (cmds.length > 2) {
+				updateLog("Too many arguments");
+				return;
+			}
+			String dir = cmds[1].toLowerCase().trim();
+			if (!dir.equals("north") && !dir.equals("south") && !dir.equals("east") && !dir.equals("west")) {
+				updateLog("Invalid direction");
+				return;
+			} else {
+				Map<String, Object> dirMap = new HashMap<String, Object>();
+				dirMap.put("direction", TileDirection.fromString(dir));
+				client.sendRequest(new Request(RequestType.PLAYER_MOVE, dirMap));
+			}
+		} else if (cmd.equals("interact")) {
+			if (cmds.length > 2) {
+				updateLog("Too many arguments");
+				return;
+			}
+			else if(cmd.equals("look")) {
+				if(cmds.length > 1) {
+					updateLog("Too many arguments");
+					return;
+				}
+				Map<String, Object> reqMap = new HashMap<String, Object>();
+				reqMap.put("position", client.getPlayer().getPos());
+				client.sendRequest(new Request(RequestType.PLAYER_MOVE, reqMap));
+			}
+		} else {
+			updateLog("Invalid input");
+		}
+	}
+
+	public void updateLog(String line) {
+		if (log.getText().trim().equals("")) {
+			log.setText("> " + line);
+		} else {
+			log.setText(log.getText() + " \n> " + line);
+		}
+	}
 }
