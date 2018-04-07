@@ -19,6 +19,11 @@ public class World implements Serializable {
 		return worldTiles[x][y];
 	}
 	
+	public Tile setTile(int x, int y, Tile t) {
+		Tile c = worldTiles[x][y];
+		worldTiles[x][y] = t;
+		return c;
+	}
 	public int getWorldWidth() {
 		return this.worldTiles.length;
 	}

@@ -12,24 +12,30 @@ import java.util.Set;
 import com.scorpions.bcp.event.Event;
 import com.scorpions.bcp.event.EventHandler;
 import com.scorpions.bcp.event.Listener;
+import com.scorpions.bcp.world.World;
 
 public class Game {
 	
 	private Queue<Event> eventQueue, nextQueue;
 	private Set<RegisteredListener> listeners;
 	private boolean queueLocked;
+	private World gameWorld;
 	
 	private static Game game;
 	
-	public Game() {
+	public Game(World w) {
 		queueLocked = false;
 		eventQueue = new LinkedList<Event>();
 		nextQueue = new LinkedList<Event>();
 		listeners = new HashSet<RegisteredListener>();
+		gameWorld = w;
 		Game.game = this;
+		
 	}
-
 	
+	public World getWorld() {
+		return this.gameWorld;
+	}
 	
 	public boolean registerListener(Listener l) {
 		Method[] classMethods = l.getClass().getDeclaredMethods();

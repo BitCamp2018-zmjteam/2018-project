@@ -114,8 +114,8 @@ public class ConnectedClient extends Thread {
 			}
 			break;
 		case PLAYER_MOVE:
-			//Map<String,Object> moveMap = r.getValues();
-			//gameServer.clientMove(moveMap);
+			Map<String,Object> moveMap = r.getValues();
+			Map<String,Object> response = gameServer.clientMove(moveMap);
 			break;
 		case WORLD_INFO:
 			break;
