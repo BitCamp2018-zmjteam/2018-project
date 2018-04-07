@@ -1,5 +1,6 @@
 package com.scorpions.bcp;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Scanner;
@@ -12,8 +13,8 @@ import com.scorpions.bcp.event.Event;
  * @author Morgan
  *
  */
-public class DialogTree {
-	private static final long serialVersionUID = 6551357719201392186L;
+public class DialogTree implements Serializable{
+	private static final long serialVersionUID = 1770872409725720898L;
 	//base is the starting line "i.e. How can I help you today?"
 	private SpeechItem base;
 	private String flag="";
@@ -81,8 +82,8 @@ public class DialogTree {
 	 * @author Morgan
 	 *
 	 */
-	public class DMIterator {
-		private static final long serialVersionUID = 6551357719201392186L;
+	public class DMIterator implements Serializable {
+		private static final long serialVersionUID = -5940095089491535793L;
 		//TODO - Add options for DM to add/change/remove dialog options
 		//TODO - Possibly - Add way for DM to interfere with running conversation
 		private SpeechItem sp;
@@ -265,8 +266,8 @@ public class DialogTree {
 	 * @author Morgan
 	 *
 	 */
-	private class PlayerSpeechItem {
-		private static final long serialVersionUID = 6551357719201392186L;
+	private class PlayerSpeechItem implements Serializable {
+		private static final long serialVersionUID = -4910592610642348689L;
 		String playerSays; //What the player said
 		Event npcResponse; //NPC's response
 		public PlayerSpeechItem(String player, Event npc) {
@@ -298,7 +299,7 @@ public class DialogTree {
 	 *
 	 */
 	private class FlaggedSpeechItem extends PlayerSpeechItem {
-		private static final long serialVersionUID = 3550003039970461100L;
+		private static final long serialVersionUID = -8805072947967548197L;
 		String flag; //For future: multiple flags in boolean combos
 		public FlaggedSpeechItem(String base, Event npc, String flag) {
 			super(base,npc);
@@ -318,7 +319,7 @@ public class DialogTree {
 	 *
 	 */
 	private class PlayerCheckSpeechItem extends PlayerSpeechItem {
-		private static final long serialVersionUID = 3550003039970461100L;
+		private static final long serialVersionUID = 6217165769150100400L;
 		HashMap<Integer,Event> outcomes;
 		String skill;
 		public PlayerCheckSpeechItem(String option, HashMap<Integer, Event> h, String skill) {
