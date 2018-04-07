@@ -10,7 +10,7 @@ public class Player extends Creature {
 	}
   //Stub methods - add flags later
 	public boolean hasFlag(String flag) {
-		return flag.contains(flag);
+		return flags.contains(flag);
 	}
 	public boolean addFlag(String flag) {
 		return flags.add(flag);
