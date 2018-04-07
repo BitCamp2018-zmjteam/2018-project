@@ -118,6 +118,7 @@ public class PlayerGUI extends JFrame implements KeyListener {
 			} else {
 				Map<String, Object> dirMap = new HashMap<String, Object>();
 				dirMap.put("direction", TileDirection.fromString(dir));
+				dirMap.put("playerid", client.getPlayer().getUUID().toString());
 				client.sendRequest(new Request(RequestType.PLAYER_MOVE, dirMap));
 			}
 		} else if (cmd.equals("interact")) {
@@ -125,7 +126,12 @@ public class PlayerGUI extends JFrame implements KeyListener {
 				updateLog("Too many arguments");
 				return;
 			}
-			else if(cmd.equals("look")) {
+			else {
+				Map<String, Object> targetMap = new HashMap<String, Object>();
+				targetMap.put("target", cmds[1]);
+				client.sendRequest(new Request(RequestType.PLAYER_MOVE, targetMap));
+			}
+		} else if(cmd.equals("look")) {
 				if(cmds.length > 1) {
 					updateLog("Too many arguments");
 					return;
@@ -133,7 +139,6 @@ public class PlayerGUI extends JFrame implements KeyListener {
 				Map<String, Object> reqMap = new HashMap<String, Object>();
 				reqMap.put("position", client.getPlayer().getPos());
 				client.sendRequest(new Request(RequestType.PLAYER_MOVE, reqMap));
-			}
 		} else {
 			updateLog("Invalid input");
 		}
