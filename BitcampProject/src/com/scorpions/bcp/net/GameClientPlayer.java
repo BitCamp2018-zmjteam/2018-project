@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+import com.scorpions.bcp.creature.Creature;
 import com.scorpions.bcp.creature.Player;
 import com.scorpions.bcp.gui.PlayerGUI;
 import com.scorpions.bcp.world.Tile;
@@ -160,4 +161,6 @@ public class GameClientPlayer {
 		this.gui = p;
 	}
 
-}
+	public Player getPlayer() {
+		return p;
+	}
