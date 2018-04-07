@@ -19,8 +19,11 @@ public class NPC extends Creature {
 	public void setDialogTree(DialogTree d) {
 		this.d = d;
 	}
-	public void converse(Player p) {
-		d.converse(p);
+	@Override
+	public void interact(Interactable i) {
+		if (i instanceof Player)
+			if (d.canStart((Player) i))
+				d.converse((Player) i);
 	}
 	@Override
 	public void interact(Interactable i) {

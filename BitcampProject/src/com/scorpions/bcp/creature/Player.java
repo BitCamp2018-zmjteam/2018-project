@@ -13,14 +13,12 @@ public class Player extends Creature {
 		this.race = race;
 		this.role = role;
 	}
-  //Stub methods - add flags later
 	public boolean hasFlag(String flag) {
 		return flags.contains(flag);
 	}
 	public boolean addFlag(String flag) {
 		return flags.add(flag);
 	}
-	
 	@Override
 	public String toString() {
 		return this.name + ", the " + this.race + " " + this.role;
