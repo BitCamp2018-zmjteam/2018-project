@@ -36,23 +36,14 @@ public class GameServer extends Thread {
 			Thread clientAccepter = new Thread() {
 				@Override
 				public void run() {
-					System.out.println("Started client watcher");
 					while (running) {
-						System.out.println("in loop");
 						try {
-							System.out.println("try accept");
 							Socket newSocket = socket.accept();
-							System.out.println("accepted - - trying cleint");
 							ConnectedClient cc = new ConnectedClient(newSocket, s);
-							System.out.println("finish client");
 							clients.add(cc);
-							System.out.println("Accepted client");
 							cc.start();
-							System.out.println("Client start");
 						} catch (IOException e) {
 							if (socket.isClosed()) {
-								// okay
-								System.out.println("Client thread closed");
 								break;
 							} else {
 								e.printStackTrace();
