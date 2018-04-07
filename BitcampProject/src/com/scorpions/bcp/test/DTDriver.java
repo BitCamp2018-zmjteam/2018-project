@@ -14,8 +14,8 @@ import com.scorpions.bcp.event.TradeOpenEvent;
 public class DTDriver {
 	public static void main(String[] args) {
 		DialogTree d = new DialogTree("Hello, how can I help you today?",new Game(),"npcOutraged",true);
-		NPC npc = new NPC(10,10,10,10,10,10,d);
-		Player p = new Player(10,10,10,10,10,10);
+		NPC npc = new NPC(10,10,10,10,10,10,d,"Shop mcKeeper");
+		Player p = new Player(10,10,10,10,10,10, "Null Nullson", "Missingno.", "Errorbarian");
 		HashMap<Integer,Event[]> h = new HashMap<>();
 		for (int i=0;i<14;i++)
 			h.put(i, new Event[]{d.makeSpeechItem("[FAILED] As if"),new SetFlagEvent(p,"npcOutraged")});
