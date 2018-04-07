@@ -47,7 +47,6 @@ public class StartupGUI extends JFrame implements ActionListener {
 		DMB.setActionCommand("DM");
 		DMB.addActionListener(this);
 		
-		
 		prompt.setLocation(50, 25);
 		prompt.setSize(400, 100);
 		
@@ -60,12 +59,12 @@ public class StartupGUI extends JFrame implements ActionListener {
 	
 	public void actionPerformed(ActionEvent event) {
 		if(event.getActionCommand().equals("Player")) {
-			String ip = JOptionPane.showInputDialog(null, "Enter the DMs IP address:", "Connect To DM", JOptionPane.QUESTION_MESSAGE);
 			this.setVisible(false);
-			TestDriver.launchPlayerGUI();
+			TestDriver.launchPlayerCreationGUI();
 		}
 		else if(event.getActionCommand().equals("DM")) {
-			
+			this.setVisible(false);
+			TestDriver.launchDMGUI();
 		}
 	}
 }

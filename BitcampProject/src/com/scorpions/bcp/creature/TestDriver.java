@@ -5,6 +5,7 @@ import java.awt.Font;
 
 import javax.swing.UIManager;
 
+import com.scorpions.bcp.gui.PlayerCreationGUI;
 import com.scorpions.bcp.gui.PlayerGUI;
 import com.scorpions.bcp.gui.StartupGUI;
 
@@ -12,6 +13,10 @@ public class TestDriver {
 	public static void main(String args[]) {
 		setGUI();
 		StartupGUI start = new StartupGUI();
+	}
+	
+	public static void launchPlayerCreationGUI() {
+		PlayerCreationGUI create = new PlayerCreationGUI();
 	}
 	
 	public static void launchPlayerGUI() {
