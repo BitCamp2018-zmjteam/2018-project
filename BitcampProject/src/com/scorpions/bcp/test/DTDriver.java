@@ -20,6 +20,6 @@ public class DTDriver {
 		dm.goDown(1);
 		dm.addSpeechOption("I can help with the bnadits", "Oh thank you adventurer", new Event[]{new SetFlagEvent(p,"dealWithBandits")});
 		dm.addSpeechOption("Too bad", "Hrm.");
-		npc.converse(p);
+		npc.interact(p);
 	}
 }
