@@ -74,7 +74,6 @@ public class DialogTree {
 				}
 			}
 		} while (!s.playerOptions.isEmpty());
-		System.out.println(s.base);
 	}
 	/**How DM moves down the tree to add stuff
 	 * 
@@ -333,7 +332,8 @@ public class DialogTree {
 		}
 		public Event getResponse(Player p) {
 			int skillMod = p.getSkillMod(skill);
-			return outcomes.get(Math.random()*20+skillMod);
+			int outcome = (int)(Math.random()*19+skillMod+1); //1-20, weighted by skill
+			return outcomes.get(outcome);
 		}
 	}
 }

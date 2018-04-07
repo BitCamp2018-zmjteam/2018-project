@@ -18,9 +18,9 @@ public class DTDriver {
 		Player p = new Player(10,10,10,10,10,10, "Null Nullson", "Missingno.", "Errorbarian");
 		HashMap<Integer,Event> h = new HashMap<>();
 		
-		for (int i=0;i<14;i++)
-			h.put(i, d.makeExtendedSpeechItem(new Event[]{d.makeSpeechItem("[FAILED] As if"),new SetFlagEvent(p,"npcOutraged")}));
-		for (int i=14;i<=20;i++)
+		for (int i=-5;i<=14;i++)
+			h.put(i, d.makeExtendedSpeechItem(new Event[]{d.makeSpeechItem("[FAILED] As if! Get out of my shop!"),new SetFlagEvent(p,"npcOutraged")}));
+		for (int i=15;i<=30;i++)
 			h.put(i, d.makeExtendedSpeechItem(new Event[]{d.makeSpeechItem("[SUCCEEDED] Please don't hurt me!"),new SetFlagEvent(p,"npcOutraged")}));
 		
 		p.addFlag("knowBanditIssue");
