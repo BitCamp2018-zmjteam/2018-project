@@ -35,6 +35,7 @@ public enum ResponseType {
 	 * GAME_INFO:
 	 *   map:
 	 *     playerMap: map of player ids to full player objects
+	 *     selfId: id of player
 	 * 
 	 * INTERACT_RESPONSE:
 	 *   map:
