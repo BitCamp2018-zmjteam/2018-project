@@ -27,12 +27,13 @@ public class TestDriver {
 	}
 	
 	public static void launchPlayerGUI(Player p) {
-		PlayerGUI playerGUI = new PlayerGUI();
+		GameClientPlayer client = new GameClientPlayer(p);
+		PlayerGUI playerGUI = new PlayerGUI(client);
+		client.setGUI(playerGUI);
 		String ip = JOptionPane.showInputDialog(null, "Enter the DMs IP address:", "Connect To DM",
 				JOptionPane.QUESTION_MESSAGE);
 		try {
 			InetAddress addr = InetAddress.getByName(ip);
-			GameClientPlayer client = new GameClientPlayer(p, playerGUI);
 			client.connect(addr, 3252);
 		}
 		catch(UnknownHostException e) {

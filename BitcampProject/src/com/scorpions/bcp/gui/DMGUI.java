@@ -15,9 +15,12 @@ public class DMGUI extends JFrame {
 	public DMGUI(GameServer server) {
 		super("DM Screen");
 		
+		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+		
 		this.server = server;
 		
-		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
 		
 		width = 1200;
 		height = 675;

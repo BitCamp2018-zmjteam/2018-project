@@ -18,16 +18,18 @@ public class GameClientPlayer {
 	private Player p;
 	private Socket selfSocket;
 	private boolean connected;
-	
+
 	private ObjectInputStream inStream;
 	private ObjectOutputStream outStream;
-	
-	public GameClientPlayer(Player p, PlayerGUI gui) {
+	private PlayerGUI gui;
+
+	public GameClientPlayer(Player p) {
 		this.p = p;
 		selfSocket = null;
 		connected = false;
+		gui = null;
 	}
-	
+
 	public void connect(InetAddress addr, int port) {
 		try {
 			selfSocket = new Socket(addr.getHostAddress(), port);
@@ -39,16 +41,18 @@ public class GameClientPlayer {
 				public void run() {
 
 					sendGreeting();
-					while(connected) {
+					while (connected) {
 						try {
 							Response r = readResponse();
-							if(r!=null) {
+							if (r != null) {
 								evalResponse(r);
 							}
 						} catch (ClassNotFoundException e) {
 							e.printStackTrace();
 						} catch (IOException e) {
-							e.printStackTrace();
+							if (!selfSocket.isClosed()) {
+								e.printStackTrace();
+							}
 						}
 					}
 				}
@@ -57,7 +61,9 @@ public class GameClientPlayer {
 			Runtime.getRuntime().addShutdownHook(new Thread() {
 				@Override
 				public void run() {
-					sendRequest(new Request(RequestType.PLAYER_LEAVE, new HashMap<String,Object>()));
+					if (!selfSocket.isClosed()) {
+						sendRequest(new Request(RequestType.PLAYER_LEAVE, new HashMap<String, Object>()));
+					}
 				}
 			});
 		} catch (UnknownHostException e) {
@@ -66,27 +72,25 @@ public class GameClientPlayer {
 			e.printStackTrace();
 		}
 	}
-	
-	
+
 	protected void sendGreeting() {
-		Map<String,Object> greetingMap = new HashMap<String,Object>();
+		Map<String, Object> greetingMap = new HashMap<String, Object>();
 		greetingMap.put("player", p);
 		this.sendRequest(new Request(RequestType.PLAYER_JOIN, greetingMap));
 	}
-	
-	
-	protected Response readResponse() throws ClassNotFoundException, IOException  {
+
+	protected Response readResponse() throws ClassNotFoundException, IOException {
 		Object o = inStream.readObject();
-		if(o instanceof Response) {
-			return (Response)o;
-		} 
+		if (o instanceof Response) {
+			return (Response) o;
+		}
 		return null;
 	}
-	
+
 	protected void evalResponse(Response r) {
-		switch(r.getType()) {
+		switch (r.getType()) {
 		case PLAYER_ACCEPT:
-			System.out.println(((Point)r.getValues().get("location")).toString());
+			System.out.println(((Point) r.getValues().get("location")).toString());
 		case GAME_INFO:
 			break;
 		case INTERACT_RESPONSE:
@@ -101,7 +105,18 @@ public class GameClientPlayer {
 			break;
 		}
 	}
-	
+
+	public void disconnect() {
+		connected = false;
+		sendRequest(new Request(RequestType.PLAYER_LEAVE, new HashMap<String, Object>()));
+		try {
+			selfSocket.close();
+		} catch (IOException e) {
+			System.out.println("Failed to close socket");
+			e.printStackTrace();
+		}
+	}
+
 	public void sendRequest(Request s) {
 		try {
 			outStream.writeObject(s);
@@ -110,5 +125,9 @@ public class GameClientPlayer {
 			e.printStackTrace();
 		}
 	}
-	
+
+	public void setGUI(PlayerGUI p) {
+		this.gui = p;
+	}
+
 }

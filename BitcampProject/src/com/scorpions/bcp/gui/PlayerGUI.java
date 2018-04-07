@@ -19,37 +19,47 @@ public class PlayerGUI extends JFrame implements KeyListener {
 	private JTextField input;
 	private JTextArea log;
 	private JScrollPane scroll;
-	
-	public PlayerGUI() {
+	private GameClientPlayer client;
+
+	public PlayerGUI(GameClientPlayer c) {
 		super("Player");
-		
+
+		this.client = c;
+
 		width = 800;
 		height = 450;
-		
-		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+		this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		this.addWindowListener(new java.awt.event.WindowAdapter() {
+			@Override
+			public void windowClosing(java.awt.event.WindowEvent windowEvent) {
+				client.disconnect();
+				windowEvent.getWindow().dispose();
+			}
+		});
 
 		panel = new JPanel();
 		panel.setLayout(null);
 
 		input = new JTextField();
 		log = new JTextArea();
-		scroll = new JScrollPane(); 
-		
+		scroll = new JScrollPane();
+
 		scroll.setViewportView(log);
 		scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-		
+
 		panel.add(scroll);
 		panel.add(input);
-		
+
 		scroll.setLocation(0, 0);
-		
-		scroll.setSize(width-6, height - 75);
+
+		scroll.setSize(width - 6, height - 75);
 		log.setSize(scroll.getSize());
 		log.setEditable(false);
 		log.setColumns(20);
 		log.setLineWrap(true);
 		log.setWrapStyleWord(true);
-		
+
 		input.setLocation(0, height - 75);
 		input.setSize(width, 50);
 		input.addKeyListener(this);
@@ -78,11 +88,10 @@ public class PlayerGUI extends JFrame implements KeyListener {
 		if (arg0.getKeyChar() == KeyEvent.VK_ENTER && !input.getText().trim().equals("")) {
 			String line = input.getText().trim();
 			input.setText("");
-			if(log.getText().trim().equals("")) {
+			if (log.getText().trim().equals("")) {
 				log.setText("> " + line);
-			}
-			else {
-				log.setText(log.getText() + "\n> " + line);		
+			} else {
+				log.setText(log.getText() + "\n> " + line);
 			}
 
 		}
