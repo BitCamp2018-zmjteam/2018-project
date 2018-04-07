@@ -1,5 +1,6 @@
 package com.scorpions.bcp.net;
 
+import java.awt.Point;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -18,19 +19,23 @@ public class ConnectedClient extends Thread {
 	public ConnectedClient(Socket s, GameServer gameServer) throws IOException {
 		this.clientSocket = s;
 		this.gameServer = gameServer;
-		this.clientIn = new ObjectInputStream(s.getInputStream());
 		this.clientOut = new ObjectOutputStream(s.getOutputStream());
+		this.clientIn = new ObjectInputStream(s.getInputStream());
 	}
 
 	@Override
 	public void run() {
+		System.out.println("Thread start");
 		while (clientSocket.isConnected()) {
+			System.out.println("yeeeehaw");
 			Object received;
 			try {
 				received = receive();
+				System.out.println("Received ");
 			} catch (ClassNotFoundException e) {
 				// skip
 				// end connection
+				e.printStackTrace();
 				if (!clientSocket.isClosed()) {
 					try {
 						clientSocket.close();
@@ -44,6 +49,7 @@ public class ConnectedClient extends Thread {
 			} catch (IOException e) {
 				// skip
 				// end connection
+				e.printStackTrace();
 				if (!clientSocket.isClosed()) {
 					try {
 						clientSocket.close();
@@ -56,6 +62,7 @@ public class ConnectedClient extends Thread {
 				received = null;
 			} catch (TimeoutException e) {
 				// end connection
+				e.printStackTrace();
 				if (!clientSocket.isClosed()) {
 					try {
 						clientSocket.close();
@@ -68,11 +75,39 @@ public class ConnectedClient extends Thread {
 				received = null;
 			}
 			if(received == null) {
+				System.out.println("received is null");
 				if(!gameServer.containsClient(this)) {
 					break;
 				} 
 			} else {
-				
+				System.out.println("REQUEST ALIVE");
+				if(received instanceof Request) {
+					System.out.println("REAL REQUEST");
+					Request r = (Request)received;
+					System.out.print("TYPE: " + r.getType());
+					switch(r.getType()) {
+					case PLAYER_INTERACT:
+						break;
+					case PLAYER_JOIN:
+						Map<String,Object> x = new HashMap<String,Object>();
+						x.put("location", new Point(4,5));
+						try {
+							this.send(new Response(ResponseType.PLAYER_ACCEPT,x));
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+						break;
+					case PLAYER_LEAVE:
+						break;
+					case PLAYER_MOVE:
+						break;
+					case WORLD_INFO:
+						break;
+					default:
+						break;
+					
+					}
+				}
 			}
 		}
 	}
@@ -82,6 +117,7 @@ public class ConnectedClient extends Thread {
 	}
 
 	private Object receive() throws ClassNotFoundException, IOException, TimeoutException {
+		System.out.println("READ START");
 		return clientIn.readObject();
 	}
 	
@@ -103,6 +139,8 @@ public class ConnectedClient extends Thread {
 	
 	public void send(Response s) throws IOException {
 		clientOut.writeObject(s);
+		clientOut.flush();
+		System.out.println("SENT RESPONSE");
 	}
 
 }
