@@ -16,6 +16,12 @@ public class Game {
 
 	
 	
+	
+	
+	public static Game getGame() {
+		return null;
+	}
+	
 	class RegisteredListener {
 		
 		private final Listener listenerInstance;
