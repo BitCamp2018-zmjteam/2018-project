@@ -28,7 +28,7 @@ public class DialogTree {
 	 *
 	 */
 	private SpeechItem endConvo = new SpeechItem("Goodbye");
-	private class SpeechItem implements Interaction {
+	private class SpeechItem implements PlayerInteraction {
 		private String base; //What the NPC says
 		private ArrayList<PlayerSpeechItem> playerOptions; //What the player can say in response
 		public SpeechItem(String base) {
@@ -40,25 +40,38 @@ public class DialogTree {
 		public void addSpeechOption(String playerOption,String npcResponse) {
 			playerOptions.add(new PlayerSpeechItem(playerOption, new SpeechItem(npcResponse)));
 		}
+		public void addSpeechOption(String playerOption,PlayerInteraction npcResponse) {
+			playerOptions.add(new PlayerSpeechItem(playerOption, npcResponse));
+		}
 		//Show the dialog tree, allow selection
-		public void doInteraction() {
-			
+		public void doInteraction(Player pl) {
+			for (PlayerSpeechItem p : playerOptions) {
+				if (p.canShow(pl)) {
+					//Placeholder - Output the options that can be shown to that player
+				}
+			}
 		}
 	}
 	/**
-	 * Player talks, NPC answers (as a SpeechItem)
+	 * Player talks, NPC answers (as a SpeechItem/other playerInteraction)
 	 * @author Morgan
 	 *
 	 */
 	public class PlayerSpeechItem {
 		String playerSays; //What the player said
-		SpeechItem npcResponse; //NPC's response
-		public PlayerSpeechItem(String player, SpeechItem npc) {
+		PlayerInteraction npcResponse; //NPC's response
+		public PlayerSpeechItem(String player, PlayerInteraction npc) {
 			playerSays = player;
 			npcResponse = npc;
 		}
 		public void addNPCResponse(SpeechItem npc) {
 			npcResponse = npc;
+		}
+		/**
+		 * Can the player be shown this dialog option?
+		 */
+		public boolean canShow(Player p) {
+			return true;
 		}
 	}
 	/**
@@ -72,7 +85,7 @@ public class DialogTree {
 			super(base,npc);
 			this.flag = flag;
 		}
-		public boolean PlayerHasFlag(Player p) {
+		public boolean canShow(Player p) {
 			return p.hasFlag(flag);
 		}
 	}
