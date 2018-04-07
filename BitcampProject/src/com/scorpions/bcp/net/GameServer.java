@@ -3,10 +3,14 @@ package com.scorpions.bcp.net;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 
 import com.scorpions.bcp.Game;
+import com.scorpions.bcp.creature.Player;
 
 public class GameServer extends Thread {
 
@@ -14,10 +18,12 @@ public class GameServer extends Thread {
 	private ServerSocket socket;
 	private boolean running;
 	private Set<ConnectedClient> clients;
+	private Map<Player, UUID> players;
 
 	public GameServer(Game g) {
 		this.game = g;
 		this.running = false;
+		this.players = new HashMap<Player,UUID>();
 	}
 
 	@Override
@@ -79,6 +85,23 @@ public class GameServer extends Thread {
 			e.printStackTrace();
 		}
 		
+	}
+	
+	public Map<String,Object> infoRequest(Player p) {
+		Map<String,Object> toReturn = new HashMap<String,Object>();
+		toReturn.put("playerMap", players);
+		toReturn.put("selfId", getPlayerUUID(p));
+		return toReturn;
+	}
+	
+	public Player playerJoined(ConnectedClient c, Player p) {
+		UUID uuid = UUID.randomUUID();
+		this.players.put(p, uuid);
+		return p;
+	}
+	
+	public UUID getPlayerUUID(Player p) {
+		return this.players.get(p);
 	}
 	
 	public void queueStop() {
