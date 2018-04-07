@@ -60,8 +60,8 @@ public class DialogTree {
 		
 		SpeechItem s = base;
 		System.out.println(s.show());
+		Scanner sc = new Scanner(System.in);
 		do {
-			Scanner sc = new Scanner(System.in);
 			int choice = sc.nextInt();
 			if (s.playerOptions.size() > choice) {
 				if (s.playerOptions.get(choice).getResponse(p) instanceof SpeechItem) {
@@ -74,6 +74,7 @@ public class DialogTree {
 				}
 			}
 		} while (!s.playerOptions.isEmpty());
+		sc.close();
 	}
 	/**How DM moves down the tree to add stuff
 	 * 
