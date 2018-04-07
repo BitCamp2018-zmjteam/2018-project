@@ -41,14 +41,17 @@ public class DialogTree {
 	public boolean canStart(Player p) {
 		return p.hasFlag(flag) ^ outrage;
 	}
+	public DMIterator getIterator() {
+		return new DMIterator();
+	}
 	/**
 	 * Start the conversation between the host NPC and the palyer p
 	 * @author Morgan
 	 *
 	 */
-	public void converse(Player p) {
+	public void converse(Player p) { //TODO - add more conversation interaction
 		converser = p;
-		base.show();
+		System.out.println(base.show());
 	}
 	/**How DM moves down the tree to add stuff
 	 * 
@@ -138,6 +141,7 @@ public class DialogTree {
 		private String base; //What the NPC says
 		private ArrayList<PlayerSpeechItem> playerOptions; //What the player can say in response
 		public SpeechItem(String base) {
+			playerOptions = new ArrayList<>();
 			this.base=base;
 		}
 		public void changeBaseDialog(String base) {
@@ -237,7 +241,7 @@ public class DialogTree {
 			return p.hasFlag(flag);
 		}
 		public String toString() {
-			return "["+flag+"] "+base;
+			return "["+flag+"] "+playerSays;
 		}
 	}
 }

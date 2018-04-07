@@ -18,5 +18,7 @@ public class NPC extends Creature {
 	public void setDialogTree(DialogTree d) {
 		this.d = d;
 	}
-
+	public void converse(Player p) {
+		d.converse(p);
+	}
 }
