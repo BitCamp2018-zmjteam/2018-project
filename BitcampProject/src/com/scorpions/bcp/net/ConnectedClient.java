@@ -1,6 +1,5 @@
 package com.scorpions.bcp.net;
 
-import java.awt.Point;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -83,45 +82,42 @@ public class ConnectedClient extends Thread {
 			} else {
 				System.out.println("REQUEST ALIVE");
 				if(received instanceof Request) {
-					System.out.println("REAL REQUEST");
-					Request r = (Request)received;
-					System.out.println("TYPE: " + r.getType());
-					switch(r.getType()) {
-					case PLAYER_INTERACT:
-						break;
-					case PLAYER_JOIN:
-						Map<String,Object> x = new HashMap<String,Object>();
-						x.put("location", new Point(4,5));
-						try {
-							this.send(new Response(ResponseType.PLAYER_ACCEPT,x));
-						} catch (IOException e) {
-							e.printStackTrace();
-						}
-						break;
-					case PLAYER_LEAVE:
-						System.out.println("Client dc'd");
-						if (!clientSocket.isClosed()) {
-							try {
-								clientSocket.close();
-							} catch (IOException e1) {
-								System.out.println("Failed to close socket");
-								e1.printStackTrace();
-							}
-						}
-						break;
-					case PLAYER_MOVE:
-						break;
-					case WORLD_INFO:
-						break;
-					default:
-						break;
-					
-					}
+					handleRequest((Request)received);
+				} else {
+					end("Invalid request");
 				}
 			}
 		}
 	}
 
+	
+	protected void handleRequest(Request r) {
+		switch(r.getType()) {
+		case PLAYER_INTERACT:
+			break;
+		case PLAYER_JOIN:
+			break;
+		case PLAYER_LEAVE:
+			System.out.println("Client dc'd");
+			if (!clientSocket.isClosed()) {
+				try {
+					clientSocket.close();
+				} catch (IOException e1) {
+					System.out.println("Failed to close socket");
+					e1.printStackTrace();
+				}
+			}
+			break;
+		case PLAYER_MOVE:
+			break;
+		case WORLD_INFO:
+			break;
+		default:
+			break;
+		
+		}
+	}
+	
 	public Socket getSocket() {
 		return this.clientSocket;
 	}
