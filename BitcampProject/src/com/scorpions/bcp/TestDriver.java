@@ -1,10 +1,11 @@
-package com.scorpions.bcp.creature;
+package com.scorpions.bcp;
 
 import java.awt.Color;
 import java.awt.Font;
 
 import javax.swing.UIManager;
 
+import com.scorpions.bcp.gui.DMGUI;
 import com.scorpions.bcp.gui.PlayerCreationGUI;
 import com.scorpions.bcp.gui.PlayerGUI;
 import com.scorpions.bcp.gui.StartupGUI;
@@ -24,7 +25,7 @@ public class TestDriver {
 	}
 	
 	public static void launchDMGUI() {
-		
+		DMGUI dmGUI = new DMGUI();
 	}
 	
 	public static void setGUI() {
@@ -50,7 +51,6 @@ public class TestDriver {
 		UIManager.put("Menu.font", myFont);
 		UIManager.put("TextField.background", myWhite);
 		UIManager.put("TextField.foreground", Color.BLACK);
-		UIManager.put("TextField.font", myFont);
 		UIManager.put("TextArea.background", myBrown);
 		UIManager.put("TextArea.foreground", myWhite);
 		UIManager.put("TextArea.font", myFont2);

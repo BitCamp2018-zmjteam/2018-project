@@ -7,7 +7,8 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import com.scorpions.bcp.creature.TestDriver;
+
+import com.scorpions.bcp.TestDriver;
 
 public class StartupGUI extends JFrame implements ActionListener {
 	private static final long serialVersionUID = 367899772406520597L;
