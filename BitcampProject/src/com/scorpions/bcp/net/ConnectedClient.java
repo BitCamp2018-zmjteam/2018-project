@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.TimeoutException;
 
 public class ConnectedClient extends Thread {
@@ -81,6 +83,22 @@ public class ConnectedClient extends Thread {
 
 	private Object receive() throws ClassNotFoundException, IOException, TimeoutException {
 		return clientIn.readObject();
+	}
+	
+	public void end(String reason) {
+		Map<String,Object> kickMap = new HashMap<String,Object>();
+		kickMap.put("reason", reason);
+		try {
+			send(new Response(ResponseType.PLAYER_KICK, kickMap));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		try {
+			clientSocket.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		gameServer.disconnected(this);
 	}
 	
 	public void send(Response s) throws IOException {
