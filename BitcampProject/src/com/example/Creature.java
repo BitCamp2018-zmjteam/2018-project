@@ -3,6 +3,16 @@ package com.example;
 public class Creature {
 	private int strength, dexterity, constitution, intelligence, wisdom, charisma;
 	
+	public Creature(int strength, int dexterity, int constitution,
+			int intelligence, int wisdom, int charisma) {
+		this.strength=strength;
+		this.dexterity=dexterity;
+		this.constitution=constitution;
+		this.intelligence=intelligence;
+		this.wisdom=wisdom;
+		this.charisma=charisma;
+	}
+	
 	public int getStr() {
 		return strength;
 	}
