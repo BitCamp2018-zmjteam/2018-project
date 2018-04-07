@@ -9,6 +9,7 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 import com.scorpions.bcp.creature.Player;
 import com.scorpions.bcp.gui.PlayerGUI;
@@ -93,8 +94,8 @@ public class GameClientPlayer {
 		case PLAYER_ACCEPT:
 			System.out.println(((Point) r.getValues().get("location")).toString());
 		case GAME_INFO:
-			Map<String,Player> playerMap = (Map<String,Player>)r.getValues().get("playerMap");
-			String selfID = (String)r.getValues().get("selfId");
+			Map<UUID,Player> playerMap = (Map<UUID,Player>)r.getValues().get("playerMap");
+			UUID selfID = (UUID)r.getValues().get("selfId");
 			break;
 		case INTERACT_RESPONSE:
 			boolean success = (Boolean)r.getValues().get("success");
@@ -105,7 +106,7 @@ public class GameClientPlayer {
 		case PLAYER_KICK:
 			break;
 		case PLAYER_MOVE:
-			String playerID = (String)r.getValues().get("playerId");
+			UUID playerID = (UUID)r.getValues().get("playerId");
 			Point location = (Point)r.getValues().get("location");
 			break;
 		case WORLD_INFO:
