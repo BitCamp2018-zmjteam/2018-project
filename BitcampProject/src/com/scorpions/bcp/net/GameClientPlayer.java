@@ -1,7 +1,6 @@
 package com.scorpions.bcp.net;
 
 import java.awt.Point;
-import java.io.EOFException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -55,6 +54,12 @@ public class GameClientPlayer {
 				}
 			};
 			socketListener.start();
+			Runtime.getRuntime().addShutdownHook(new Thread() {
+				@Override
+				public void run() {
+					sendRequest(new Request(RequestType.PLAYER_LEAVE, new HashMap<String,Object>()));
+				}
+			});
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
 		} catch (IOException e) {

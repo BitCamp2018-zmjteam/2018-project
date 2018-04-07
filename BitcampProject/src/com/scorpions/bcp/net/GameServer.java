@@ -8,7 +8,7 @@ import java.util.Set;
 
 import com.scorpions.bcp.Game;
 
-public class GameServer {
+public class GameServer extends Thread {
 
 	private final Game game;
 	private ServerSocket socket;
@@ -20,7 +20,8 @@ public class GameServer {
 		this.running = false;
 	}
 
-	public void start() {
+	@Override
+	public void run() {
 		try {
 			this.socket = new ServerSocket(3252);
 			GameServer s = this;

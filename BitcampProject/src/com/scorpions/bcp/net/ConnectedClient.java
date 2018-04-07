@@ -99,6 +99,15 @@ public class ConnectedClient extends Thread {
 						}
 						break;
 					case PLAYER_LEAVE:
+						System.out.println("Client dc'd");
+						if (!clientSocket.isClosed()) {
+							try {
+								clientSocket.close();
+							} catch (IOException e1) {
+								System.out.println("Failed to close socket");
+								e1.printStackTrace();
+							}
+						}
 						break;
 					case PLAYER_MOVE:
 						break;
