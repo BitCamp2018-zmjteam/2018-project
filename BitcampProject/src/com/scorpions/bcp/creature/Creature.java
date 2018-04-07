@@ -4,8 +4,9 @@ import java.util.ArrayList;
 import java.util.TreeMap;
 
 import com.scorpions.bcp.items.Item;
+import com.scorpions.bcp.world.Interactable;
 
-public class Creature {
+public abstract class Creature implements Interactable {
 	private int gp;
 	private int creatureSize;
 	private int prof;
