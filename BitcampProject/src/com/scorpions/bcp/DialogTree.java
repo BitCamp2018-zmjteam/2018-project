@@ -13,6 +13,7 @@ import com.scorpions.bcp.event.Event;
  *
  */
 public class DialogTree {
+	private static final long serialVersionUID = 6551357719201392186L;
 	//base is the starting line "i.e. How can I help you today?"
 	private SpeechItem base;
 	private String flag="";
@@ -58,13 +59,14 @@ public class DialogTree {
 		converser = p;
 		
 		SpeechItem s = base;
+		System.out.println(s.show());
 		do {
 			Scanner sc = new Scanner(System.in);
-			System.out.println(s.show());
 			int choice = sc.nextInt();
-			if (s.playerOptions.size() >= choice) {
+			if (s.playerOptions.size() > choice) {
 				if (s.playerOptions.get(choice).getResponse(p) instanceof SpeechItem) {
 					s = (SpeechItem)(s.playerOptions.get(choice).getResponse(p));
+					System.out.println(s.show());
 				} else {
 					System.out.println(s.playerOptions.get(choice));
 					wholeGame.queueEvent(s.playerOptions.get(choice).getResponse(p));
@@ -80,6 +82,7 @@ public class DialogTree {
 	 *
 	 */
 	public class DMIterator {
+		private static final long serialVersionUID = 6551357719201392186L;
 		//TODO - Add options for DM to add/change/remove dialog options
 		//TODO - Possibly - Add way for DM to interfere with running conversation
 		private SpeechItem sp;
@@ -114,8 +117,8 @@ public class DialogTree {
 			sp.addFlaggedSpeechOption(option, npcLine, npcResponse, flag);
 			return true;
 		}
-		public void addSpeechCheckOption(String option, HashMap<Integer, Event[]> outcomes, String skill) {
-			sp.addSpeechCheckOption(option, outcomes, skill);
+		public void addSpeechCheckOption(String option, HashMap<Integer, Event> h, String skill) {
+			sp.addSpeechCheckOption(option, h, skill);
 		}
 		public boolean removeSpeechOption(int index) {
 			sp.removePlayerOption(index);
@@ -170,7 +173,14 @@ public class DialogTree {
 		return new SpeechItem(s);
 	}
 	
+	public ExtendedSpeechItem makeExtendedSpeechItem(Event[] e) {
+		return new ExtendedSpeechItem("",e);
+	}
 	private class SpeechItem extends Event {
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 6551357719201392186L;
 		private String base; //What the NPC says
 		protected ArrayList<PlayerSpeechItem> playerOptions; //What the player can say in response
 		public SpeechItem(String base) {
@@ -210,8 +220,8 @@ public class DialogTree {
 		public void addExtendedSpeechOption(String playerOption,String npcResponse, Event[] outcome) {
 			playerOptions.add(new PlayerSpeechItem(playerOption, new ExtendedSpeechItem(npcResponse,outcome)));
 		}
-		public void addSpeechCheckOption(String option, HashMap<Integer, Event[]> outcomes, String skill) {
-			playerOptions.add(new PlayerCheckSpeechItem(option,outcomes,skill));
+		public void addSpeechCheckOption(String option, HashMap<Integer, Event> h, String skill) {
+			playerOptions.add(new PlayerCheckSpeechItem(option,h,skill));
 		}
 		//Show the dialog tree, allow selection
 		protected String show() {
@@ -236,18 +246,20 @@ public class DialogTree {
 	 *
 	 */
 	private class ExtendedSpeechItem extends SpeechItem {
+		private static final long serialVersionUID = 3550003039970461100L;
 		Event[] trigger; //Events triggered on start of esi
 		public ExtendedSpeechItem(String base, Event[] outcome) {
 			super(base);
 			this.trigger = outcome;
 		}
 		protected String show() {
-			for (Event e : trigger)
+			for (Event e : trigger) {
 				if (e instanceof SpeechItem) {
 					System.out.println(((SpeechItem)e).show());
 				} else {
 					wholeGame.queueEvent(e);
 				}
+			}
 			return super.show();
 		}
 	}
@@ -257,6 +269,7 @@ public class DialogTree {
 	 *
 	 */
 	private class PlayerSpeechItem {
+		private static final long serialVersionUID = 6551357719201392186L;
 		String playerSays; //What the player said
 		Event npcResponse; //NPC's response
 		public PlayerSpeechItem(String player, Event npc) {
@@ -288,6 +301,7 @@ public class DialogTree {
 	 *
 	 */
 	private class FlaggedSpeechItem extends PlayerSpeechItem {
+		private static final long serialVersionUID = 3550003039970461100L;
 		String flag; //For future: multiple flags in boolean combos
 		public FlaggedSpeechItem(String base, Event npc, String flag) {
 			super(base,npc);
@@ -307,18 +321,19 @@ public class DialogTree {
 	 *
 	 */
 	private class PlayerCheckSpeechItem extends PlayerSpeechItem {
-		HashMap<Integer,Event[]> outcomes;
+		private static final long serialVersionUID = 3550003039970461100L;
+		HashMap<Integer,Event> outcomes;
 		String skill;
-		public PlayerCheckSpeechItem(String option, HashMap<Integer, Event[]> outcomes, String skill) {
-			super(option,outcomes.get(20)[0]);
-			this.outcomes = outcomes;
+		public PlayerCheckSpeechItem(String option, HashMap<Integer, Event> h, String skill) {
+			super(option,h.get(20));
+			this.outcomes = h;
 			this.skill = skill;
 		}
 		public void addNPCResponse(SpeechItem npc) {
 		}
 		public Event getResponse(Player p) {
 			int skillMod = p.getSkillMod(skill);
-			return new ExtendedSpeechItem("",outcomes.get(Math.random()*20+skillMod));
+			return outcomes.get(Math.random()*20+skillMod);
 		}
 	}
 }
