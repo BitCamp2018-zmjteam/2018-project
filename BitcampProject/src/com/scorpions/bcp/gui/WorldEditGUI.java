@@ -114,7 +114,7 @@ public class WorldEditGUI extends JFrame implements ActionListener {
 		saveAsStruct.setLocation(10, 310);
 		saveAsStruct.setSize(200, 40);
 		loadWorld.setLocation(10, 360);
-		loadWorld.setSize(150, 40);
+		loadWorld.setSize(200, 40);
 		exit.setLocation(10, 410);
 		exit.setSize(150, 40);
 		worldPanel.setSize(500, 500);
