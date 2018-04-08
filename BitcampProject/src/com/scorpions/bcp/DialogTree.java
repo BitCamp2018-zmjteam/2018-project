@@ -1,7 +1,12 @@
 package com.scorpions.bcp;
 
+import java.io.BufferedReader;
 import java.io.InputStream;
+import java.io.PipedReader;
+import java.io.PipedWriter;
+import java.io.Reader;
 import java.io.Serializable;
+import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Scanner;
@@ -25,7 +30,8 @@ public class DialogTree implements Serializable{
 	private Player converser;
 	private Game wholeGame;
 	private UUID npcUUID;
-	
+	private Reader textOrigin;
+	private PipedWriter convInput;
 	public DialogTree(String base,Game wholeGame) {
 		this.base=new SpeechItem(base);
 		this.wholeGame = wholeGame;
@@ -62,12 +68,13 @@ public class DialogTree implements Serializable{
 	 * @author Morgan
 	 *
 	 */
-	public void converse(Player p) { //TODO - add more conversation interaction
+	public void converse(Player p) {
 		converser = p;
-		InputStream origin = System.in; //Replace with the player's inputs
-		SpeechItem s = base;
+		//Replace with the player's inputs
+ 		SpeechItem s = base;
 		wholeGame.queueEvent(new PlayerMessageEvent(converser,s.show(),npcUUID));
-		Scanner sc = new Scanner(origin);
+		PipedReader pr = new PipedReader();
+		BufferedReader sc = new BufferedReader(pr);
 		do {
 			int choice = sc.nextInt();
 			if (s.playerOptions.size() > choice) {

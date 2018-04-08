@@ -1,5 +1,8 @@
 package com.scorpions.bcp.creature;
 
+import java.io.InputStream;
+import java.io.StringBufferInputStream;
+
 import com.scorpions.bcp.DialogTree;
 import com.scorpions.bcp.world.Interactable;
 /**
