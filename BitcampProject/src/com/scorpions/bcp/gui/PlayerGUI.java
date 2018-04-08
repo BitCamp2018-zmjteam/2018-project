@@ -134,11 +134,10 @@ public class PlayerGUI extends JFrame implements KeyListener {
 			if (cmds.length > 2) {
 				updateLog("Too many arguments");
 				return;
-			}
-			else {
+			} else {
 				Map<String, Object> targetMap = new HashMap<String, Object>();
 				targetMap.put("target", cmds[1]);
-				client.sendRequest(new Request(RequestType.PLAYER_MOVE, targetMap));
+				client.sendRequest(new Request(RequestType.PLAYER_INTERACT, targetMap));
 			}
 		} else if(cmd.equals("look")) {
 				if(cmds.length > 1) {
@@ -147,7 +146,7 @@ public class PlayerGUI extends JFrame implements KeyListener {
 				}
 				Map<String, Object> reqMap = new HashMap<String, Object>();
 				reqMap.put("position", client.getPlayer().getPos());
-				client.sendRequest(new Request(RequestType.PLAYER_MOVE, reqMap));
+				client.sendRequest(new Request(RequestType.WORLD_INFO, reqMap));
 		} else {
 			updateLog("Invalid input");
 			} 
