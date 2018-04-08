@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+import com.scorpions.bcp.creature.Creature;
 import com.scorpions.bcp.creature.Player;
 import com.scorpions.bcp.gui.PlayerGUI;
 import com.scorpions.bcp.world.Tile;
@@ -101,8 +102,8 @@ public class GameClientPlayer {
 		case GAME_INFO:
 			Map<String,Player> playerMap = (Map<String,Player>)r.getValues().get("playerMap");
 			System.out.println(r.getValues());
-			UUID selfID = UUID.fromString((String)r.getValues().get("selfId"));
-			p.setUUID(selfID);
+			String selfID = ((String)r.getValues().get("selfId"));
+			assert(selfID.equals(p.getUUID().toString()));
 			gui.updateLog("You have UUID " + selfID);
 			gui.updateLog("Also in the world are:");
 			for (String u : playerMap.keySet()) {
@@ -148,6 +149,10 @@ public class GameClientPlayer {
 			p.setX((int) offset.getX());
 			p.setY((int) offset.getY());
 			break;
+		case PLAYER_MESSAGE:
+			String sender = Creature.getCreature((String)r.getValues().get("uuid")).getName();
+			String message = (String)r.getValues().get("message");
+			gui.updateLog("("+sender+")\n"+message);
 		default:
 			break;
 		}
