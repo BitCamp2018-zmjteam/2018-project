@@ -100,8 +100,16 @@ public class PlayerGUI extends JFrame implements KeyListener {
 	}
 
 	public void parseInput(String input) {
+		if(client.getPlayer().getTarget() != null) {
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("target", client.getPlayer().getTarget().getUUID().toString());
+			map.put("message", input);
+			Request req = new Request(RequestType.MESSAGE_SENT, map);
+			client.sendRequest(req);
+		}
+		else {
 		String[] cmds = input.split(" ");
-		if (cmds.length <= 1) {
+		if (cmds.length < 1) {
 			updateLog("Invalid input");
 			return;
 		}
@@ -142,12 +150,13 @@ public class PlayerGUI extends JFrame implements KeyListener {
 				client.sendRequest(new Request(RequestType.PLAYER_MOVE, reqMap));
 		} else {
 			updateLog("Invalid input");
+			} 
 		}
 	}
 
 	public void updateLog(String line) {
 		if (log.getText().trim().equals("")) {
-			log.setText("> " + line);
+			log.setText(">" + line);
 		} else {
 			log.setText(log.getText() + " \n> " + line);
 		}

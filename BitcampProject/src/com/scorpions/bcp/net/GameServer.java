@@ -13,6 +13,7 @@ import com.scorpions.bcp.Game;
 import com.scorpions.bcp.creature.Player;
 import com.scorpions.bcp.event.PlayerMoveEvent;
 import com.scorpions.bcp.event.PostEventTask;
+import com.scorpions.bcp.event.interact.PlayerSentMessageEvent;
 import com.scorpions.bcp.gui.DMGUI;
 import com.scorpions.bcp.world.Tile;
 import com.scorpions.bcp.world.TileDirection;
@@ -28,6 +29,7 @@ public class GameServer extends Thread {
 	
 	public GameServer(Game g) {
 		this.game = g;
+		g.registerListener(new GameServerListener(this));
 		this.running = false;
 		this.players = new HashMap<String,Player>();
 	}
@@ -84,12 +86,54 @@ public class GameServer extends Thread {
 		
 	}
 	
+	public Response worldInfo(ConnectedClient c) {
+		Player p = c.getPlayer();
+		int minX, minY, maxX, maxY;
+		int lookDistance = 12;
+		int lookRadius = lookDistance/2;
+		minX = p.getPos().x-lookRadius;
+		minY = p.getPos().y-lookRadius;
+		maxX = p.getPos().x+lookRadius;
+		maxY = p.getPos().y+lookRadius;
+		if(minX <= 0) {
+			minX = 0;
+		}
+		if(maxX > game.getWorld().getWorldWidth()) {
+			maxX=game.getWorld().getWorldWidth();
+		}
+		if(minY <= 0) {
+			minY = 0;
+		}
+		if(maxY > game.getWorld().getWorldHeight()) {
+			maxY = game.getWorld().getWorldHeight();
+		}
+		int xrange = maxX-minX;
+		int yrange = maxY-minY;
+		Tile[][] areaTiles = new Tile[xrange][yrange];
+		for(int i = 0; i < xrange; i++) {
+			for(int k = 0; k < yrange; k++) {
+				areaTiles[i][k] = game.getWorld().getTile(i+minX, k+minY);
+			}
+		}
+		Map<String,Object> returnMap = new HashMap<String,Object>();
+		returnMap.put("area", areaTiles);
+		Response r = new Response(ResponseType.WORLD_INFO, returnMap);
+		return r;
+	}
+	
 	public Map<String,Object> infoRequest(Player p) {
 		System.out.println(p);
 		Map<String,Object> toReturn = new HashMap<String,Object>();
 		toReturn.put("playerMap", players);
 		toReturn.put("selfId", p.getUUID().toString());
 		return toReturn;
+	}
+	
+	public ConnectedClient getClient(Player p) {
+		for(ConnectedClient c : clients) {
+			if(c.getPlayer().equals(p)) return c;
+		}
+		return null;
 	}
 	
 	public Response playerJoined(ConnectedClient c, Player p) {
@@ -168,6 +212,11 @@ public class GameServer extends Thread {
 		}
 	}
 	
+	public void playerSentMessage(String targetId, String msg, Player sender) {
+		PlayerSentMessageEvent event = new PlayerSentMessageEvent(targetId, msg, sender);
+		game.queueEvent(event);
+  }
+  
 	public void playerInteract(Player interactor, String name) {
 		worldInfo();
 	}
@@ -181,6 +230,10 @@ public class GameServer extends Thread {
 		}
 	}
 	
+	public Set<ConnectedClient> getClients() {
+		return this.clients;
+	}
+	
 	protected void tick() {
 		game.eventCycle();
 	}
@@ -191,6 +244,7 @@ public class GameServer extends Thread {
 
 	public void disconnected(ConnectedClient c) {
 		this.clients.remove(c);
+		this.players.remove(c.getPlayer().getUUID().toString());
 		System.out.println("Removed " + c);
 	}
 	

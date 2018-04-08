@@ -6,10 +6,10 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 
 import com.scorpions.bcp.creature.Creature;
 import com.scorpions.bcp.creature.Player;
@@ -55,8 +55,11 @@ public class GameClientPlayer {
 						} catch (ClassNotFoundException e) {
 							e.printStackTrace();
 						} catch (IOException e) {
-							if (!selfSocket.isClosed()) {
+							if (!(e instanceof SocketException)) {
 								e.printStackTrace();
+							} else {
+								connected = false;
+								System.exit(0);
 							}
 						}
 					}
@@ -144,16 +147,14 @@ public class GameClientPlayer {
 			break;
 		case WORLD_INFO:
 			Tile[][] area = ((Tile[][])r.getValues().get("area"));
-			Point offset = (Point)r.getValues().get("offset");
 			String update = "";
 			for (Tile[] row : area) {
 				for (Tile t : row) {
 					update += t.getCreature()==null?t.isNavigable()?" ":"#":"@";
 				}
-				update += "\n";
+				update += "\n> ";
 			}
 			update += "# is a barrier, @ is a creature\n";
-			update += "You are at ("+offset.getX()+","+offset.getY()+")";
 			gui.updateLog(update);
 			break;
 		case PLAYER_MESSAGE:

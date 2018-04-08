@@ -13,7 +13,7 @@ import java.util.List;
 
 import com.scorpions.bcp.creature.NPC;
 
-public class World implements Serializable {
+public class World implements Serializable, Structure {
 
 	/**
 	 * 
@@ -21,10 +21,10 @@ public class World implements Serializable {
 	private static final long serialVersionUID = -4342858946362283595L;
 	private Tile[][] worldTiles;
 	private List<Point> spawnPoints;
-	
+	private final String name;
 	public static final String FILE_SUFFIX=".dtw";
 	
-	public World(int width, int height) {
+	public World(int width, int height, String worldName) {
 		worldTiles = new Tile[width][height];
 		spawnPoints = new LinkedList<Point>();
 		for(int i = 0; i < width; i++) {
@@ -32,6 +32,7 @@ public class World implements Serializable {
 				worldTiles[i][k] = new Tile(true);
 			}
 		}
+		this.name = worldName;
 	}
 	
 	public void addSpawnPoint(Point p) {
@@ -173,7 +174,7 @@ public class World implements Serializable {
 	}
 	
 	public static File createDefaultWorld() {
-		World w = new World(10, 5);
+		World w = new World(10, 5, "default");
 		w.addStructure(new MerchantStructure(new NPC(0, 0, 0, 0, 0, 0, null, null)), 0, 0);
 		w.addSpawnPoint(new Point(6,2));
 		File exportFile = new File(System.getProperty("user.home") + File.separator + "default_world" + World.FILE_SUFFIX);
@@ -181,6 +182,16 @@ public class World implements Serializable {
 			return exportFile;
 		}
 		return null;
+	}
+
+	@Override
+	public Tile[][] getTiles() {
+		return worldTiles;
+	}
+
+	@Override
+	public String getName() {
+		return "WORLD_ " + name;
 	}
 	
 }

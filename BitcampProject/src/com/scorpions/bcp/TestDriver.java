@@ -52,8 +52,8 @@ public class TestDriver {
 	}
 
 	public static void setGUI() {
-		Font myFont = new Font("Blackadder ITC", Font.PLAIN, 20);
-		Font myFont2 = new Font("Blackadder ITC", Font.PLAIN, 30);
+		Font myFont = new Font("Lucida Console", Font.PLAIN, 15);
+		Font myFont2 = new Font("Lucida Console", Font.PLAIN, 17);
 		Color myBrown = new Color(147, 88, 28);
 		Color myWhite = new Color(242, 240, 215);
 

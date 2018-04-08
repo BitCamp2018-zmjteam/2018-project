@@ -24,7 +24,7 @@ public enum RequestType implements Serializable {
 	 *     - GAME_INFO
 	 * WORLD_INFO:
 	 *   request map:
-	 *     - x,y pair
+	 *     - x,y pair -- nevermind
 	 *     - OPTIONAL -- distance (default 12)
 	 *   response type:
 	 *     - WORLD_INFO

@@ -87,4 +87,9 @@ public class MerchantStructure implements Structure, Serializable {
 		return structureTiles;
 	}
 	
+	@Override
+	public String getName() {
+		return "MERCHANT_STRUCTURE";
+	}
+	
 }

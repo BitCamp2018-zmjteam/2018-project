@@ -33,6 +33,10 @@ public class ConnectedClient extends Thread {
 		player = null;
 	}
 
+	public Player getPlayer() {
+		return this.player;
+	}
+	
 	@Override
 	public void run() {
 		System.out.println("Thread start");
@@ -141,6 +145,12 @@ public class ConnectedClient extends Thread {
 			gameServer.playerMove(moveMap);
 			break;
 		case WORLD_INFO:
+			Response res = gameServer.worldInfo(this);
+			try {
+				send(res);
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
 			break;
 		case GAME_INFO:
 			Map<String,Object> map = gameServer.infoRequest(player);
@@ -152,10 +162,10 @@ public class ConnectedClient extends Thread {
 			}
 			break;
 		case MESSAGE_SENT:
-			String target = (String)r.values.get("target");
-			String message = (String)r.values.get("message");
-			Player origin = player;
-			gameServer.getGame().queueEvent(new PlayerSentMessageEvent(UUID.fromString(target),message,origin));
+			String targetId = (String)r.getValues().get("target");
+			String msg = (String)r.getValues().get("message");
+			gameServer.playerSentMessage(targetId, msg, player);
+			break;
 		default:
 			break;
 		
