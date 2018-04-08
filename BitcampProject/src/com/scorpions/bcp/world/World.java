@@ -1,5 +1,6 @@
 package com.scorpions.bcp.world;
 
+import java.io.File;
 import java.io.Serializable;
 
 public class World implements Serializable {
@@ -19,6 +20,11 @@ public class World implements Serializable {
 		return worldTiles[x][y];
 	}
 	
+	public Tile setTile(int x, int y, Tile t) {
+		Tile c = worldTiles[x][y];
+		worldTiles[x][y] = t;
+		return c;
+	}
 	public int getWorldWidth() {
 		return this.worldTiles.length;
 	}
@@ -87,5 +93,14 @@ public class World implements Serializable {
 			}
 		}
 		worldTiles = newTiles;
+	}
+	
+	
+	public static World fromFile(File f) {
+		return null;
+	}
+	
+	public boolean exportWorld(File f) {
+		return true;
 	}
 }

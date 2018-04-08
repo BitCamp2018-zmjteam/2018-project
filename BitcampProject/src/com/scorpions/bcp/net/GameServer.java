@@ -11,6 +11,7 @@ import java.util.UUID;
 
 import com.scorpions.bcp.Game;
 import com.scorpions.bcp.creature.Player;
+import com.scorpions.bcp.world.TileDirection;
 
 public class GameServer extends Thread {
 
@@ -18,12 +19,12 @@ public class GameServer extends Thread {
 	private ServerSocket socket;
 	private boolean running;
 	private Set<ConnectedClient> clients;
-	private Map<Player, UUID> players;
+	private Map<String, Player> players;
 
 	public GameServer(Game g) {
 		this.game = g;
 		this.running = false;
-		this.players = new HashMap<Player,UUID>();
+		this.players = new HashMap<String,Player>();
 	}
 
 	@Override
@@ -81,22 +82,51 @@ public class GameServer extends Thread {
 	public Map<String,Object> infoRequest(Player p) {
 		Map<String,Object> toReturn = new HashMap<String,Object>();
 		toReturn.put("playerMap", players);
-		toReturn.put("selfId", getPlayerUUID(p));
+		toReturn.put("selfId", p.getUUID());
 		return toReturn;
 	}
 	
 	public Player playerJoined(ConnectedClient c, Player p) {
 		UUID uuid = UUID.randomUUID();
-		this.players.put(p, uuid);
+		p.setUUID(uuid);
+		this.players.put(uuid.toString(), p);
 		return p;
 	}
 	
-	public UUID getPlayerUUID(Player p) {
-		return this.players.get(p);
+	
+	public Player getPlayer(String uuid) {
+		return this.players.get(uuid);
 	}
 	
 	public void queueStop() {
 		this.running = false;
+	}
+	
+	public Response playerMove(Map<String,Object> map) {
+		TileDirection td = (TileDirection)map.get("direction");
+		String id = (String)map.get("playerid");
+		Player p = getPlayer(id);
+		int newX = p.getPos().x;
+		int newY = p.getPos().y;
+		
+		switch(td) {
+		case BOTTOM:
+			//y-1
+			
+			break;
+		case LEFT:
+			//x-1
+			break;
+		case RIGHT:
+			//x+1
+			break;
+		case TOP:
+			//y+1
+			break;
+		default:
+			break;
+		}
+		return null;
 	}
 	
 	public void forceStop() {

@@ -8,8 +8,8 @@ import com.scorpions.bcp.world.Interactable;
 public class Player extends Creature {
 	private ArrayList<String> flags;
 	private String race, role;
-	private UUID uuid;
-
+	private UUID id;
+  
 	public Player(int strength, int dexterity, int constitution, int intelligence, int wisdom, int charisma, String name, String race, String role) {
 		super(strength, dexterity, constitution, intelligence, wisdom, charisma, name);
 		flags = new ArrayList<>();
@@ -31,10 +31,10 @@ public class Player extends Creature {
 		// TODO Auto-generated method stub
 		
 	}
-	public void setUUID(UUID uuid) {
-		this.uuid = uuid;
-	}
 	public UUID getUUID() {
-		return uuid;
+		return id;
+	}
+	public void setUUID(UUID id) {
+		this.id = id;
 	}
 }
