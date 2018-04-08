@@ -41,7 +41,7 @@ public class DMGUI extends JFrame implements ActionListener {
 	private int width, height;
 	private GameServer server;
 	private String address;
-	private JButton start, loadWorld, saveWorld, addItem, newWorld;
+	private JButton start, loadWorld, addItem, newWorld;
 	private JScrollPane npcPane, itemsPane, playersPane;
 	private JList<String> npcList, itemsList; 
 	private JList<Player> playersList;
@@ -55,9 +55,12 @@ public class DMGUI extends JFrame implements ActionListener {
 	private TreeMap<String, NPC> npcMap;
 	private World worldEdit;
 	private Tile tileEdit;
+	private WorldEditGUI wEG;
 	public DMGUI(GameServer server) {
 		super("DM Screen");
 
+		wEG = new WorldEditGUI(this);
+		
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		try {
 			address = InetAddress.getLocalHost().getHostAddress();
@@ -85,7 +88,6 @@ public class DMGUI extends JFrame implements ActionListener {
 		ipAddr = new JLabel("IP: " + address);
 		start = new JButton("Start server");
 		loadWorld = new JButton("Load world");
-		saveWorld = new JButton("Save world");
 		addItem = new JButton("Add Item");
 		newWorld = new JButton("New World");
 		npcPane = new JScrollPane();
@@ -126,8 +128,6 @@ public class DMGUI extends JFrame implements ActionListener {
 		start.addActionListener(this);
 		loadWorld.setActionCommand("Load");
 		loadWorld.addActionListener(this);
-		saveWorld.setActionCommand("Save");
-		saveWorld.addActionListener(this);
 		addItem.setActionCommand("Add Item");
 		addItem.addActionListener(this);
 		newWorld.setActionCommand("New World");
@@ -232,13 +232,10 @@ public class DMGUI extends JFrame implements ActionListener {
 		playerCha.setSize(200, 40);
 		
 		world.add(loadWorld);
-		world.add(saveWorld);
 		world.add(newWorld);
 		loadWorld.setLocation(415, 500);
 		loadWorld.setSize(150, 40);
-		saveWorld.setLocation(595, 500);
-		saveWorld.setSize(150, 40);
-		newWorld.setLocation(10, 10);
+		newWorld.setLocation(595, 500);
 		newWorld.setSize(150, 40);
 		
 		panel.addTab("Main", main);
@@ -259,7 +256,7 @@ public class DMGUI extends JFrame implements ActionListener {
 		if (event.getActionCommand().equals("Start")) {
 			start.setVisible(false);
 			loadWorld.setVisible(false);
-			saveWorld.setVisible(false);
+			newWorld.setVisible(false);
 			server.start();
 		} else if (event.getActionCommand().equals("Load")) {
 			File f;
@@ -271,9 +268,6 @@ public class DMGUI extends JFrame implements ActionListener {
 				f = fc.getSelectedFile();
 				World.fromFile(f);
 			}
-		} else if (event.getActionCommand().equals("Save")) {
-			
-			
 		}
 		else if(event.getActionCommand().equals("Add Item")) {
 			addItem();
@@ -289,7 +283,7 @@ public class DMGUI extends JFrame implements ActionListener {
 							JOptionPane.QUESTION_MESSAGE));
 				}
 				catch(NumberFormatException e) {
-					e.printStackTrace();
+					
 				}
 			}
 			while(worldHeight <= 0) {
@@ -298,7 +292,6 @@ public class DMGUI extends JFrame implements ActionListener {
 							JOptionPane.QUESTION_MESSAGE));
 				}
 				catch(NumberFormatException e) {
-					e.printStackTrace();
 				}
 			}
 			while(name.equals("")) {
@@ -306,6 +299,7 @@ public class DMGUI extends JFrame implements ActionListener {
 						JOptionPane.QUESTION_MESSAGE);
 			}
 			worldEdit = new World(worldHeight, worldHeight, name);
+			wEG.load(worldEdit);
 		}
 
 	}
