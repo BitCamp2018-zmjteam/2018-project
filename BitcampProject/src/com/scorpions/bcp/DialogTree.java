@@ -1,5 +1,6 @@
 package com.scorpions.bcp;
 
+import java.io.InputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -59,10 +60,10 @@ public class DialogTree implements Serializable{
 	 */
 	public void converse(Player p) { //TODO - add more conversation interaction
 		converser = p;
-		
+		InputStream origin = System.in; //Replace with the player's inputs
 		SpeechItem s = base;
 		wholeGame.queueEvent(new PlayerMessageEvent(converser,s.show()));
-		Scanner sc = new Scanner(System.in);
+		Scanner sc = new Scanner(origin);
 		do {
 			int choice = sc.nextInt();
 			if (s.playerOptions.size() > choice) {
