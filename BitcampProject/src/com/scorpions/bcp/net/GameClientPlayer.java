@@ -105,16 +105,16 @@ public class GameClientPlayer {
 			System.out.print("Interaction ");
 			System.out.print(success?"succeeded":"failed");
 			if (result != null)
-				System.out.println(" ("+result.toString()+")");
+				gui.updateLog(" ("+result.toString()+")");
 			else
-				System.out.println("");
+				gui.updateLog("");
 			break;
 		case PLAYER_KICK:
 			break;
 		case PLAYER_MOVE:
 			UUID playerID = (UUID)r.getValues().get("playerId");
 			Point location = (Point)r.getValues().get("location");
-			System.out.println("You are now at ("+location.getX()+","+location.getY()+").");
+			gui.updateLog("You are now at ("+location.getX()+","+location.getY()+").");
 			//Set location of p using location
 			break;
 		case WORLD_INFO:
