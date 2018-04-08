@@ -110,7 +110,9 @@ public class GameClientPlayer {
 			for (String u : playerMap.keySet()) {
 				gui.updateLog(playerMap.get(u) + " with UUID " + u);
 			}
-			//this.sendRequest(new Request(RequestType.WORLD_INFO,smth));
+			HashMap<String,Object> worldInfoMap = new HashMap<>();
+			worldInfoMap.put("location", new Point((int)p.getPos().getX(),(int)p.getPos().getY()));
+			this.sendRequest(new Request(RequestType.WORLD_INFO,worldInfoMap));
 			break;
 		case INTERACT_RESPONSE:
 			boolean success = (Boolean)r.getValues().get("success");
