@@ -203,4 +203,8 @@ public class World implements Serializable, Structure {
 		return name;
 	}
 	
+	@Override
+	public String toString() {
+		return getName();
+	}
 }
