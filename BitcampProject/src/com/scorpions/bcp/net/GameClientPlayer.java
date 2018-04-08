@@ -25,12 +25,14 @@ public class GameClientPlayer {
 	private ObjectInputStream inStream;
 	private ObjectOutputStream outStream;
 	private PlayerGUI gui;
+	private Map<String,Player> players;
 
 	public GameClientPlayer(Player p) {
 		this.p = p;
 		selfSocket = null;
 		connected = false;
 		gui = null;
+		players = new HashMap<String,Player>();
 	}
 
 	public void connect(InetAddress addr, int port) {
@@ -127,12 +129,15 @@ public class GameClientPlayer {
 			break;
 		case PLAYER_MOVE:
 			String playerID = (String)r.getValues().get("playerid");
-			assert(playerID.equals(p.getUUID().toString()));
 			Point location = (Point)r.getValues().get("location");
-			System.out.println(r);
-			gui.updateLog("You are now at ("+location.getX()+","+location.getY()+").");
-			p.setX((int) location.getX());
-			p.setY((int) location.getY());
+			if(this.players.containsKey(playerID)) {
+				Player moved = this.players.get(playerID);
+				moved.setX(location.x);
+				moved.setY(location.y);
+				if(this.p.getUUID().toString().equals(playerID)) {
+					gui.updateLog("You are now at ("+location.getX()+","+location.getY()+").");
+				}
+			}
 			break;
 		case WORLD_INFO:
 			Tile[][] area = ((Tile[][])r.getValues().get("area"));
