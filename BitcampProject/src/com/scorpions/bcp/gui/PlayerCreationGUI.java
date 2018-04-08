@@ -21,8 +21,8 @@ public class PlayerCreationGUI extends JFrame implements ActionListener {
 	private JTextField strField, dexField, conField, intField, wisField, chaField, nameField;
 	private JLabel str, dex, con, intel, wis, cha, name;
 	private JComboBox<String> raceChoice, roleChoice;
-	private String[] races = { "Human", "High-Elf", "Dwarf", "Half-Elf" };
-	private String[] roles = { "Paladin", "Rogue", "Wizard", "Fighter" };
+	private String[] races = { "Human", "High-Elf", "Dwarf", "Half-Elf", "Half-Orc", "Tiefling", "Halfling", "Gnome", "Dragonborn"};
+	private String[] roles = { "Paladin", "Rogue", "Wizard", "Fighter", "Barbarian", "Warlock", "Cleric", "Sorcerer"};
 	private JButton finish;
 	private Player player;
 	public PlayerCreationGUI() {
