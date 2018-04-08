@@ -19,17 +19,20 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-import com.scorpions.bcp.world.Structure;
 import com.scorpions.bcp.creature.NPC;
+import com.scorpions.bcp.world.Structure;
+import com.scorpions.bcp.world.Tile;
 import com.scorpions.bcp.world.World;
 
 public class WorldEditGUI extends JFrame implements ActionListener {
 	private World current;
 	private DMGUI dmGUI;
 	private int width, height;
-	private JPanel panel, worldPanel;
+	private JPanel panel, worldPanel, previewPanel;
 	private JButton flipTile, addNPC, placeStruct, saveAsWorld, saveAsStruct, loadWorld, exit;
 	private JTextField xField, yField;
 	private JLabel xLabel, yLabel;
@@ -49,10 +52,10 @@ public class WorldEditGUI extends JFrame implements ActionListener {
 		structureModel = new DefaultListModel<Structure>();
 		structureList = new JList<Structure>(structureModel);
 		JScrollPane structPane = new JScrollPane(structureList);
-		
-		
+
 		panel = new JPanel();
 		worldPanel = new WPanel();
+		previewPanel = new SPanel();
 		xLabel = new JLabel("X: ");
 		yLabel = new JLabel("Y: ");
 		xField = new JTextField();
@@ -79,6 +82,14 @@ public class WorldEditGUI extends JFrame implements ActionListener {
 		loadWorld.addActionListener(this);
 		exit.setActionCommand("Exit");
 		exit.addActionListener(this);
+		structureList.addListSelectionListener(new ListSelectionListener() {
+
+			@Override
+			public void valueChanged(ListSelectionEvent arg0) {
+				repaint();
+			}
+
+		});
 
 		panel.add(xLabel);
 		panel.add(yLabel);
@@ -93,8 +104,8 @@ public class WorldEditGUI extends JFrame implements ActionListener {
 		panel.add(exit);
 		panel.add(worldPanel);
 		panel.add(structPane);
-		
-		
+		panel.add(previewPanel);
+
 		xLabel.setLocation(10, 10);
 		xLabel.setSize(100, 40);
 		yLabel.setLocation(10, 60);
@@ -121,6 +132,8 @@ public class WorldEditGUI extends JFrame implements ActionListener {
 		worldPanel.setLocation(450, 50);
 		structPane.setSize(200, 300);
 		structPane.setLocation(225, 50);
+		previewPanel.setSize(150, 150);
+		previewPanel.setLocation(250, 375);
 
 		panel.setLayout(null);
 		this.add(panel);
@@ -147,20 +160,20 @@ public class WorldEditGUI extends JFrame implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
-		if (arg0.getActionCommand().equals("Flip") && validCoords(selectedX,selectedY)) {
+		if (arg0.getActionCommand().equals("Flip") && validCoords(selectedX, selectedY)) {
 			current.getTile(selectedX, selectedY).setNavigable(!current.getTile(selectedX, selectedY).isNavigable());
 			repaint();
-		} else if (arg0.getActionCommand().equals("Add NPC") && validCoords(selectedX,selectedY)) {
+		} else if (arg0.getActionCommand().equals("Add NPC") && validCoords(selectedX, selectedY)) {
 			addNPC(selectedX, selectedY);
 			repaint();
 		} else if (arg0.getActionCommand().equals("Place Struct")) {
-			if(structureList.getSelectedValue() != null) {
-				//check if can fit in world at point
+			if (structureList.getSelectedValue() != null) {
+				// check if can fit in world at point
 				int height = structureList.getSelectedValue().getTiles().length;
 				int width = structureList.getSelectedValue().getTiles()[0].length;
-				int endPointX = selectedX+width;
-				int endPointY = selectedY+height;
-				if(endPointX <= current.getWorldWidth() && endPointY <= current.getWorldHeight()) {
+				int endPointX = selectedX + width;
+				int endPointY = selectedY + height;
+				if (endPointX <= current.getWorldWidth() && endPointY <= current.getWorldHeight()) {
 					current.addStructure(structureList.getSelectedValue(), selectedX, selectedY);
 				}
 			}
@@ -168,23 +181,23 @@ public class WorldEditGUI extends JFrame implements ActionListener {
 		} else if (arg0.getActionCommand().equals("Save Struct")) {
 			JFileChooser fc = new JFileChooser();
 			int check = fc.showOpenDialog(new JFrame());
-			
-			if(check == JFileChooser.APPROVE_OPTION) {
+
+			if (check == JFileChooser.APPROVE_OPTION) {
 				File f = fc.getSelectedFile();
 				Structure.exportStructure(current, new File(f.getAbsolutePath() + ".dts"));
 			}
-			
+
 			repaint();
 		} else if (arg0.getActionCommand().equals("Save World")) {
-			
+
 			JFileChooser fc = new JFileChooser();
 			int check = fc.showOpenDialog(new JFrame());
-			
-			if(check == JFileChooser.APPROVE_OPTION) {
+
+			if (check == JFileChooser.APPROVE_OPTION) {
 				File f = fc.getSelectedFile();
 				current.exportWorld(f);
 			}
-			
+
 			repaint();
 		} else if (arg0.getActionCommand().equals("Load")) {
 			File f;
@@ -196,7 +209,7 @@ public class WorldEditGUI extends JFrame implements ActionListener {
 				f = fc.getSelectedFile();
 				// current = world from file
 				Structure s = Structure.fromFile(f);
-				if(s!=null) {
+				if (s != null) {
 					structureModel.addElement(s);
 				}
 			}
@@ -204,7 +217,6 @@ public class WorldEditGUI extends JFrame implements ActionListener {
 		} else if (arg0.getActionCommand().equals("Exit")) {
 			this.close();
 		}
-		
 
 	}
 
@@ -214,19 +226,20 @@ public class WorldEditGUI extends JFrame implements ActionListener {
 		}
 		return true;
 	}
-	
+
 	public void addNPC(int x, int y) {
-		String name = JOptionPane.showInputDialog(null, "Enter the npc name from the npc list(enter null for an empty tile):",
-				"Add NPC", JOptionPane.QUESTION_MESSAGE);
+		String name = JOptionPane.showInputDialog(null,
+				"Enter the npc name from the npc list(enter null for an empty tile):", "Add NPC",
+				JOptionPane.QUESTION_MESSAGE);
 		NPC newNPC = npcs.get(name);
 		current.getTile(x, y).setCreature(newNPC);
 	}
-	
+
 	public boolean checkIfCoordsValid() {
 		try {
 			int x = Integer.parseInt(xField.getText());
 			int y = Integer.parseInt(yField.getText());
-			if (validCoords(x,y)) {
+			if (validCoords(x, y)) {
 				JOptionPane.showMessageDialog(null, "Invalid coordinates", "Error", JOptionPane.INFORMATION_MESSAGE);
 				return false;
 			}
@@ -238,10 +251,71 @@ public class WorldEditGUI extends JFrame implements ActionListener {
 		return true;
 	}
 
+	class SPanel extends JPanel {
+
+		@Override
+		public void paint(Graphics g) {
+			if (structureList.getSelectedValue() != null) {
+				try {
+					Structure current = structureList.getSelectedValue();
+					Tile[][] tiles = current.getTiles();
+					int structureH = current.getTiles().length;
+					int structureW = current.getTiles()[0].length;
+					int gridSize = (structureW > structureH) ? structureW : structureH;
+					int offsetX = (gridSize - structureW) / 2;
+					int offsetY = (gridSize - structureH) / 2;
+					int gridBlockSize = (int) (getSize().getWidth() / gridSize);
+					Color last = g.getColor();
+					g.setColor(Color.LIGHT_GRAY);
+					g.fillRect(0, 0, getWidth(), getHeight());
+					for (int i = 0; i < structureW; i++) {
+						for (int k = 0; k < structureH; k++) {
+							int drawPosX = offsetX + i;
+							int drawPosY = offsetY + k;
+							if (tiles[i][k].isNavigable()) {
+								g.setColor(Color.WHITE);
+								g.drawRect(drawPosX * gridBlockSize, drawPosY * gridBlockSize, gridBlockSize,
+										gridBlockSize);
+								if (tiles[i][k].getCreature() != null) {
+									g.setColor(new Color(211, 23, 208));
+									int halfWidth = gridBlockSize / 2;
+									g.fillOval((drawPosX * gridBlockSize) + halfWidth / 2,
+											(drawPosY * gridBlockSize) + halfWidth / 2, halfWidth, halfWidth);
+								}
+							} else {
+
+								g.setColor(Color.DARK_GRAY);
+								g.fillRect(drawPosX * gridBlockSize, drawPosY * gridBlockSize, gridBlockSize,
+										gridBlockSize);
+								if (tiles[i][k].getCreature() != null) {
+									g.setColor(new Color(211, 23, 208));
+									int halfWidth = gridBlockSize / 2;
+									g.fillOval((drawPosX * gridBlockSize) + halfWidth,
+											(drawPosY * gridBlockSize) + halfWidth, halfWidth, halfWidth);
+								}
+							}
+						}
+					}
+					g.setColor(Color.RED);
+					g.drawRect(offsetX * gridBlockSize, offsetY * gridBlockSize, structureW * gridBlockSize,
+							structureH * gridBlockSize);
+					g.setColor(last);
+
+				} catch (Exception e) {
+
+				}
+			} else {
+				Color last = g.getColor();
+				g.setColor(Color.LIGHT_GRAY);
+				g.fillRect(0, 0, getWidth(), getHeight());
+				g.setColor(last);
+			}
+
+		}
+	}
+
 	class WPanel extends JPanel {
-		
-		private 
-		
+
 		WPanel() {
 			this.addMouseListener(new MouseAdapter() {
 				@Override
@@ -249,25 +323,26 @@ public class WorldEditGUI extends JFrame implements ActionListener {
 					int xPixel = e.getX();
 					int yPixel = e.getY();
 
-
 					int gridSize = (current.getWorldWidth() > current.getWorldHeight()) ? current.getWorldWidth()
 							: current.getWorldHeight();
 					int offsetX = (gridSize - current.getWorldWidth()) / 2;
 					int offsetY = (gridSize - current.getWorldHeight()) / 2;
 					int gridBlockSize = (int) (getSize().getWidth() / gridSize);
-					
-					int tileX = xPixel/gridBlockSize;
-					int tileY = yPixel/gridBlockSize;
-					
-					tileX-=offsetX;
-					tileY-=offsetY;
-					if(!(tileX < 0 || tileX >= current.getWorldWidth() || tileY < 0 || tileY >= current.getWorldHeight())) {
+
+					int tileX = xPixel / gridBlockSize;
+					int tileY = yPixel / gridBlockSize;
+
+					tileX -= offsetX;
+					tileY -= offsetY;
+					if (!(tileX < 0 || tileX >= current.getWorldWidth() || tileY < 0
+							|| tileY >= current.getWorldHeight())) {
 						selectedX = tileX;
 						selectedY = tileY;
-						xField.setText(""+selectedX);
-						yField.setText(""+selectedY);
+						xField.setText("" + selectedX);
+						yField.setText("" + selectedY);
 					}
-					System.out.println("CLICK @(" + selectedX + ", " + selectedY + ") -- " + current.getTile(selectedX, selectedY));
+					System.out.println("CLICK @(" + selectedX + ", " + selectedY + ") -- "
+							+ current.getTile(selectedX, selectedY));
 					repaint();
 				}
 			});
@@ -292,30 +367,32 @@ public class WorldEditGUI extends JFrame implements ActionListener {
 							g.setColor(Color.WHITE);
 							g.drawRect(drawPosX * gridBlockSize, drawPosY * gridBlockSize, gridBlockSize,
 									gridBlockSize);
-							if(current.getTile(i, k).getCreature() != null) {
-								g.setColor(new Color(211,23,208));
-								int halfWidth = gridBlockSize/2;
-								g.fillOval((drawPosX * gridBlockSize)+halfWidth/2, (drawPosY * gridBlockSize)+halfWidth/2, halfWidth,
-										halfWidth);
+							if (current.getTile(i, k).getCreature() != null) {
+								g.setColor(new Color(211, 23, 208));
+								int halfWidth = gridBlockSize / 2;
+								g.fillOval((drawPosX * gridBlockSize) + halfWidth / 2,
+										(drawPosY * gridBlockSize) + halfWidth / 2, halfWidth, halfWidth);
 							}
 						} else {
-							
+
 							g.setColor(Color.DARK_GRAY);
 							g.fillRect(drawPosX * gridBlockSize, drawPosY * gridBlockSize, gridBlockSize,
 									gridBlockSize);
-							if(current.getTile(i, k).getCreature() != null) {
-								g.setColor(new Color(211,23,208));
-								int halfWidth = gridBlockSize/2;
-								g.fillOval((drawPosX * gridBlockSize)+halfWidth, (drawPosY * gridBlockSize)+halfWidth, halfWidth,
-										halfWidth);
+							if (current.getTile(i, k).getCreature() != null) {
+								g.setColor(new Color(211, 23, 208));
+								int halfWidth = gridBlockSize / 2;
+								g.fillOval((drawPosX * gridBlockSize) + halfWidth,
+										(drawPosY * gridBlockSize) + halfWidth, halfWidth, halfWidth);
 							}
 						}
 					}
 				}
 				g.setColor(Color.RED);
-				g.drawRect(offsetX*gridBlockSize, offsetY*gridBlockSize, current.getWorldWidth()*gridBlockSize, current.getWorldHeight()*gridBlockSize);
-				g.setColor(new Color(6,(9*16)+4,32));
-				g.drawRect((selectedX + offsetX)*gridBlockSize, (selectedY + offsetY)*gridBlockSize, gridBlockSize, gridBlockSize);
+				g.drawRect(offsetX * gridBlockSize, offsetY * gridBlockSize, current.getWorldWidth() * gridBlockSize,
+						current.getWorldHeight() * gridBlockSize);
+				g.setColor(new Color(6, (9 * 16) + 4, 32));
+				g.drawRect((selectedX + offsetX) * gridBlockSize, (selectedY + offsetY) * gridBlockSize, gridBlockSize,
+						gridBlockSize);
 				g.setColor(last);
 			} else {
 				Color last = g.getColor();
@@ -324,6 +401,5 @@ public class WorldEditGUI extends JFrame implements ActionListener {
 				g.setColor(last);
 			}
 		}
-
 	}
 }
