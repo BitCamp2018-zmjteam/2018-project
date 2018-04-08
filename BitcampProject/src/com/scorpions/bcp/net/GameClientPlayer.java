@@ -130,7 +130,8 @@ public class GameClientPlayer {
 				gui.updateLog("");
 			break;
 		case PLAYER_KICK:
-			gui.updateLog("You were kicked from the server.");
+			String reason = (String)r.getValues().get("reason");
+			gui.updateLog("You were kicked from the server" + (reason.isEmpty()?".":"becasue \""+reason+"\"."));
 			break;
 		case PLAYER_MOVE:
 			String playerID = (String)r.getValues().get("playerid");
