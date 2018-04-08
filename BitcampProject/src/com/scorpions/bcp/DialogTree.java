@@ -5,6 +5,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Scanner;
+import java.util.UUID;
 
 import com.scorpions.bcp.creature.Player;
 import com.scorpions.bcp.event.Event;
@@ -23,6 +24,8 @@ public class DialogTree implements Serializable{
 	private boolean outrage=true;
 	private Player converser;
 	private Game wholeGame;
+	private UUID npcUUID;
+	
 	public DialogTree(String base,Game wholeGame) {
 		this.base=new SpeechItem(base);
 		this.wholeGame = wholeGame;
@@ -33,11 +36,12 @@ public class DialogTree implements Serializable{
 	 * @param flag a flag required/prohibiting conversation
 	 * @param outrage if true, flag prohibits conversation
 	 */
-	public DialogTree(String base, Game wholeGame, String flag, boolean outrage) {
+	public DialogTree(String base, Game wholeGame, String flag, boolean outrage, UUID npcUUID) {
 		this.base = new SpeechItem(base);
 		this.wholeGame = wholeGame;
 		this.flag = flag;
 		this.outrage = outrage;
+		this.npcUUID = npcUUID;
 	}
 	/**
 	 * Check flag to start
@@ -62,14 +66,14 @@ public class DialogTree implements Serializable{
 		converser = p;
 		InputStream origin = System.in; //Replace with the player's inputs
 		SpeechItem s = base;
-		wholeGame.queueEvent(new PlayerMessageEvent(converser,s.show()));
+		wholeGame.queueEvent(new PlayerMessageEvent(converser,s.show(),npcUUID));
 		Scanner sc = new Scanner(origin);
 		do {
 			int choice = sc.nextInt();
 			if (s.playerOptions.size() > choice) {
 				if (s.playerOptions.get(choice).getResponse(p) instanceof SpeechItem) {
 					s = (SpeechItem)(s.playerOptions.get(choice).getResponse(p));
-					wholeGame.queueEvent(new PlayerMessageEvent(converser,s.show()));
+					wholeGame.queueEvent(new PlayerMessageEvent(converser,s.show(),npcUUID));
 				} else {
 					wholeGame.queueEvent(s.playerOptions.get(choice).getResponse(p));
 					break;
@@ -254,7 +258,7 @@ public class DialogTree implements Serializable{
 		protected String show() {
 			for (Event e : trigger) {
 				if (e instanceof SpeechItem) {
-					wholeGame.queueEvent(new PlayerMessageEvent(converser,((SpeechItem)e).show()));
+					wholeGame.queueEvent(new PlayerMessageEvent(converser,((SpeechItem)e).show(),npcUUID));
 				} else {
 					wholeGame.queueEvent(e);
 				}
