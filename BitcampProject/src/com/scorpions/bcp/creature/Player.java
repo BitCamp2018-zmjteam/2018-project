@@ -9,7 +9,7 @@ public class Player extends Creature {
 	private static final long serialVersionUID = -6890460594523292940L;
 	private ArrayList<String> flags;
 	private String race, role;
-	private UUID id;
+	private NPC convoTarget;
   
 	public Player(int strength, int dexterity, int constitution, int intelligence, int wisdom, int charisma, String name, String race, String role) {
 		super(strength, dexterity, constitution, intelligence, wisdom, charisma, name);
@@ -32,10 +32,10 @@ public class Player extends Creature {
 		// TODO Auto-generated method stub
 		
 	}
-	public UUID getUUID() {
-		return id;
+	public void setConversationTarget(NPC target) {
+		convoTarget = target;
 	}
-	public void setUUID(UUID id) {
-		this.id = id;
+	public NPC getTarget() {
+		return convoTarget;
 	}
 }

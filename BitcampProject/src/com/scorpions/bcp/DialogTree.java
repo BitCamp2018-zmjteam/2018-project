@@ -53,7 +53,7 @@ public class DialogTree implements Serializable{
 		return new DMIterator();
 	}
 	/**
-	 * Start the conversation between the host NPC and the palyer p
+	 * Start the conversation between the host NPC and the player p
 	 * @author Morgan
 	 *
 	 */

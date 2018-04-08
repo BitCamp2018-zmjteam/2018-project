@@ -127,6 +127,7 @@ public class GameClientPlayer {
 			String playerID = (String)r.getValues().get("playerid");
 			assert(playerID.equals(p.getUUID().toString()));
 			Point location = (Point)r.getValues().get("location");
+			System.out.println(r);
 			gui.updateLog("You are now at ("+location.getX()+","+location.getY()+").");
 			p.setX((int) location.getX());
 			p.setY((int) location.getY());
