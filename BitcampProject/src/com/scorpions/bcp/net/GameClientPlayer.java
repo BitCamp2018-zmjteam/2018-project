@@ -97,7 +97,7 @@ public class GameClientPlayer {
 		case GAME_INFO:
 			Map<UUID,Player> playerMap = (Map<UUID,Player>)r.getValues().get("playerMap");
 			UUID selfID = (UUID)r.getValues().get("selfId");
-			uuid = selfID;
+			p.setUUID(selfID);
 			break;
 		case INTERACT_RESPONSE:
 			boolean success = (Boolean)r.getValues().get("success");
@@ -163,3 +163,4 @@ public class GameClientPlayer {
 	public Player getPlayer() {
 		return p;
 	}
+}
