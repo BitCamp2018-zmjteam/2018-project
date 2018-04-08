@@ -148,7 +148,7 @@ public class WorldEditGUI extends JFrame implements ActionListener {
 		try {
 			int x = Integer.parseInt(xField.getText());
 			int y = Integer.parseInt(yField.getText());
-			if(x < 0 || y < 0) {
+			if(x < 0 || y < 0 || x >= current.getWorldWidth() || y >= current.getWorldHeight()) {
 				JOptionPane.showMessageDialog(null, "Invalid coordinates", "Error",
 						JOptionPane.INFORMATION_MESSAGE);
 				return false;

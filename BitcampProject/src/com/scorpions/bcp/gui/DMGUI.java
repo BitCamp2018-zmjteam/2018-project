@@ -37,7 +37,7 @@ public class DMGUI extends JFrame implements ActionListener {
 	private JTabbedPane panel;
 	private JPanel main, npcs, npcData, world, players, items, itemsData, playersData;
 	private JLabel ipAddr, iNameLabel, iBPLabel, iSPLabel, iDescLabel, playerTitle, 
-		playerStr, playerDex, playerCon, playerInt, playerWis, playerCha;
+		playerStr, playerDex, playerCon, playerInt, playerWis, playerCha, playerMoney;
 	private int width, height;
 	private GameServer server;
 	private String address;
@@ -114,6 +114,7 @@ public class DMGUI extends JFrame implements ActionListener {
 		playerInt = new JLabel("Intelligence: 0");
 		playerWis = new JLabel("Wisdom: 0");
 		playerCha = new JLabel("Charisma: 0");
+		playerMoney = new JLabel("GP: 0");
 		new JLabel("Width: ");
 		new JLabel("Height: ");
 		new JTextField();
@@ -154,10 +155,10 @@ public class DMGUI extends JFrame implements ActionListener {
 		npcs.add(npcData);
 		npcPane.setViewportView(npcList);
 		npcPane.setSize(0, 0);
-		npcPane.setSize(200, this.height - 80);
+		npcPane.setSize(200, this.height - 60);
 		npcPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 		npcData.setLocation(200, 0);
-		npcData.setSize(this.width - 200, this.height - 80);
+		npcData.setSize(this.width - 200, this.height - 60);
 
 		items.add(itemsPane);
 		items.add(itemsData);
@@ -172,10 +173,10 @@ public class DMGUI extends JFrame implements ActionListener {
 		itemsData.add(iDescLabel);
 		itemsPane.setViewportView(itemsList);
 		itemsPane.setSize(0, 0);
-		itemsPane.setSize(200, this.height - 80);
+		itemsPane.setSize(200, this.height - 60);
 		itemsPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 		itemsData.setLocation(200, 0);
-		itemsData.setSize(this.width - 200, this.height - 80);
+		itemsData.setSize(this.width - 200, this.height - 60);
 		addItem.setLocation(425, 500);
 		addItem.setSize(150, 40);
 		iNameLabel.setLocation(10, 10);
@@ -210,19 +211,20 @@ public class DMGUI extends JFrame implements ActionListener {
 		playersData.add(playerInt);
 		playersData.add(playerWis);
 		playersData.add(playerCha);
+		playersData.add(playerMoney);
 		playersPane.setViewportView(playersList);
 		playersPane.setSize(0, 0);
-		playersPane.setSize(200, this.height - 80);
+		playersPane.setSize(200, this.height - 60);
 		playersPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 		playersData.setLocation(200, 0);
-		playersData.setSize(this.width - 200, this.height - 80);
+		playersData.setSize(this.width - 200, this.height - 60);
 		playerTitle.setLocation(10, 10);
 		playerTitle.setSize(400, 40);
 		playerStr.setLocation(10, 80);
 		playerStr.setSize(200, 40);
 		playerDex.setLocation(10, 150);
 		playerDex.setSize(200, 40);
-		playerCon.setLocation(10, 210);
+		playerCon.setLocation(10, 220);
 		playerCon.setSize(200, 40);
 		playerInt.setLocation(10, 290);
 		playerInt.setSize(200, 40);
@@ -230,6 +232,8 @@ public class DMGUI extends JFrame implements ActionListener {
 		playerWis.setSize(200, 40);
 		playerCha.setLocation(10, 430);
 		playerCha.setSize(200, 40);
+		playerMoney.setLocation(10, 500);
+		playerMoney.setSize(200, 40);
 		
 		world.add(loadWorld);
 		world.add(newWorld);
@@ -371,6 +375,7 @@ public class DMGUI extends JFrame implements ActionListener {
 			playerInt.setText("Intelligence: " + p.getStat("INT"));
 			playerWis.setText("Wisdom: " + p.getStat("WIS"));
 			playerCha.setText("Charisma: " + p.getStat("CHA"));
+			playerMoney.setText("GP: " + p.getGP());
 		}
 		
 	}

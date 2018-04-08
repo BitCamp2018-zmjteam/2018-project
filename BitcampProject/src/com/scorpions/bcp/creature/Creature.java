@@ -124,6 +124,10 @@ public abstract class Creature implements Interactable, Serializable {
 		this.gp += amount;
 	}	
 	
+	public int getGP() {
+		return this.gp;
+	}
+	
 	public void setProf(int prof) {
 		this.prof = prof;
 	}
