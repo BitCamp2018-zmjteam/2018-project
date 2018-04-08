@@ -75,11 +75,13 @@ public class DialogTree implements Serializable{
 	 *
 	 */
 	public void converse(Player p) throws NumberFormatException, IOException {
+		convInput = new PipedWriter();
 		converser = p;
 		//Replace with the player's inputs
  		SpeechItem s = base;
 		wholeGame.queueEvent(new PlayerMessageEvent(converser,s.show(),npcUUID));
 		PipedReader pr = new PipedReader();
+		pr.connect(convInput);
 		BufferedReader sc = new BufferedReader(pr);
 		do {
 			int choice = Integer.parseInt(sc.readLine());
@@ -94,6 +96,7 @@ public class DialogTree implements Serializable{
 			}
 		} while (!s.playerOptions.isEmpty());
 		try {
+			pr.close();
 			sc.close();
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -146,6 +149,14 @@ public class DialogTree implements Serializable{
 		}
 		public boolean removeSpeechOption(int index) {
 			sp.removePlayerOption(index);
+			return true;
+		}
+		public boolean changePlayerResponse(int index, String newResponse) {
+			sp.playerOptions.get(index).playerSays = newResponse;
+			return true;
+		}
+		public boolean changeNPCResponse(int index, String newResponse) {
+			sp.playerOptions.get(index).npcResponse = new SpeechItem(newResponse);
 			return true;
 		}
 		public boolean clearPlayerOptions() {

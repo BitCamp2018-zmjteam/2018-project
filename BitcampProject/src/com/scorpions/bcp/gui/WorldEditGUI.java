@@ -7,6 +7,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
+import java.util.TreeMap;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
@@ -21,6 +22,7 @@ import javax.swing.JTextField;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import com.scorpions.bcp.world.Structure;
+import com.scorpions.bcp.creature.NPC;
 import com.scorpions.bcp.world.World;
 
 public class WorldEditGUI extends JFrame implements ActionListener {
@@ -34,6 +36,7 @@ public class WorldEditGUI extends JFrame implements ActionListener {
 	private int selectedX, selectedY;
 	private DefaultListModel<Structure> structureModel;
 	private JList<Structure> structureList;
+	private TreeMap<String, NPC> npcs;
 
 	public WorldEditGUI(DMGUI dmGUI) {
 		super("World Edit");
@@ -128,13 +131,16 @@ public class WorldEditGUI extends JFrame implements ActionListener {
 		this.setVisible(false);
 	}
 
-	public void load(World world) {
+	public void load(World world, TreeMap<String, NPC> npcs) {
 		current = world;
+		this.npcs = npcs;
 		dmGUI.setVisible(false);
 		this.setVisible(true);
 	}
 
 	public void close() {
+		npcs = null;
+		current = null;
 		this.setVisible(false);
 		dmGUI.setVisible(true);
 	}

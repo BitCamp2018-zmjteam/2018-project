@@ -32,6 +32,7 @@ public enum ResponseType implements Serializable {
 	 *   map:
 	 *     playerId: player who moved
 	 *     location: x,y | new location
+	 *     targets: Map<Interactable,Point> | targets that are interactable
 	 *     
 	 * GAME_INFO:
 	 *   map:

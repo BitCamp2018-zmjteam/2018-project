@@ -36,31 +36,32 @@ public class DMGUI extends JFrame implements ActionListener {
 	private static final long serialVersionUID = -6156179537660121688L;
 	private JTabbedPane panel;
 	private JPanel main, npcs, npcData, world, players, items, itemsData, playersData;
-	private JLabel ipAddr, iNameLabel, iBPLabel, iSPLabel, iDescLabel, playerTitle, 
-		playerStr, playerDex, playerCon, playerInt, playerWis, playerCha, playerMoney;
+	private JLabel ipAddr, iNameLabel, iBPLabel, iSPLabel, iDescLabel, playerTitle, playerStr, playerDex, playerCon,
+			playerInt, playerWis, playerCha, playerMoney, npcStrL, npcDexL, npcConL, npcIntL, npcWisL, npcChaL,
+			npcNameL;
 	private int width, height;
 	private GameServer server;
 	private String address;
-	private JButton start, loadWorld, addItem, newWorld;
+	private JButton start, loadWorld, addItem, newWorld, addNpc;
 	private JScrollPane npcPane, itemsPane, playersPane;
-	private JList<String> npcList, itemsList; 
+	private JList<String> npcList, itemsList;
 	private JList<Player> playersList;
-	private DefaultListModel<String> npcModel, itemsModel;	
+	private DefaultListModel<String> npcModel, itemsModel;
 	private DefaultListModel<Player> playersModel;
-	private JTextField itemName, itemBP, itemSP;
+	private JTextField itemName, itemBP, itemSP, npcStr, npcDex, npcCon, npcInt, npcWis, npcCha, npcName;
 	private JTextArea itemDesc;
-	private TreeMap<String,Item> itemsMap;
+	private TreeMap<String, Item> itemsMap;
 	private TreeMap<String, Player> playersMap;
-	private ListSelectionModel itemsLSM, playersLSM;
+	private ListSelectionModel itemsLSM, playersLSM, npcLSM;
 	private TreeMap<String, NPC> npcMap;
 	private World worldEdit;
-	private Tile tileEdit;
 	private WorldEditGUI wEG;
+
 	public DMGUI(GameServer server) {
 		super("DM Screen");
 
 		wEG = new WorldEditGUI(this);
-		
+
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		try {
 			address = InetAddress.getLocalHost().getHostAddress();
@@ -90,6 +91,7 @@ public class DMGUI extends JFrame implements ActionListener {
 		loadWorld = new JButton("Load world");
 		addItem = new JButton("Add Item");
 		newWorld = new JButton("New World");
+		addNpc = new JButton("Add NPC");
 		npcPane = new JScrollPane();
 		npcModel = new DefaultListModel<String>();
 		npcList = new JList<String>(npcModel);
@@ -102,6 +104,13 @@ public class DMGUI extends JFrame implements ActionListener {
 		itemName = new JTextField();
 		itemBP = new JTextField();
 		itemSP = new JTextField();
+		npcStr = new JTextField();
+		npcDex = new JTextField();
+		npcCon = new JTextField();
+		npcInt = new JTextField();
+		npcWis = new JTextField();
+		npcCha = new JTextField();
+		npcName = new JTextField();
 		itemDesc = new JTextArea();
 		iNameLabel = new JLabel("Item Name:");
 		iBPLabel = new JLabel("Buy Price:");
@@ -115,16 +124,25 @@ public class DMGUI extends JFrame implements ActionListener {
 		playerWis = new JLabel("Wisdom: 0");
 		playerCha = new JLabel("Charisma: 0");
 		playerMoney = new JLabel("GP: 0");
+		npcStrL = new JLabel("Strength:");
+		npcDexL = new JLabel("Dexterity:");
+		npcConL = new JLabel("Constitution:");
+		npcIntL = new JLabel("Intelligence:");
+		npcWisL = new JLabel("Wisdom:");
+		npcChaL = new JLabel("Charisma:");
+		npcNameL = new JLabel("Name:");
 		new JLabel("Width: ");
 		new JLabel("Height: ");
 		new JTextField();
 		new JTextField();
-		
+
 		itemsLSM = itemsList.getSelectionModel();
-	    itemsLSM.addListSelectionListener(new itemsListListener());
-	    playersLSM = playersList.getSelectionModel();
-	    playersLSM.addListSelectionListener(new playerListListener());
-	    
+		itemsLSM.addListSelectionListener(new itemsListListener());
+		playersLSM = playersList.getSelectionModel();
+		playersLSM.addListSelectionListener(new playerListListener());
+		npcLSM = npcList.getSelectionModel();
+		npcLSM.addListSelectionListener(new npcListListener());
+
 		start.setActionCommand("Start");
 		start.addActionListener(this);
 		loadWorld.setActionCommand("Load");
@@ -132,9 +150,10 @@ public class DMGUI extends JFrame implements ActionListener {
 		addItem.setActionCommand("Add Item");
 		addItem.addActionListener(this);
 		newWorld.setActionCommand("New World");
-		newWorld.addActionListener(this);		
+		newWorld.addActionListener(this);
+		addNpc.setActionCommand("Add NPC");
+		addNpc.addActionListener(this);
 
-		
 		main.setLayout(null);
 		npcs.setLayout(null);
 		world.setLayout(null);
@@ -159,6 +178,51 @@ public class DMGUI extends JFrame implements ActionListener {
 		npcPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 		npcData.setLocation(200, 0);
 		npcData.setSize(this.width - 200, this.height - 60);
+		npcData.add(npcNameL);
+		npcData.add(npcName);
+		npcData.add(npcStrL);
+		npcData.add(npcDexL);
+		npcData.add(npcConL);
+		npcData.add(npcIntL);
+		npcData.add(npcWisL);
+		npcData.add(npcChaL);
+		npcData.add(npcStr);
+		npcData.add(npcDex);
+		npcData.add(npcCon);
+		npcData.add(npcInt);
+		npcData.add(npcWis);
+		npcData.add(npcCha);
+		npcData.add(addNpc);
+		npcNameL.setLocation(10, 10);
+		npcNameL.setSize(140, 40);
+		npcName.setLocation(150, 10);
+		npcName.setSize(140, 40);
+		npcStrL.setLocation(10, 80);
+		npcStrL.setSize(140, 40);
+		npcStr.setLocation(150, 80);
+		npcStr.setSize(140, 40);
+		npcDexL.setLocation(10, 150);
+		npcDexL.setSize(140, 40);
+		npcDex.setLocation(150, 150);
+		npcDex.setSize(140, 40);
+		npcConL.setLocation(10, 220);
+		npcConL.setSize(140, 40);
+		npcCon.setLocation(150, 220);
+		npcCon.setSize(140, 40);
+		npcIntL.setLocation(10, 290);
+		npcIntL.setSize(140, 40);
+		npcInt.setLocation(150, 290);
+		npcInt.setSize(140, 40);
+		npcWisL.setLocation(10, 360);
+		npcWisL.setSize(140, 40);
+		npcWis.setLocation(150, 360);
+		npcWis.setSize(140, 40);
+		npcChaL.setLocation(10, 430);
+		npcChaL.setSize(140, 40);
+		npcCha.setLocation(150, 430);
+		npcCha.setSize(140, 40);
+		addNpc.setLocation(425, 500);
+		addNpc.setSize(150, 40);
 
 		items.add(itemsPane);
 		items.add(itemsData);
@@ -234,14 +298,14 @@ public class DMGUI extends JFrame implements ActionListener {
 		playerCha.setSize(200, 40);
 		playerMoney.setLocation(10, 500);
 		playerMoney.setSize(200, 40);
-		
+
 		world.add(loadWorld);
 		world.add(newWorld);
 		loadWorld.setLocation(415, 500);
 		loadWorld.setSize(150, 40);
 		newWorld.setLocation(595, 500);
 		newWorld.setSize(150, 40);
-		
+
 		panel.addTab("Main", main);
 		panel.addTab("NPCs", npcs);
 		panel.addTab("World", world);
@@ -262,6 +326,8 @@ public class DMGUI extends JFrame implements ActionListener {
 			loadWorld.setVisible(false);
 			newWorld.setVisible(false);
 			server.start();
+		} else if (event.getActionCommand().equals("Add NPC")) {
+			addNPC();
 		} else if (event.getActionCommand().equals("Load")) {
 			File f;
 			JFileChooser fc = new JFileChooser();
@@ -273,41 +339,37 @@ public class DMGUI extends JFrame implements ActionListener {
 				World w = World.fromFile(f);
 				if(w != null) {
 					worldEdit = w;
-					wEG.load(worldEdit);
+					wEG.load(worldEdit, npcMap);
 				}
 			}
-		}
-		else if(event.getActionCommand().equals("Add Item")) {
+		} else if (event.getActionCommand().equals("Add Item")) {
 			addItem();
 			itemsPane.getVerticalScrollBar().setValue(itemsPane.getVerticalScrollBar().getMaximum());
-		}
-		else if(event.getActionCommand().equals("New World")) {
+		} else if (event.getActionCommand().equals("New World")) {
 			int worldWidth = 0;
 			int worldHeight = 0;
 			String name = "";
-			while(worldWidth <= 0) {
+			while (worldWidth <= 0) {
 				try {
-					worldWidth = Integer.parseInt(JOptionPane.showInputDialog(null, "Enter the world width:", "Create world",
-							JOptionPane.QUESTION_MESSAGE));
-				}
-				catch(NumberFormatException e) {
-					
+					worldWidth = Integer.parseInt(JOptionPane.showInputDialog(null, "Enter the world width:",
+							"Create world", JOptionPane.QUESTION_MESSAGE));
+				} catch (NumberFormatException e) {
+
 				}
 			}
-			while(worldHeight <= 0) {
+			while (worldHeight <= 0) {
 				try {
-					worldHeight = Integer.parseInt(JOptionPane.showInputDialog(null, "Enter the world height:", "Create world",
-							JOptionPane.QUESTION_MESSAGE));
-				}
-				catch(NumberFormatException e) {
+					worldHeight = Integer.parseInt(JOptionPane.showInputDialog(null, "Enter the world height:",
+							"Create world", JOptionPane.QUESTION_MESSAGE));
+				} catch (NumberFormatException e) {
 				}
 			}
-			while(name.equals("")) {
+			while (name.equals("")) {
 				name = JOptionPane.showInputDialog(null, "Enter the world name:", "Create world",
 						JOptionPane.QUESTION_MESSAGE);
 			}
-			worldEdit = new World(worldWidth, worldHeight, name);
-			wEG.load(worldEdit);
+			worldEdit = new World(worldHeight, worldHeight, name);
+			wEG.load(worldEdit, npcMap);
 		}
 
 	}
@@ -317,18 +379,46 @@ public class DMGUI extends JFrame implements ActionListener {
 		playersMap.put(pl.getUUID().toString(), pl);
 		playersPane.getVerticalScrollBar().setValue(playersPane.getVerticalScrollBar().getMaximum());
 	}
-	
+
 	public void removePlayer(UUID id) {
 		playersModel.removeElement(playersMap.remove(id.toString()));
 	}
-	
-	public void addNPC(NPC npc) {
-		npcModel.addElement(npc.getName());
-		npcMap.put(npc.getName(), npc);
+
+	public void addNPC() {
+		try {
+			int str = Integer.parseInt(npcStr.getText()), dex = Integer.parseInt(npcDex.getText()),
+					con = Integer.parseInt(npcCon.getText()), intel = Integer.parseInt(npcInt.getText()),
+					wis = Integer.parseInt(npcWis.getText()), cha = Integer.parseInt(npcCha.getText());
+			String name = npcName.getText().trim();
+			if (str < 0 || dex < 0 || con < 0 || intel < 0 || wis < 0 || cha < 0) {
+				JOptionPane.showMessageDialog(null, "Invalid stats", "Error", JOptionPane.INFORMATION_MESSAGE);
+				return;
+			} else if (name.trim().equals("")) {
+				JOptionPane.showMessageDialog(null, "Invalid name", "Error", JOptionPane.INFORMATION_MESSAGE);
+			}
+			if(npcModel.contains(name)) {
+				JOptionPane.showMessageDialog(null, "NPC already exists", "Error", JOptionPane.INFORMATION_MESSAGE);
+				return;
+			}
+			NPC newNPC = new NPC(str, dex, con, intel, wis, cha, null, name);
+			npcModel.addElement(newNPC.getName());
+			npcMap.put(name, newNPC);
+			npcStr.setText("");
+			npcDex.setText("");
+			npcCon.setText("");
+			npcInt.setText("");
+			npcWis.setText("");
+			npcCha.setText("");
+			npcName.setText("");
+		} catch (NumberFormatException e) {
+			JOptionPane.showMessageDialog(null, "Invalid stats", "Error", JOptionPane.INFORMATION_MESSAGE);
+
+		}
+
 	}
 
 	public void addItem() {
-		if(!itemsModel.contains(itemName.getText().trim())) {
+		if (!itemsModel.contains(itemName.getText().trim())) {
 			try {
 				int bp = Integer.parseInt(itemBP.getText());
 				int sp = Integer.parseInt(itemSP.getText());
@@ -342,18 +432,14 @@ public class DMGUI extends JFrame implements ActionListener {
 				itemBP.setText("");
 				itemSP.setText("");
 				itemDesc.setText("");
+			} catch (NumberFormatException e) {
+				JOptionPane.showMessageDialog(null, "Invalid price", "Error", JOptionPane.INFORMATION_MESSAGE);
 			}
-			catch(NumberFormatException e) {
-				JOptionPane.showMessageDialog(null, "Invalid price", "Error",
-						JOptionPane.INFORMATION_MESSAGE);
-			}
-		}
-		else {
-			JOptionPane.showMessageDialog(null, "Item already exists", "Error",
-					JOptionPane.INFORMATION_MESSAGE);
+		} else {
+			JOptionPane.showMessageDialog(null, "Item already exists", "Error", JOptionPane.INFORMATION_MESSAGE);
 		}
 	}
-	
+
 	private class itemsListListener implements ListSelectionListener {
 
 		@Override
@@ -364,9 +450,9 @@ public class DMGUI extends JFrame implements ActionListener {
 			itemSP.setText(i.getSellPrice() + "");
 			itemDesc.setText(i.getDesc());
 		}
-		
+
 	}
-	
+
 	private class playerListListener implements ListSelectionListener {
 
 		@Override
@@ -381,6 +467,22 @@ public class DMGUI extends JFrame implements ActionListener {
 			playerCha.setText("Charisma: " + p.getStat("CHA"));
 			playerMoney.setText("GP: " + p.getGP());
 		}
-		
+
+	}
+	
+	private class npcListListener implements ListSelectionListener {
+
+		@Override
+		public void valueChanged(ListSelectionEvent arg0) {
+			NPC npc = npcMap.get(npcList.getSelectedValue());
+			npcName.setText(npc.getName());
+			npcStr.setText(npc.getStat("STR") + "");
+			npcDex.setText(npc.getStat("DEX") + "");
+			npcCon.setText(npc.getStat("CON") + "");
+			npcInt.setText(npc.getStat("INT") + "");
+			npcWis.setText(npc.getStat("WIS") + "");
+			npcCha.setText(npc.getStat("CHA") + "");
+		}
+
 	}
 }

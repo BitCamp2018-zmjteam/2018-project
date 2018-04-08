@@ -14,6 +14,7 @@ import java.util.Map;
 import com.scorpions.bcp.creature.Creature;
 import com.scorpions.bcp.creature.Player;
 import com.scorpions.bcp.gui.PlayerGUI;
+import com.scorpions.bcp.world.Interactable;
 import com.scorpions.bcp.world.Tile;
 
 public class GameClientPlayer {
@@ -106,14 +107,14 @@ public class GameClientPlayer {
 			this.sendRequest(new Request(RequestType.GAME_INFO,null));
 			break;
 		case GAME_INFO:
-			Map<String,Player> playerMap = (Map<String,Player>)r.getValues().get("playerMap");
+			players = (Map<String,Player>)r.getValues().get("playerMap");
 			System.out.println(r.getValues());
 			String selfID = ((String)r.getValues().get("selfId"));
 			assert(selfID.equals(p.getUUID().toString()));
 			gui.updateLog("You have UUID " + selfID);
 			gui.updateLog("Also in the world are:");
-			for (String u : playerMap.keySet()) {
-				gui.updateLog(playerMap.get(u) + " with UUID " + u);
+			for (String u : players.keySet()) {
+				gui.updateLog(players.get(u) + " with UUID " + u);
 			}
 			HashMap<String,Object> worldInfoMap = new HashMap<>();
 			worldInfoMap.put("location", new Point((int)p.getPos().getX(),(int)p.getPos().getY()));
@@ -148,14 +149,21 @@ public class GameClientPlayer {
 		case WORLD_INFO:
 			Tile[][] area = ((Tile[][])r.getValues().get("area"));
 			String update = "";
-			for (Tile[] row : area) {
-				for (Tile t : row) {
-					update += t.getCreature()==null?t.isNavigable()?" ":"#":"@";
+			for (int i=0;i<area[0].length;i++) {
+				for (int j=0;j<area.length;j++) {
+					update += area[j][i].getCreature()==null?area[j][i].isNavigable()?" ":"#":"@";
 				}
 				update += "\n> ";
 			}
-			update += "# is a barrier, @ is a creature\n";
-			gui.updateLog(update);
+			Map<Interactable,Point> targets = (Map<Interactable,Point>)r.getValues().get("targets");
+			if (targets.size() != 0) {
+				gui.updateLog("Interactable Targets:");
+				for (Interactable i : targets.keySet()) {
+					gui.updateLog(i.getName() + " at point (" + targets.get(i).getX()+ ","+targets.get(i).getY()+")");
+				}
+				update += "# is a barrier, @ is a creature\n";
+				gui.updateLog(update);
+			}
 			break;
 		case PLAYER_MESSAGE:
 			String sender = Creature.getCreature((String)r.getValues().get("uuid")).getName();

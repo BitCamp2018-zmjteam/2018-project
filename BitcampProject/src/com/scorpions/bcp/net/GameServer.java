@@ -94,8 +94,21 @@ public class GameServer extends Thread {
 	public Response worldInfo(ConnectedClient c) {
 		Player p = c.getPlayer();
 		Tile[][] areaTiles = retrieveTiles(p.getPos().x,p.getPos().y);
+		Map<Interactable,Point> possibleTargets = new HashMap<>();
+		for (int i=0;i<areaTiles.length;i++) {
+			for (int j=0;j<areaTiles[0].length;j++) {
+				if (areaTiles[i][j] instanceof Interactable) {
+					possibleTargets.put((Interactable)areaTiles[i][j],new Point(i,j));
+				}
+				if (areaTiles[i][j].getCreature() != null) {
+					possibleTargets.put((areaTiles[i][j].getCreature()),new Point(i,j));
+				}
+			}
+		}
+		System.out.println(possibleTargets + "\n" + possibleTargets.size());
 		Map<String,Object> returnMap = new HashMap<String,Object>();
 		returnMap.put("area", areaTiles);
+		returnMap.put("targets", possibleTargets);
 		Response r = new Response(ResponseType.WORLD_INFO, returnMap);
 		return r;
 	}
