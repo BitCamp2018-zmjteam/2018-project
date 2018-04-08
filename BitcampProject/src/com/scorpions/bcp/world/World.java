@@ -141,9 +141,8 @@ public class World implements Serializable, Structure {
 					return (World)o;
 				}
 				return null;
-			} else {
-				return null;
 			}
+			return null;
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (ClassCastException e) {
