@@ -24,6 +24,7 @@ public class GameClientPlayer {
 	private ObjectInputStream inStream;
 	private ObjectOutputStream outStream;
 	private PlayerGUI gui;
+	private Map<String,Player> playerMap;
 
 	public GameClientPlayer(Player p) {
 		this.p = p;
@@ -90,7 +91,7 @@ public class GameClientPlayer {
 	}
 
 	protected void evalResponse(Response r) {
-		System.out.println("eval Start "+r.getType());
+		System.out.println("eval Start "+r.getType() + "  " + r.getValues().values());
 		switch (r.getType()) {
 		case PLAYER_ACCEPT:
 			Point point = (Point) r.getValues().get("location");
@@ -99,7 +100,7 @@ public class GameClientPlayer {
 			this.sendRequest(new Request(RequestType.GAME_INFO,null));
 			break;
 		case GAME_INFO:
-			Map<String,Player> playerMap = (Map<String,Player>)r.getValues().get("playerMap");
+			playerMap = (Map<String,Player>)r.getValues().get("playerMap");
 			System.out.println(r.getValues());
 			UUID selfID = UUID.fromString((String)r.getValues().get("selfId"));
 			p.setUUID(selfID);
@@ -125,11 +126,14 @@ public class GameClientPlayer {
 			break;
 		case PLAYER_MOVE:
 			String playerID = (String)r.getValues().get("playerid");
-			assert(playerID.equals(p.getUUID().toString()));
 			Point location = (Point)r.getValues().get("location");
-			gui.updateLog("You are now at ("+location.getX()+","+location.getY()+").");
-			p.setX((int) location.getX());
-			p.setY((int) location.getY());
+			if(playerMap.get(playerID) != null) {
+				playerMap.get(playerID).setX(location.x);
+				playerMap.get(playerID).setY(location.y);
+				if(playerID.equals(p.getUUID().toString())) {
+					gui.updateLog("You are now at ("+location.getX()+","+location.getY()+").");
+				}
+			}
 			break;
 		case WORLD_INFO:
 			Tile[][] area = ((Tile[][])r.getValues().get("area"));

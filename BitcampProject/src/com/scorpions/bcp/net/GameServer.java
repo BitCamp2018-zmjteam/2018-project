@@ -157,6 +157,7 @@ public class GameServer extends Thread {
 						for(ConnectedClient cc : clients) {
 							try {
 								cc.send(r);
+								System.out.println("R: " + r.getValues().values());
 							} catch (IOException e) {
 								e.printStackTrace();
 							}

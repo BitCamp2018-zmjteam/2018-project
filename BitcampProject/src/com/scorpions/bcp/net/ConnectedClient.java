@@ -167,6 +167,7 @@ public class ConnectedClient extends Thread {
 	public void send(Response s) throws IOException {
 		clientOut.writeObject(s);
 		clientOut.flush();
+		clientOut.reset();
 		System.out.println("SENT RESPONSE");
 	}
 
