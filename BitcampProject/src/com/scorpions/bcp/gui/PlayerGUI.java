@@ -151,5 +151,6 @@ public class PlayerGUI extends JFrame implements KeyListener {
 		} else {
 			log.setText(log.getText() + " \n> " + line);
 		}
+		scroll.getVerticalScrollBar().setValue(scroll.getVerticalScrollBar().getMaximum());
 	}
 }
