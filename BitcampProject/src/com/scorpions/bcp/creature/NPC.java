@@ -1,5 +1,6 @@
 package com.scorpions.bcp.creature;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringBufferInputStream;
 
@@ -27,6 +28,19 @@ public class NPC extends Creature {
 	public void interact(Interactable i) {
 		if (i instanceof Player)
 			if (d.canStart((Player) i))
-				d.converse((Player) i);
+				try {
+					d.converse((Player) i);
+				} catch (NumberFormatException | IOException e) {
+					e.printStackTrace();
+				}
+	}
+	public void sendMessage(String message) {
+		try {
+			d.getPipedWriter().write(message);
+			d.getPipedWriter().flush();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }

@@ -1,6 +1,7 @@
 package com.scorpions.bcp;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.PipedReader;
 import java.io.PipedWriter;
@@ -58,17 +59,22 @@ public class DialogTree implements Serializable{
 	 * <br>2. The character prohibits a flag and the character doesn't have it
 	 */
 	public boolean canStart(Player p) {
-		return p.hasFlag(flag) ^ outrage;
+		return (p.hasFlag(flag) ^ outrage) && converser == null;
 	}
 	public DMIterator getIterator() {
 		return new DMIterator();
 	}
+	public PipedWriter getPipedWriter() {
+		return convInput;
+	}
 	/**
 	 * Start the conversation between the host NPC and the player p
 	 * @author Morgan
+	 * @throws IOException 
+	 * @throws NumberFormatException 
 	 *
 	 */
-	public void converse(Player p) {
+	public void converse(Player p) throws NumberFormatException, IOException {
 		converser = p;
 		//Replace with the player's inputs
  		SpeechItem s = base;
@@ -76,7 +82,7 @@ public class DialogTree implements Serializable{
 		PipedReader pr = new PipedReader();
 		BufferedReader sc = new BufferedReader(pr);
 		do {
-			int choice = sc.nextInt();
+			int choice = Integer.parseInt(sc.readLine());
 			if (s.playerOptions.size() > choice) {
 				if (s.playerOptions.get(choice).getResponse(p) instanceof SpeechItem) {
 					s = (SpeechItem)(s.playerOptions.get(choice).getResponse(p));
@@ -87,7 +93,12 @@ public class DialogTree implements Serializable{
 				}
 			}
 		} while (!s.playerOptions.isEmpty());
-		sc.close();
+		try {
+			sc.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		converser = null;
 	}
 	/**How DM moves down the tree to add stuff
 	 * 
