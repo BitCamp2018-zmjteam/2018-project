@@ -21,33 +21,34 @@ public class TestDriver {
 		setGUI();
 		StartupGUI start = new StartupGUI();
 	}
-	
+
 	public static void launchPlayerCreationGUI() {
 		PlayerCreationGUI create = new PlayerCreationGUI();
 	}
-	
+
 	public static void launchPlayerGUI(Player p) {
 		GameClientPlayer client = new GameClientPlayer(p);
 		PlayerGUI playerGUI = new PlayerGUI(client);
 		client.setGUI(playerGUI);
 		String ip = JOptionPane.showInputDialog(null, "Enter the DMs IP address:", "Connect To DM",
+
 				JOptionPane.QUESTION_MESSAGE);
+		/*
 		try {
 			InetAddress addr = InetAddress.getByName(ip);
 			client.connect(addr, 3252);
-		}
-		catch(UnknownHostException e) {
-			System.out.println("FUCK");
-		}
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
+		}*/
 	}
-	
+
 	public static void launchDMGUI() {
 		Game game = new Game();
 		GameServer server = new GameServer(game);
 		DMGUI dmGUI = new DMGUI(server);
 		server.start();
 	}
-	
+
 	public static void setGUI() {
 		Font myFont = new Font("Blackadder ITC", Font.PLAIN, 20);
 		Font myFont2 = new Font("Blackadder ITC", Font.PLAIN, 30);

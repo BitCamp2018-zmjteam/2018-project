@@ -9,6 +9,7 @@ public class Player extends Creature {
 	private ArrayList<String> flags;
 	private String race, role;
 	private UUID uuid;
+
 	public Player(int strength, int dexterity, int constitution, int intelligence, int wisdom, int charisma, String name, String race, String role) {
 		super(strength, dexterity, constitution, intelligence, wisdom, charisma, name);
 		flags = new ArrayList<>();

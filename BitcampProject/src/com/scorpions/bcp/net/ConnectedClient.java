@@ -9,18 +9,22 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeoutException;
 
+import com.scorpions.bcp.creature.Player;
+
 public class ConnectedClient extends Thread {
 
 	private Socket clientSocket;
 	private GameServer gameServer;
 	private ObjectInputStream clientIn;
 	private ObjectOutputStream clientOut;
-
+	private Player player;
+	
 	public ConnectedClient(Socket s, GameServer gameServer) throws IOException {
 		this.clientSocket = s;
 		this.gameServer = gameServer;
 		this.clientOut = new ObjectOutputStream(s.getOutputStream());
 		this.clientIn = new ObjectInputStream(s.getInputStream());
+		player = null;
 	}
 
 	@Override
@@ -96,6 +100,7 @@ public class ConnectedClient extends Thread {
 		case PLAYER_INTERACT:
 			break;
 		case PLAYER_JOIN:
+			player = gameServer.playerJoined(this, (Player)r.getValues().get("player"));
 			break;
 		case PLAYER_LEAVE:
 			System.out.println("Client dc'd");
@@ -109,8 +114,19 @@ public class ConnectedClient extends Thread {
 			}
 			break;
 		case PLAYER_MOVE:
+			//Map<String,Object> moveMap = r.getValues();
+			//gameServer.clientMove(moveMap);
 			break;
 		case WORLD_INFO:
+			break;
+		case GAME_INFO:
+			Map<String,Object> map = gameServer.infoRequest(player);
+			Response response = new Response(ResponseType.GAME_INFO, map);
+			try {
+				send(response);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 			break;
 		default:
 			break;
