@@ -149,6 +149,11 @@ public class ConnectedClient extends Thread {
 				e.printStackTrace();
 			}
 			break;
+		case MESSAGE_SENT:
+			String targetId = (String)r.getValues().get("target");
+			String msg = (String)r.getValues().get("message");
+			gameServer.playerSentMessage(targetId, msg, player);
+			break;
 		default:
 			break;
 		

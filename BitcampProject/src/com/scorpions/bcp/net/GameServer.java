@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.Set;
 
 import com.scorpions.bcp.Game;
+import com.scorpions.bcp.creature.Creature;
 import com.scorpions.bcp.creature.Player;
 import com.scorpions.bcp.event.PlayerMoveEvent;
 import com.scorpions.bcp.event.PostEventTask;
@@ -208,6 +209,17 @@ public class GameServer extends Thread {
 				});
 				game.queueEvent(pme);
 			}
+		}
+	}
+	
+	public void playerSentMessage(String targetId, String msg, Player sender) {
+		if(targetId != null) {
+			Creature target = Creature.getCreature(targetId);
+			if(target != null) {
+				
+			}
+		} else {
+			
 		}
 	}
 	
