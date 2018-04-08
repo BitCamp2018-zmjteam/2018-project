@@ -73,8 +73,8 @@ public class WorldEditGUI extends JFrame implements ActionListener {
 		placeStruct.addActionListener(this);
 		saveAsWorld.setActionCommand("Save World");
 		saveAsWorld.addActionListener(this);
-		saveAsWorld.setActionCommand("Save Struct");
-		saveAsWorld.addActionListener(this);
+		saveAsStruct.setActionCommand("Save Struct");
+		saveAsStruct.addActionListener(this);
 		loadWorld.setActionCommand("Load");
 		loadWorld.addActionListener(this);
 		exit.setActionCommand("Exit");
@@ -153,7 +153,16 @@ public class WorldEditGUI extends JFrame implements ActionListener {
 		} else if (arg0.getActionCommand().equals("Add NPC") && validCoords(selectedX,selectedY)) {
 			repaint();
 		} else if (arg0.getActionCommand().equals("Place Struct")) {
-			
+			if(structureList.getSelectedValue() != null) {
+				//check if can fit in world at point
+				int height = structureList.getSelectedValue().getTiles().length;
+				int width = structureList.getSelectedValue().getTiles()[0].length;
+				int endPointX = selectedX+width;
+				int endPointY = selectedY+height;
+				if(endPointX <= current.getWorldWidth() && endPointY <= current.getWorldHeight()) {
+					current.addStructure(structureList.getSelectedValue(), selectedX, selectedY);
+				}
+			}
 			repaint();
 		} else if (arg0.getActionCommand().equals("Save Struct")) {
 			JFileChooser fc = new JFileChooser();
