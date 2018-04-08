@@ -2,6 +2,7 @@ package com.scorpions.bcp.gui;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -33,7 +34,7 @@ public class WorldEditGUI extends JFrame implements ActionListener {
 	private DMGUI dmGUI;
 	private int width, height;
 	private JPanel panel, worldPanel, previewPanel;
-	private JButton flipTile, addNPC, placeStruct, saveAsWorld, saveAsStruct, loadWorld, exit;
+	private JButton flipTile, addNPC, placeStruct, saveAsWorld, saveAsStruct, loadWorld, toggleSpawnPoint, exit;
 	private JTextField xField, yField;
 	private JLabel xLabel, yLabel;
 	private int selectedX, selectedY;
@@ -61,6 +62,7 @@ public class WorldEditGUI extends JFrame implements ActionListener {
 		xField = new JTextField();
 		yField = new JTextField();
 		flipTile = new JButton("Flip Tile");
+		toggleSpawnPoint = new JButton("Toggle Spawnpoint");
 		addNPC = new JButton("Add NPC");
 		placeStruct = new JButton("Place Structure");
 		saveAsWorld = new JButton("Save as World");
@@ -80,6 +82,8 @@ public class WorldEditGUI extends JFrame implements ActionListener {
 		saveAsStruct.addActionListener(this);
 		loadWorld.setActionCommand("Load");
 		loadWorld.addActionListener(this);
+		toggleSpawnPoint.setActionCommand("Toggle Spawn");
+		toggleSpawnPoint.addActionListener(this);
 		exit.setActionCommand("Exit");
 		exit.addActionListener(this);
 		structureList.addListSelectionListener(new ListSelectionListener() {
@@ -105,6 +109,7 @@ public class WorldEditGUI extends JFrame implements ActionListener {
 		panel.add(worldPanel);
 		panel.add(structPane);
 		panel.add(previewPanel);
+		panel.add(toggleSpawnPoint);
 
 		xLabel.setLocation(10, 10);
 		xLabel.setSize(100, 40);
@@ -126,7 +131,7 @@ public class WorldEditGUI extends JFrame implements ActionListener {
 		saveAsStruct.setSize(200, 40);
 		loadWorld.setLocation(10, 360);
 		loadWorld.setSize(200, 40);
-		exit.setLocation(10, 410);
+		exit.setLocation(10, 460);
 		exit.setSize(150, 40);
 		worldPanel.setSize(500, 500);
 		worldPanel.setLocation(450, 50);
@@ -134,6 +139,8 @@ public class WorldEditGUI extends JFrame implements ActionListener {
 		structPane.setLocation(225, 50);
 		previewPanel.setSize(150, 150);
 		previewPanel.setLocation(250, 375);
+		toggleSpawnPoint.setLocation(10, 410);
+		toggleSpawnPoint.setSize(225, 40);
 
 		panel.setLayout(null);
 		this.add(panel);
@@ -216,6 +223,19 @@ public class WorldEditGUI extends JFrame implements ActionListener {
 
 		} else if (arg0.getActionCommand().equals("Exit")) {
 			this.close();
+		} else if(arg0.getActionCommand().equals("Toggle Spawn")) {
+			Point thePoint = null;
+			for(Point p : current.getSpawnPoints()) {
+				if(p.x == selectedX && p.y == selectedY) {
+					thePoint = p;
+				}
+			}
+			if(thePoint == null) {
+				current.addSpawnPoint(new Point(selectedX,selectedY));
+			} else {
+				current.getSpawnPoints().remove(thePoint);
+			}
+			repaint();
 		}
 
 	}
@@ -363,6 +383,13 @@ public class WorldEditGUI extends JFrame implements ActionListener {
 					for (int k = 0; k < current.getWorldHeight(); k++) {
 						int drawPosX = offsetX + i;
 						int drawPosY = offsetY + k;
+						for(Point p : current.getSpawnPoints()) {
+							if(p.x == i && p.y == k) {
+								g.setColor(Color.blue);
+								g.fillRect(drawPosX * gridBlockSize, drawPosY * gridBlockSize, gridBlockSize,
+										gridBlockSize);
+							}
+						}
 						if (current.getTile(i, k).isNavigable()) {
 							g.setColor(Color.WHITE);
 							g.drawRect(drawPosX * gridBlockSize, drawPosY * gridBlockSize, gridBlockSize,

@@ -22,6 +22,7 @@ import com.scorpions.bcp.gui.DMGUI;
 import com.scorpions.bcp.world.Interactable;
 import com.scorpions.bcp.world.Tile;
 import com.scorpions.bcp.world.TileDirection;
+import com.scorpions.bcp.world.World;
 
 public class GameServer extends Thread {
 
@@ -37,6 +38,10 @@ public class GameServer extends Thread {
 		g.registerListener(new GameServerListener(this));
 		this.running = false;
 		this.players = new HashMap<String,Player>();
+	}
+	
+	public void changeWorld(World w) {
+		this.game.setWorld(w);
 	}
 
 	@Override

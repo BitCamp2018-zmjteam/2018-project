@@ -161,7 +161,6 @@ public class GameClientPlayer {
 				for (Interactable i : targets.keySet()) {
 					gui.updateLog(i.getName() + " at point (" + targets.get(i).getX()+ ","+targets.get(i).getY()+")");
 				}
-				update += "# is a barrier, @ is a creature\n";
 				gui.updateLog(update);
 			}
 			break;

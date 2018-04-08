@@ -29,7 +29,6 @@ import com.scorpions.bcp.creature.NPC;
 import com.scorpions.bcp.creature.Player;
 import com.scorpions.bcp.items.Item;
 import com.scorpions.bcp.net.GameServer;
-import com.scorpions.bcp.world.Tile;
 import com.scorpions.bcp.world.World;
 
 public class DMGUI extends JFrame implements ActionListener {
@@ -38,12 +37,12 @@ public class DMGUI extends JFrame implements ActionListener {
 	private JPanel main, npcs, npcData, world, players, items, itemsData, playersData;
 	private JLabel ipAddr, iNameLabel, iBPLabel, iSPLabel, iDescLabel, playerTitle, playerStr, playerDex, playerCon,
 			playerInt, playerWis, playerCha, playerMoney, npcStrL, npcDexL, npcConL, npcIntL, npcWisL, npcChaL,
-			npcNameL, playerResponse, npcResponse, flagsReq, flagsGive, existingOptions, baseDialog, directory;
+			npcNameL, playerResponse, npcResponse, flagsReq, flagsGive, existingOptions, baseDialog, directory,currentWorldName;
 	private int width, height;
 	private GameServer server;
 	private String address;
 	private JButton start, loadWorld, addItem, newWorld, addNpc, addSpeechOpt, optRemove, optEdit, optRemoveAll,
-			optGoInto;
+			optGoInto,selectWorld;
 	private JScrollPane npcPane, itemsPane, playersPane;
 	private JList<String> npcList, itemsList, flags;
 	private JList<Player> playersList;
@@ -94,6 +93,7 @@ public class DMGUI extends JFrame implements ActionListener {
 		addItem = new JButton("Add Item");
 		newWorld = new JButton("New World");
 		addNpc = new JButton("Add NPC");
+		selectWorld = new JButton("Set World");
 		addSpeechOpt = new JButton("Add Speech Option");
 		optRemove = new JButton("Remove");
 		optEdit = new JButton("Edit");
@@ -138,6 +138,7 @@ public class DMGUI extends JFrame implements ActionListener {
 		playerWis = new JLabel("Wisdom: 0");
 		playerCha = new JLabel("Charisma: 0");
 		playerMoney = new JLabel("GP: 0");
+		currentWorldName = new JLabel("World: default");
 		npcStrL = new JLabel("Strength:");
 		npcDexL = new JLabel("Dexterity:");
 		npcConL = new JLabel("Constitution:");
@@ -169,6 +170,8 @@ public class DMGUI extends JFrame implements ActionListener {
 		newWorld.addActionListener(this);
 		addNpc.setActionCommand("Add NPC");
 		addNpc.addActionListener(this);
+		selectWorld.setActionCommand("Select World");
+		selectWorld.addActionListener(this);
 
 		main.setLayout(null);
 		npcs.setLayout(null);
@@ -181,11 +184,17 @@ public class DMGUI extends JFrame implements ActionListener {
 
 		main.add(ipAddr);
 		main.add(start);
+		main.add(selectWorld);
+		main.add(currentWorldName);
 		ipAddr.setLocation(10, 10);
 		ipAddr.setSize(300, 30);
 		start.setLocation(525, 500);
 		start.setSize(150, 40);
-
+		selectWorld.setLocation(700, 500);
+		selectWorld.setSize(150, 40);
+		currentWorldName.setLocation(10,50);
+		currentWorldName.setSize(300, 30);
+		
 		npcs.add(npcPane);
 		npcs.add(npcData);
 		npcPane.setViewportView(npcList);
@@ -341,6 +350,7 @@ public class DMGUI extends JFrame implements ActionListener {
 			start.setVisible(false);
 			loadWorld.setVisible(false);
 			newWorld.setVisible(false);
+			selectWorld.setVisible(false);
 			server.start();
 		} else if (event.getActionCommand().equals("Add NPC")) {
 			addNPC();
@@ -386,6 +396,22 @@ public class DMGUI extends JFrame implements ActionListener {
 			}
 			worldEdit = new World(worldHeight, worldHeight, name);
 			wEG.load(worldEdit, npcMap);
+		} else if (event.getActionCommand().equals("Select World")) {
+			File f;
+			JFileChooser fc = new JFileChooser();
+			FileNameExtensionFilter filter = new FileNameExtensionFilter("World files", World.FILE_SUFFIX);
+			fc.setFileFilter(filter);
+			int check = fc.showOpenDialog(new JFrame());
+			if (check == JFileChooser.APPROVE_OPTION) {
+				f = fc.getSelectedFile();
+				World w = World.fromFile(f);
+				if (w != null) {
+					server.changeWorld(w);
+					System.out.println("WORLD CHANGE: " + w.getName());
+					currentWorldName.setText("World: " + w.getName());
+					repaint();
+				}
+			}
 		}
 
 	}

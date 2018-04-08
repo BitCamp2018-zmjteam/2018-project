@@ -33,6 +33,10 @@ public class Game {
 		System.out.println(gameWorld);
 	}
 	
+	public void setWorld(World w) {
+		this.gameWorld = w;
+	}
+	
 	public World getWorld() {
 		return this.gameWorld;
 	}
