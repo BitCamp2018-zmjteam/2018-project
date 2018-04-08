@@ -100,7 +100,12 @@ public class ConnectedClient extends Thread {
 		case PLAYER_INTERACT:
 			break;
 		case PLAYER_JOIN:
-			player = gameServer.playerJoined(this, (Player)r.getValues().get("player"));
+			player = (Player)r.getValues().get("player");
+			try {
+				send(gameServer.playerJoined(this, player));
+			} catch (IOException e2) {
+				e2.printStackTrace();
+			}
 			break;
 		case PLAYER_LEAVE:
 			System.out.println("Client dc'd");
@@ -162,6 +167,7 @@ public class ConnectedClient extends Thread {
 	public void send(Response s) throws IOException {
 		clientOut.writeObject(s);
 		clientOut.flush();
+		clientOut.reset();
 		System.out.println("SENT RESPONSE");
 	}
 

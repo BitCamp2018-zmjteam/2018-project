@@ -14,6 +14,7 @@ import com.scorpions.bcp.Game;
 import com.scorpions.bcp.creature.Player;
 import com.scorpions.bcp.event.PlayerMoveEvent;
 import com.scorpions.bcp.event.PostEventTask;
+import com.scorpions.bcp.gui.DMGUI;
 import com.scorpions.bcp.world.Tile;
 import com.scorpions.bcp.world.TileDirection;
 
@@ -24,7 +25,8 @@ public class GameServer extends Thread {
 	private boolean running;
 	private Set<ConnectedClient> clients;
 	private Map<String, Player> players;
-
+	private DMGUI gui;
+	
 	public GameServer(Game g) {
 		this.game = g;
 		this.running = false;
@@ -84,17 +86,21 @@ public class GameServer extends Thread {
 	}
 	
 	public Map<String,Object> infoRequest(Player p) {
+		System.out.println(p);
 		Map<String,Object> toReturn = new HashMap<String,Object>();
 		toReturn.put("playerMap", players);
-		toReturn.put("selfId", p.getUUID());
+		toReturn.put("selfId", p.getUUID().toString());
 		return toReturn;
 	}
 	
-	public Player playerJoined(ConnectedClient c, Player p) {
-		UUID uuid = UUID.randomUUID();
-		p.setUUID(uuid);
-		this.players.put(uuid.toString(), p);
-		return p;
+	public Response playerJoined(ConnectedClient c, Player p) {
+		Map<String,Object> acceptMap = new HashMap<String,Object>();
+		Point spawnPoint = game.getWorld().getRandomSpawn();
+		acceptMap.put("location", spawnPoint);
+		p.setX(spawnPoint.x);
+		p.setY(spawnPoint.y);
+		Response r = new Response(ResponseType.PLAYER_ACCEPT, acceptMap);
+		return r;
 	}
 	
 	
@@ -112,7 +118,6 @@ public class GameServer extends Thread {
 		Player p = getPlayer(id);
 		int newX = p.getPos().x;
 		int newY = p.getPos().y;
-		
 		switch(td) {
 		case BOTTOM:
 			//y-1
@@ -133,28 +138,33 @@ public class GameServer extends Thread {
 		default:
 			break;
 		}
-		Tile destination = game.getWorld().getTile(newX, newY);
-		if(destination.isNavigable() && destination.getCreature() == null) {
-			//A ok move
-			PlayerMoveEvent pme = new PlayerMoveEvent(p,new Point(newX,newY));
-			pme.addPostCompleteTask(new PostEventTask(pme) {
-				@Override
-				public void run() {
+		if(newX < game.getWorld().getWorldWidth() && newY < game.getWorld().getWorldHeight() && newX >= 0 && newY>=0) {
+			Tile destination = game.getWorld().getTile(newX, newY);
+			if(destination.isNavigable() && destination.getCreature() == null) {
+				//A ok move
+				PlayerMoveEvent pme = new PlayerMoveEvent(p,new Point(newX,newY));
+				pme.addPostCompleteTask(new PostEventTask(pme) {
+					@Override
+					public void run() {
 
-					Map<String,Object> moveMap = new HashMap<String,Object>();
-					moveMap.put("playerid", p.getUUID().toString());
-					moveMap.put("location", p.getPos());
-					Response r = new Response(ResponseType.PLAYER_MOVE, moveMap);
-					for(ConnectedClient cc : clients) {
-						try {
-							cc.send(r);
-						} catch (IOException e) {
-							e.printStackTrace();
+						Map<String,Object> moveMap = new HashMap<String,Object>();
+						Player player = ((PlayerMoveEvent)event).getPlayer();
+						moveMap.put("playerid", player.getUUID().toString());
+						moveMap.put("location", player.getPos());
+						Response r = new Response(ResponseType.PLAYER_MOVE, moveMap);
+						System.out.println(player.getPos().toString() + "  " + moveMap.get("location"));
+						for(ConnectedClient cc : clients) {
+							try {
+								cc.send(r);
+								System.out.println("R: " + r.getValues().values());
+							} catch (IOException e) {
+								e.printStackTrace();
+							}
 						}
 					}
-				}
-			});
-			game.queueEvent(pme);
+				});
+				game.queueEvent(pme);
+			}
 		}
 	}
 	
@@ -196,6 +206,10 @@ public class GameServer extends Thread {
 	
 	public Game getGame() {
 		return this.game;
+	}
+
+	public void setGUI(DMGUI dmGUI) {
+		this.gui = dmGUI;
 	}
 
 }

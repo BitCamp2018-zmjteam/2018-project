@@ -94,6 +94,7 @@ public class GameClientPlayer {
 		System.out.println("eval Start "+r.getType());
 		switch (r.getType()) {
 		case PLAYER_ACCEPT:
+			gui.updateLog("Location: " + ((Point) (r.getValues().get("location"))).getX() + ", " + ((Point) (r.getValues().get("location"))).getY());
 			Point point = (Point) r.getValues().get("location");
 			p.setX(point.x);
 			p.setY(point.y);

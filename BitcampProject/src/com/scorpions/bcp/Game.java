@@ -30,7 +30,7 @@ public class Game {
 		listeners = new HashSet<RegisteredListener>();
 		gameWorld = w;
 		Game.game = this;
-		
+		System.out.println(gameWorld);
 	}
 	
 	public World getWorld() {
