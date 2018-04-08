@@ -148,6 +148,14 @@ public class DialogTree implements Serializable{
 			sp.removePlayerOption(index);
 			return true;
 		}
+		public boolean changePlayerResponse(int index, String newResponse) {
+			sp.playerOptions.get(index).playerSays = newResponse;
+			return true;
+		}
+		public boolean changeNPCResponse(int index, String newResponse) {
+			sp.playerOptions.get(index).npcResponse = new SpeechItem(newResponse);
+			return true;
+		}
 		public boolean clearPlayerOptions() {
 			sp.clearPlayerOptions();
 			return true;
