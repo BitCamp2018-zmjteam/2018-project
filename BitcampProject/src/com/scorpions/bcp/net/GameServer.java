@@ -8,12 +8,14 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 
 import com.scorpions.bcp.Game;
 import com.scorpions.bcp.creature.Creature;
 import com.scorpions.bcp.creature.Player;
 import com.scorpions.bcp.event.PlayerMoveEvent;
 import com.scorpions.bcp.event.PostEventTask;
+import com.scorpions.bcp.event.interact.PlayerSentMessageEvent;
 import com.scorpions.bcp.gui.DMGUI;
 import com.scorpions.bcp.world.Tile;
 import com.scorpions.bcp.world.TileDirection;
@@ -213,14 +215,8 @@ public class GameServer extends Thread {
 	}
 	
 	public void playerSentMessage(String targetId, String msg, Player sender) {
-		if(targetId != null) {
-			Creature target = Creature.getCreature(targetId);
-			if(target != null) {
-				
-			}
-		} else {
-			
-		}
+		PlayerSentMessageEvent event = new PlayerSentMessageEvent(targetId, msg, sender);
+		game.queueEvent(event);
 	}
 	
 	public void forceStop() {
