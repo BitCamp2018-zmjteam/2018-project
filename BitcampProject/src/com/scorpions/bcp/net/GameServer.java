@@ -97,7 +97,9 @@ public class GameServer extends Thread {
 		acceptMap.put("location", spawnPoint);
 		p.setX(spawnPoint.x);
 		p.setY(spawnPoint.y);
+		players.put(p.getUUID().toString(), p);
 		Response r = new Response(ResponseType.PLAYER_ACCEPT, acceptMap);
+		
 		return r;
 	}
 	
