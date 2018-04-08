@@ -78,6 +78,9 @@ public class Game {
 			}
 			e.doEvent(this);
 		}
+		for(Event e : eventQueue) {
+			e.doPostCompleteTasks(false);
+		}
 		eventQueue.clear();
 		eventQueue.addAll(nextQueue);
 		queueLocked = false;
