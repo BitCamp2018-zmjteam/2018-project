@@ -14,6 +14,7 @@ import java.util.concurrent.TimeoutException;
 import com.scorpions.bcp.creature.Creature;
 import com.scorpions.bcp.creature.NPC;
 import com.scorpions.bcp.creature.Player;
+import com.scorpions.bcp.event.interact.PlayerInteractCreatureEvent;
 import com.scorpions.bcp.event.interact.PlayerSentMessageEvent;
 
 public class ConnectedClient extends Thread {
@@ -115,9 +116,8 @@ public class ConnectedClient extends Thread {
 			String name = (String)r.getValues().get("name");
 			Point posit = (Point)r.getValues().get("interactedPos");
 			String interType = (String)r.getValues().get("interactType");
-			if (interType.equals("CREATURE") && Creature.getCreature(name) instanceof NPC) { //Interact with NPC
-				NPC interactNPC = (NPC)Creature.getCreature(name);
-				interactNPC.interact(player);
+			if (interType.equals("CREATURE")) { //Interact with NPC
+				gameServer.getGame().queueEvent(new PlayerInteractCreatureEvent(player, Creature.getCreature(name)));
 			}
 			break;
 		case PLAYER_JOIN:

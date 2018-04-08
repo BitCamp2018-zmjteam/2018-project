@@ -215,6 +215,10 @@ public class GameServer extends Thread {
 	public void playerSentMessage(String targetId, String msg, Player sender) {
 		PlayerSentMessageEvent event = new PlayerSentMessageEvent(targetId, msg, sender);
 		game.queueEvent(event);
+  }
+  
+	public void playerInteract(Player interactor, String name) {
+		worldInfo();
 	}
 	
 	public void forceStop() {
