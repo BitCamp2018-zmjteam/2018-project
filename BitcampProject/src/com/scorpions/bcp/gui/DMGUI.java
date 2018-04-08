@@ -38,18 +38,20 @@ public class DMGUI extends JFrame implements ActionListener {
 	private JPanel main, npcs, npcData, world, players, items, itemsData, playersData;
 	private JLabel ipAddr, iNameLabel, iBPLabel, iSPLabel, iDescLabel, playerTitle, playerStr, playerDex, playerCon,
 			playerInt, playerWis, playerCha, playerMoney, npcStrL, npcDexL, npcConL, npcIntL, npcWisL, npcChaL,
-			npcNameL;
+			npcNameL, playerResponse, npcResponse, flagsReq, flagsGive, existingOptions, baseDialog, directory;
 	private int width, height;
 	private GameServer server;
 	private String address;
-	private JButton start, loadWorld, addItem, newWorld, addNpc;
+	private JButton start, loadWorld, addItem, newWorld, addNpc, addSpeechOpt, optRemove, optEdit, optRemoveAll,
+			optGoInto;
 	private JScrollPane npcPane, itemsPane, playersPane;
-	private JList<String> npcList, itemsList;
+	private JList<String> npcList, itemsList, flags;
 	private JList<Player> playersList;
-	private DefaultListModel<String> npcModel, itemsModel;
+	private DefaultListModel<String> npcModel, itemsModel, optModel;
 	private DefaultListModel<Player> playersModel;
-	private JTextField itemName, itemBP, itemSP, npcStr, npcDex, npcCon, npcInt, npcWis, npcCha, npcName;
-	private JTextArea itemDesc;
+	private JTextField itemName, itemBP, itemSP, npcStr, npcDex, npcCon, npcInt, npcWis, npcCha, npcName,
+			playerResponseField, npcResponseField, flagReqField, baseDialogField;
+	private JTextArea itemDesc, flagsGiven;
 	private TreeMap<String, Item> itemsMap;
 	private TreeMap<String, Player> playersMap;
 	private ListSelectionModel itemsLSM, playersLSM, npcLSM;
@@ -92,7 +94,14 @@ public class DMGUI extends JFrame implements ActionListener {
 		addItem = new JButton("Add Item");
 		newWorld = new JButton("New World");
 		addNpc = new JButton("Add NPC");
+		addSpeechOpt = new JButton("Add Speech Option");
+		optRemove = new JButton("Remove");
+		optEdit = new JButton("Edit");
+		optRemoveAll = new JButton("Remove All");
+		optGoInto = new JButton("Go Into");
 		npcPane = new JScrollPane();
+		optModel = new DefaultListModel<String>();
+		flags = new JList<String>(optModel);
 		npcModel = new DefaultListModel<String>();
 		npcList = new JList<String>(npcModel);
 		itemsPane = new JScrollPane();
@@ -111,6 +120,11 @@ public class DMGUI extends JFrame implements ActionListener {
 		npcWis = new JTextField();
 		npcCha = new JTextField();
 		npcName = new JTextField();
+		playerResponseField = new JTextField();
+		npcResponseField = new JTextField();
+		flagReqField = new JTextField();
+		baseDialogField = new JTextField();
+		flagsGiven = new JTextArea();
 		itemDesc = new JTextArea();
 		iNameLabel = new JLabel("Item Name:");
 		iBPLabel = new JLabel("Buy Price:");
@@ -131,6 +145,8 @@ public class DMGUI extends JFrame implements ActionListener {
 		npcWisL = new JLabel("Wisdom:");
 		npcChaL = new JLabel("Charisma:");
 		npcNameL = new JLabel("Name:");
+		playerResponse = new JLabel("Player Response");
+		npcResponse = new JLabel("");
 		new JLabel("Width: ");
 		new JLabel("Height: ");
 		new JTextField();
@@ -337,7 +353,7 @@ public class DMGUI extends JFrame implements ActionListener {
 			if (check == JFileChooser.APPROVE_OPTION) {
 				f = fc.getSelectedFile();
 				World w = World.fromFile(f);
-				if(w != null) {
+				if (w != null) {
 					worldEdit = w;
 					wEG.load(worldEdit, npcMap);
 				}
@@ -396,7 +412,7 @@ public class DMGUI extends JFrame implements ActionListener {
 			} else if (name.trim().equals("")) {
 				JOptionPane.showMessageDialog(null, "Invalid name", "Error", JOptionPane.INFORMATION_MESSAGE);
 			}
-			if(npcModel.contains(name)) {
+			if (npcModel.contains(name)) {
 				JOptionPane.showMessageDialog(null, "NPC already exists", "Error", JOptionPane.INFORMATION_MESSAGE);
 				return;
 			}
@@ -469,7 +485,7 @@ public class DMGUI extends JFrame implements ActionListener {
 		}
 
 	}
-	
+
 	private class npcListListener implements ListSelectionListener {
 
 		@Override
