@@ -15,11 +15,16 @@ public class PlayerMessageEvent extends Event {
 	private Player target;
 	private String message;
 	private String sender;
+	private Response r;
 	
 	public PlayerMessageEvent(Player target, String message, UUID sender) {
 		this.target = target;
 		this.message = message;
 		this.sender = sender.toString();
+		Map<String,Object> respoMap = new HashMap<>();
+		respoMap.put("uuid", sender);
+		respoMap.put("message", message);
+		r = new Response(ResponseType.PLAYER_MESSAGE,respoMap);
 	}
 	public Player getPlayerTarget() {
 		return target;
@@ -31,19 +36,11 @@ public class PlayerMessageEvent extends Event {
 		return sender;
 	}
 	public Response getResponse() {
-		Map<String,Object> respoMap = new HashMap<>();
-		respoMap.put("uuid", sender);
-		respoMap.put("message", message);
-		Response r = new Response(ResponseType.PLAYER_MESSAGE,respoMap);
 		return r;
 	}
 	protected void enact(Game g) {
 		// TODO Auto-generated method stub
 		// Send a response to the client with the Player_Message Protocol
-		Map<String,Object> respoMap = new HashMap<>();
-		respoMap.put("uuid", sender);
-		respoMap.put("message", message);
-		Response r = new Response(ResponseType.PLAYER_MESSAGE,respoMap);
 	}
 
 }

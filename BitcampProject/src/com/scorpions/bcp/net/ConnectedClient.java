@@ -139,6 +139,11 @@ public class ConnectedClient extends Thread {
 				e.printStackTrace();
 			}
 			break;
+		case MESSAGE_SENT:
+			String target = (String)r.values.get("target");
+			String message = (String)r.values.get("message");
+			Player origin = player;
+			
 		default:
 			break;
 		

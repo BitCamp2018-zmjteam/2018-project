@@ -154,8 +154,6 @@ public class GameClientPlayer {
 			update += "# is a barrier, @ is a creature\n";
 			update += "You are at ("+offset.getX()+","+offset.getY()+")";
 			gui.updateLog(update);
-			p.setX((int) offset.getX());
-			p.setY((int) offset.getY());
 			break;
 		case PLAYER_MESSAGE:
 			String sender = Creature.getCreature((String)r.getValues().get("uuid")).getName();
