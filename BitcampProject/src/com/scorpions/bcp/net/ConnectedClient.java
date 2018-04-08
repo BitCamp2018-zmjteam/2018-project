@@ -121,9 +121,9 @@ public class ConnectedClient extends Thread {
 			break;
 		case GAME_INFO:
 			Map<String,Object> map = gameServer.infoRequest(player);
-			Response response = new Response(ResponseType.GAME_INFO, map);
+			Response response2 = new Response(ResponseType.GAME_INFO, map);
 			try {
-				send(response);
+				send(response2);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
