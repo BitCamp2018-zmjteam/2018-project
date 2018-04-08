@@ -151,7 +151,7 @@ public class GameClientPlayer {
 				for (Tile t : row) {
 					update += t.getCreature()==null?t.isNavigable()?" ":"#":"@";
 				}
-				update += "\n";
+				update += "\n> ";
 			}
 			update += "# is a barrier, @ is a creature\n";
 			gui.updateLog(update);
