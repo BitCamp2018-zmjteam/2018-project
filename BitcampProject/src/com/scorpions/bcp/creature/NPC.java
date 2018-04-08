@@ -8,6 +8,7 @@ import com.scorpions.bcp.world.Interactable;
  *
  */
 public class NPC extends Creature {
+	private static final long serialVersionUID = 640702901064267395L;
 	private DialogTree d;
 	public NPC(int strength, int dexterity, int constitution, int intelligence, int wisdom, int charisma, DialogTree d, String name) {
 		super(strength, dexterity, constitution, intelligence, wisdom, charisma, name);
