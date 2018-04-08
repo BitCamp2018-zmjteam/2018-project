@@ -2,6 +2,7 @@ package com.scorpions.bcp;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.io.File;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
@@ -15,6 +16,7 @@ import com.scorpions.bcp.gui.PlayerGUI;
 import com.scorpions.bcp.gui.StartupGUI;
 import com.scorpions.bcp.net.GameClientPlayer;
 import com.scorpions.bcp.net.GameServer;
+import com.scorpions.bcp.world.World;
 
 public class TestDriver {
 	public static void main(String args[]) {
@@ -43,7 +45,7 @@ public class TestDriver {
 	}
 
 	public static void launchDMGUI() {
-		Game game = new Game();
+		Game game = new Game(World.fromFile(World.createDefaultWorld()));
 		GameServer server = new GameServer(game);
 		DMGUI dmGUI = new DMGUI(server);
 	}
