@@ -1,5 +1,6 @@
 package com.scorpions.bcp.net;
 
+import java.awt.Point;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -10,6 +11,8 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.TimeoutException;
 
+import com.scorpions.bcp.creature.Creature;
+import com.scorpions.bcp.creature.NPC;
 import com.scorpions.bcp.creature.Player;
 import com.scorpions.bcp.event.interact.PlayerSentMessageEvent;
 
@@ -105,6 +108,13 @@ public class ConnectedClient extends Thread {
 	protected void handleRequest(Request r) {
 		switch(r.getType()) {
 		case PLAYER_INTERACT:
+			String name = (String)r.getValues().get("name");
+			Point posit = (Point)r.getValues().get("interactedPos");
+			String interType = (String)r.getValues().get("interactType");
+			if (interType.equals("CREATURE") && Creature.getCreature(name) instanceof NPC) { //Interact with NPC
+				NPC interactNPC = (NPC)Creature.getCreature(name);
+				interactNPC.interact(player);
+			}
 			break;
 		case PLAYER_JOIN:
 			player = (Player)r.getValues().get("player");
