@@ -88,5 +88,8 @@ public class TestDriver {
 		UIManager.put("TabbedPane.foreground", myWhite);
 		UIManager.put("TabbedPane.background", myBrown);
 		UIManager.put("TabbedPane.font", myFont2);
+		UIManager.put("List.background", myBrown);
+		UIManager.put("List.foreground", myWhite);
+		UIManager.put("List.font", myFont);
 	}
 }
