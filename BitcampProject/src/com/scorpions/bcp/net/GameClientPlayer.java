@@ -101,9 +101,7 @@ public class GameClientPlayer {
 		case GAME_INFO:
 			Map<String,Player> playerMap = (Map<String,Player>)r.getValues().get("playerMap");
 			System.out.println(r.getValues());
-			UUID selfID = UUID.fromString((String)r.getValues().get("selfId"));
-			p.setUUID(selfID);
-			gui.updateLog("You have UUID " + selfID);
+			gui.updateLog("You have UUID " + p.getUUID().toString());
 			gui.updateLog("Also in the world are:");
 			for (String u : playerMap.keySet()) {
 				gui.updateLog(playerMap.get(u) + " with UUID " + u);
