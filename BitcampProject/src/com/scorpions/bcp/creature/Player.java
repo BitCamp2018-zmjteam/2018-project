@@ -1,12 +1,14 @@
 package com.scorpions.bcp.creature;
 
 import java.util.ArrayList;
+import java.util.UUID;
 
 import com.scorpions.bcp.world.Interactable;
 
 public class Player extends Creature {
 	private ArrayList<String> flags;
 	private String race, role;
+	private UUID uuid;
 
 	public Player(int strength, int dexterity, int constitution, int intelligence, int wisdom, int charisma, String name, String race, String role) {
 		super(strength, dexterity, constitution, intelligence, wisdom, charisma, name);
@@ -28,5 +30,11 @@ public class Player extends Creature {
 	public void interact(Interactable i) {
 		// TODO Auto-generated method stub
 		
+	}
+	public void setUUID(UUID uuid) {
+		this.uuid = uuid;
+	}
+	public UUID getUUID() {
+		return uuid;
 	}
 }
