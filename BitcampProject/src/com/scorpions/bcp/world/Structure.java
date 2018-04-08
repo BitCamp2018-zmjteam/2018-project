@@ -12,6 +12,8 @@ public interface Structure extends Serializable {
 
 	Tile[][] getTiles();
 	
+	public String getName();
+	
 	public static boolean exportStructure(Structure c, File f) {
 		if(!f.getParentFile().exists()) {
 			f.mkdirs();
@@ -54,4 +56,5 @@ public interface Structure extends Serializable {
 		return null;
 
 	}
+	
 }
