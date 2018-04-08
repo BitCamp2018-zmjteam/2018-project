@@ -6,6 +6,7 @@ import java.util.UUID;
 import com.scorpions.bcp.world.Interactable;
 
 public class Player extends Creature {
+	private static final long serialVersionUID = -6890460594523292940L;
 	private ArrayList<String> flags;
 	private String race, role;
 	private UUID id;
