@@ -6,9 +6,9 @@ import com.scorpions.bcp.net.GameServer;
 public class ServerDriver {
 
 	public static void main(String[] args) {
-		Game g = new Game();
+		/*Game g = new Game();
 		GameServer gs = new GameServer(g);
-		gs.start();
+		gs.start();*/
 	}
 	
 }
