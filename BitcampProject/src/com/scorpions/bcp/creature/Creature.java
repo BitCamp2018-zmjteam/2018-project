@@ -44,6 +44,10 @@ public abstract class Creature implements Interactable, Serializable {
 		creatures.put(id.toString(), this);
 	}
 	
+	public static void registerCreature(Creature c) {
+		creatures.put(c.getUUID().toString(), c);
+	}
+	
 	public void initMaps(int str, int dex, int con, int intel, int wis, int cha) {
 		stats.put("STR", str);
 		stats.put("DEX", dex);

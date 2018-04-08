@@ -11,6 +11,7 @@ import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.scorpions.bcp.creature.Creature;
 import com.scorpions.bcp.creature.NPC;
 
 public class World implements Serializable, Structure {
@@ -138,12 +139,19 @@ public class World implements Serializable, Structure {
 				Object o = ois.readObject();
 				ois.close();
 				if(o instanceof World) {
-					return (World)o;
+					World w = (World)o;
+					for (Tile[] tr : w.worldTiles) {
+						for (Tile t : tr) {
+							if (t.getCreature() != null) {
+								Creature.registerCreature(t.getCreature());
+							}
+						}
+					}
+					return w;
 				}
 				return null;
-			} else {
-				return null;
 			}
+			return null;
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (ClassCastException e) {
