@@ -168,6 +168,10 @@ public class GameServer extends Thread {
 		}
 	}
 	
+	public void playerInteract(Player interactor, String name) {
+		worldInfo();
+	}
+	
 	public void forceStop() {
 		this.running = false;
 		try {
