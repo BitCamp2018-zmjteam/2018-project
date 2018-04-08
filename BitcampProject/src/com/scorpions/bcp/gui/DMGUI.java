@@ -286,7 +286,7 @@ public class DMGUI extends JFrame implements ActionListener {
 		npcDialogTree.add(npcCenter, BorderLayout.CENTER);
 		npcDialogTree.add(npcDone, BorderLayout.PAGE_END);
 		npcs.add(npcDialogTree);
-		npcDialogTree.setLocation(200, 100);
+		npcDialogTree.setLocation(400, 10);
 		npcDialogTree.setSize(this.width - 400, this.height - 70);
 		
 		items.add(itemsPane);
