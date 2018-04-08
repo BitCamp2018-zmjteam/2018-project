@@ -8,7 +8,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import java.util.UUID;
 
 import com.scorpions.bcp.Game;
 import com.scorpions.bcp.creature.Player;
@@ -99,7 +98,9 @@ public class GameServer extends Thread {
 		acceptMap.put("location", spawnPoint);
 		p.setX(spawnPoint.x);
 		p.setY(spawnPoint.y);
+		players.put(p.getUUID().toString(), p);
 		Response r = new Response(ResponseType.PLAYER_ACCEPT, acceptMap);
+		gui.addPlayer(p);
 		return r;
 	}
 	
@@ -121,7 +122,7 @@ public class GameServer extends Thread {
 		switch(td) {
 		case BOTTOM:
 			//y-1
-			newY--;
+			newY++;
 			break;
 		case LEFT:
 			//x-1
@@ -133,7 +134,7 @@ public class GameServer extends Thread {
 			break;
 		case TOP:
 			//y+1
-			newY++;
+			newY--;
 			break;
 		default:
 			break;
@@ -156,7 +157,6 @@ public class GameServer extends Thread {
 						for(ConnectedClient cc : clients) {
 							try {
 								cc.send(r);
-								System.out.println("R: " + r.getValues().values());
 							} catch (IOException e) {
 								e.printStackTrace();
 							}

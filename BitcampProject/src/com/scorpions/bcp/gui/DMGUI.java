@@ -41,8 +41,10 @@ public class DMGUI extends JFrame implements ActionListener {
 	private String address;
 	private JButton start, loadWorld, saveWorld, addItem;
 	private JScrollPane npcPane, itemsPane, playersPane;
-	private JList<String> npcList, itemsList, playersList;
-	private DefaultListModel<String> npcModel, itemsModel, playersModel;
+	private JList<String> npcList, itemsList; 
+	private JList<Player> playersList;
+	private DefaultListModel<String> npcModel, itemsModel;	
+	private DefaultListModel<Player> playersModel;
 	private JTextField itemName, itemBP, itemSP;
 	private JTextArea itemDesc;
 	private TreeMap<String,Item> itemsMap;
@@ -66,6 +68,8 @@ public class DMGUI extends JFrame implements ActionListener {
 		height = 675;
 
 		itemsMap = new TreeMap<String, Item>();
+		playersMap = new TreeMap<String, Player>();
+		npcMap = new TreeMap<String, NPC>();
 		panel = new JTabbedPane();
 		main = new JPanel();
 		npcs = new JPanel();
@@ -87,8 +91,8 @@ public class DMGUI extends JFrame implements ActionListener {
 		itemsModel = new DefaultListModel<String>();
 		itemsList = new JList<String>(itemsModel);
 		playersPane = new JScrollPane();
-		playersModel = new DefaultListModel<String>();
-		playersList = new JList<String>(playersModel);
+		playersModel = new DefaultListModel<Player>();
+		playersList = new JList<Player>(playersModel);
 		itemName = new JTextField();
 		itemBP = new JTextField();
 		itemSP = new JTextField();
@@ -259,13 +263,19 @@ public class DMGUI extends JFrame implements ActionListener {
 		}
 		else if(event.getActionCommand().equals("Add Item")) {
 			addItem();
+			itemsPane.getVerticalScrollBar().setValue(itemsPane.getVerticalScrollBar().getMaximum());
 		}
 
 	}
 
 	public void addPlayer(Player pl) {
-		playersModel.addElement(pl.getName());
-		playersMap.put(pl.getName(), pl);
+		playersModel.addElement(pl);
+		playersMap.put(pl.getUUID().toString(), pl);
+		playersPane.getVerticalScrollBar().setValue(playersPane.getVerticalScrollBar().getMaximum());
+	}
+	
+	public void removePlayer(UUID id) {
+		playersModel.removeElement(playersMap.remove(id.toString()));
 	}
 	
 	public void addNPC(NPC npc) {

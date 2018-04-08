@@ -86,7 +86,12 @@ public class ConnectedClient extends Thread {
 			} else {
 				System.out.println("REQUEST ALIVE");
 				if(received instanceof Request) {
-					handleRequest((Request)received);
+					try {
+						handleRequest((Request)received);
+					} catch (Exception e) {
+						System.out.println("Error while handling request from client");
+						e.printStackTrace();
+					}
 				} else {
 					end("Invalid request");
 				}
@@ -117,6 +122,7 @@ public class ConnectedClient extends Thread {
 					e1.printStackTrace();
 				}
 			}
+			gameServer.disconnected(this);
 			break;
 		case PLAYER_MOVE:
 			Map<String,Object> moveMap = r.getValues();
