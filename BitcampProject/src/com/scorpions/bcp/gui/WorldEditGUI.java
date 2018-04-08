@@ -151,6 +151,7 @@ public class WorldEditGUI extends JFrame implements ActionListener {
 			current.getTile(selectedX, selectedY).setNavigable(!current.getTile(selectedX, selectedY).isNavigable());
 			repaint();
 		} else if (arg0.getActionCommand().equals("Add NPC") && validCoords(selectedX,selectedY)) {
+			addNPC(selectedX, selectedY);
 			repaint();
 		} else if (arg0.getActionCommand().equals("Place Struct")) {
 			
@@ -203,6 +204,13 @@ public class WorldEditGUI extends JFrame implements ActionListener {
 			return false;
 		}
 		return true;
+	}
+	
+	public void addNPC(int x, int y) {
+		String name = JOptionPane.showInputDialog(null, "Enter the npc name from the npc list(enter null for an empty tile):",
+				"Add NPC", JOptionPane.QUESTION_MESSAGE);
+		NPC newNPC = npcs.get(name);
+		current.getTile(x, y).setCreature(newNPC);
 	}
 	
 	public boolean checkIfCoordsValid() {
