@@ -1,6 +1,8 @@
 package com.scorpions.bcp.gui;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -8,6 +10,7 @@ import java.net.InetAddress;
 import java.util.TreeMap;
 import java.util.UUID;
 
+import javax.swing.BoxLayout;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
@@ -25,6 +28,8 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+import com.scorpions.bcp.DialogTree;
+import com.scorpions.bcp.DialogTree.DMIterator;
 import com.scorpions.bcp.creature.NPC;
 import com.scorpions.bcp.creature.Player;
 import com.scorpions.bcp.items.Item;
@@ -35,27 +40,33 @@ import com.scorpions.bcp.world.World;
 public class DMGUI extends JFrame implements ActionListener {
 	private static final long serialVersionUID = -6156179537660121688L;
 	private JTabbedPane panel;
-	private JPanel main, npcs, npcData, world, players, items, itemsData, playersData;
+	private JPanel main, npcs, npcData, world, players, items, itemsData, playersData, npcDialogTree,
+		npcTop, npcLeft, npcCenter, npcRight;
 	private JLabel ipAddr, iNameLabel, iBPLabel, iSPLabel, iDescLabel, playerTitle, 
 		playerStr, playerDex, playerCon, playerInt, playerWis, playerCha, playerMoney,
-		npcStrL, npcDexL, npcConL, npcIntL, npcWisL, npcChaL, npcNameL;
+		npcStrL, npcDexL, npcConL, npcIntL, npcWisL, npcChaL, npcNameL, npcDT, npcDownstream, npcBase,
+		npcPlayerResponse, npcNPCResponse,npcFlagReq,npcFlagGiven,npcExistingOptions;
 	private int width, height;
 	private GameServer server;
 	private String address;
-	private JButton start, loadWorld, addItem, newWorld;
+	private JButton start, loadWorld, addItem, newWorld,npcgotoTop,npcRemoveOption, npcEditOption,
+		npcRemoveAll, npcGoDown, npcAddSpeech, npcDone;
 	private JScrollPane npcPane, itemsPane, playersPane;
-	private JList<String> npcList, itemsList; 
+	private JList<String> npcList, itemsList,npcOptionsList; 
 	private JList<Player> playersList;
 	private DefaultListModel<String> npcModel, itemsModel;	
 	private DefaultListModel<Player> playersModel;
-	private JTextField itemName, itemBP, itemSP, npcStr, npcDex, npcCon, npcInt, npcWis, npcCha, npcName;
-	private JTextArea itemDesc;
+	private JTextField itemName, itemBP, itemSP, npcStr, npcDex, npcCon, npcInt, npcWis, 
+		npcCha, npcName, npcEditBase, npcPlayResp, npcNPCResp, npcFlagRequ;
+	private JTextArea itemDesc,npcFlagsGiven;
 	private TreeMap<String,Item> itemsMap;
 	private TreeMap<String, Player> playersMap;
 	private ListSelectionModel itemsLSM, playersLSM;
 	private TreeMap<String, NPC> npcMap;
 	private World worldEdit;
 	private Tile tileEdit;
+	private DialogTree dT;
+	private DMIterator dmIt;
 	private WorldEditGUI wEG;
 	public DMGUI(GameServer server) {
 		super("DM Screen");
@@ -86,6 +97,11 @@ public class DMGUI extends JFrame implements ActionListener {
 		npcData = new JPanel();
 		itemsData = new JPanel();
 		playersData = new JPanel();
+		npcDialogTree = new JPanel();
+		npcTop = new JPanel();
+		npcLeft = new JPanel();
+		npcCenter = new JPanel();
+		npcRight = new JPanel();
 		ipAddr = new JLabel("IP: " + address);
 		start = new JButton("Start server");
 		loadWorld = new JButton("Load world");
@@ -110,6 +126,7 @@ public class DMGUI extends JFrame implements ActionListener {
 		npcWis = new JTextField();
 		npcCha = new JTextField();
 		npcName = new JTextField();
+		npcDialogTree = new JPanel();
 		itemDesc = new JTextArea();
 		iNameLabel = new JLabel("Item Name:");
 		iBPLabel = new JLabel("Buy Price:");
@@ -130,6 +147,28 @@ public class DMGUI extends JFrame implements ActionListener {
 		npcWisL = new JLabel("Wisdom:");
 		npcChaL = new JLabel("Charisma:");
 		npcNameL = new JLabel("Name:");
+		npcDT = new JLabel("Dialog Tree");
+		npcDownstream = new JLabel("top-second-third");
+		npcBase = new JLabel("base dialog");
+		npcExistingOptions = new JLabel("Existing Options");
+		npcPlayerResponse = new JLabel("Player Response");
+		npcNPCResponse = new JLabel("NPC Response to Player");
+		npcFlagReq = new JLabel("Flag Required");
+		npcFlagGiven = new JLabel("Flags Rewarded");
+		npcgotoTop = new JButton("Go to Top Level");
+		npcAddSpeech = new JButton("Add Speech Option");
+		npcRemoveOption = new JButton("Remove");
+		npcEditOption = new JButton("Edit");
+		npcRemoveAll = new JButton("Remove All");
+		npcGoDown = new JButton("Go into selected");
+		npcEditBase = new JTextField(20);
+		npcPlayResp = new JTextField(20);
+		npcNPCResp = new JTextField(20);
+		npcFlagRequ = new JTextField(20);
+		npcFlagsGiven = new JTextArea(20,5);
+		npcDone = new JButton("Finished");
+		npcOptionsList = new JList<String>();
+		
 		new JLabel("Width: ");
 		new JLabel("Height: ");
 		new JTextField();
@@ -216,7 +255,40 @@ public class DMGUI extends JFrame implements ActionListener {
 		npcChaL.setSize(140, 40);
 		npcCha.setLocation(150, 430);
 		npcCha.setSize(140, 40);
-
+		npcTop.add(npcDT);
+		npcTop.add(npcDownstream);
+		npcTop.add(npcgotoTop);
+		npcLeft.add(npcAddSpeech);
+		npcLeft.add(npcPlayerResponse);
+		npcLeft.add(npcPlayResp);
+		npcLeft.add(npcNPCResponse);
+		npcLeft.add(npcNPCResp);
+		npcLeft.add(npcFlagReq);
+		npcLeft.add(npcFlagRequ);
+		npcLeft.add(npcFlagGiven);
+		npcLeft.add(npcFlagsGiven);
+		npcCenter.add(npcExistingOptions);
+		npcCenter.add(npcOptionsList);
+		npcCenter.add(npcRemoveOption);
+		npcCenter.add(npcEditOption);
+		npcCenter.add(npcRemoveAll);
+		npcCenter.add(npcGoDown);
+		npcRight.add(npcBase);
+		npcRight.add(npcEditBase);
+		npcTop.setLayout(new BoxLayout(npcTop,BoxLayout.LINE_AXIS));
+		npcLeft.setLayout(new BoxLayout(npcLeft,BoxLayout.PAGE_AXIS));
+		npcCenter.setLayout(new BoxLayout(npcCenter,BoxLayout.PAGE_AXIS));
+		npcRight.setLayout(new BoxLayout(npcRight,BoxLayout.PAGE_AXIS));
+		npcDialogTree.setLayout(new BorderLayout());
+		npcDialogTree.add(npcTop, BorderLayout.PAGE_START);
+		npcDialogTree.add(npcRight, BorderLayout.LINE_END);
+		npcDialogTree.add(npcLeft, BorderLayout.LINE_START);
+		npcDialogTree.add(npcCenter, BorderLayout.CENTER);
+		npcDialogTree.add(npcDone, BorderLayout.PAGE_END);
+		npcs.add(npcDialogTree);
+		npcDialogTree.setLocation(200, 100);
+		npcDialogTree.setSize(this.width - 400, this.height - 70);
+		
 		items.add(itemsPane);
 		items.add(itemsData);
 		itemsData.add(addItem);
