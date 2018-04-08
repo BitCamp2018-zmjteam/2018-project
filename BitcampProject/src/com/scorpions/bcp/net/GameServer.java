@@ -28,6 +28,7 @@ public class GameServer extends Thread {
 	
 	public GameServer(Game g) {
 		this.game = g;
+		g.registerListener(new GameServerListener(this));
 		this.running = false;
 		this.players = new HashMap<String,Player>();
 	}
@@ -84,12 +85,54 @@ public class GameServer extends Thread {
 		
 	}
 	
+	public Response worldInfo(ConnectedClient c) {
+		Player p = c.getPlayer();
+		int minX, minY, maxX, maxY;
+		int lookDistance = 12;
+		int lookRadius = lookDistance/2;
+		minX = p.getPos().x-lookRadius;
+		minY = p.getPos().y-lookRadius;
+		maxX = p.getPos().x+lookRadius;
+		maxY = p.getPos().y+lookRadius;
+		if(minX <= 0) {
+			minX = 0;
+		}
+		if(maxX > game.getWorld().getWorldWidth()) {
+			maxX=game.getWorld().getWorldWidth();
+		}
+		if(maxY <= 0) {
+			maxY = 0;
+		}
+		if(maxY > game.getWorld().getWorldHeight()) {
+			maxY = game.getWorld().getWorldHeight();
+		}
+		int xrange = maxX-minX;
+		int yrange = maxY-minY;
+		Tile[][] areaTiles = new Tile[xrange][yrange];
+		for(int i = 0; i < xrange; i++) {
+			for(int k = 0; k < yrange; k++) {
+				areaTiles[i][k] = game.getWorld().getTile(i+minX, k+minY);
+			}
+		}
+		Map<String,Object> returnMap = new HashMap<String,Object>();
+		returnMap.put("area", areaTiles);
+		Response r = new Response(ResponseType.WORLD_INFO, returnMap);
+		return r;
+	}
+	
 	public Map<String,Object> infoRequest(Player p) {
 		System.out.println(p);
 		Map<String,Object> toReturn = new HashMap<String,Object>();
 		toReturn.put("playerMap", players);
 		toReturn.put("selfId", p.getUUID().toString());
 		return toReturn;
+	}
+	
+	public ConnectedClient getClient(Player p) {
+		for(ConnectedClient c : clients) {
+			if(c.getPlayer().equals(p)) return c;
+		}
+		return null;
 	}
 	
 	public Response playerJoined(ConnectedClient c, Player p) {

@@ -28,7 +28,6 @@ public enum ResponseType implements Serializable {
 	 * WORLD_INFO:
 	 *   map:
 	 *     - area: tile[][] | area around the player
-	 *     - offset: x,y pair | offset in the world
 	 * PLAYER_MOVE:
 	 *   map:
 	 *     playerId: player who moved

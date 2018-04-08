@@ -146,7 +146,6 @@ public class GameClientPlayer {
 			break;
 		case WORLD_INFO:
 			Tile[][] area = ((Tile[][])r.getValues().get("area"));
-			Point offset = (Point)r.getValues().get("offset");
 			String update = "";
 			for (Tile[] row : area) {
 				for (Tile t : row) {
@@ -155,10 +154,7 @@ public class GameClientPlayer {
 				update += "\n";
 			}
 			update += "# is a barrier, @ is a creature\n";
-			update += "You are at ("+offset.getX()+","+offset.getY()+")";
 			gui.updateLog(update);
-			p.setX((int) offset.getX());
-			p.setY((int) offset.getY());
 			break;
 		case PLAYER_MESSAGE:
 			String sender = Creature.getCreature((String)r.getValues().get("uuid")).getName();

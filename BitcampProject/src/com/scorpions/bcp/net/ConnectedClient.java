@@ -133,6 +133,12 @@ public class ConnectedClient extends Thread {
 			gameServer.playerMove(moveMap);
 			break;
 		case WORLD_INFO:
+			Response res = gameServer.worldInfo(this);
+			try {
+				send(res);
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
 			break;
 		case GAME_INFO:
 			Map<String,Object> map = gameServer.infoRequest(player);
