@@ -27,6 +27,10 @@ public class ConnectedClient extends Thread {
 		player = null;
 	}
 
+	public Player getPlayer() {
+		return this.player;
+	}
+	
 	@Override
 	public void run() {
 		System.out.println("Thread start");

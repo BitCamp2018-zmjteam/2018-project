@@ -187,6 +187,7 @@ public class GameServer extends Thread {
 
 	public void disconnected(ConnectedClient c) {
 		this.clients.remove(c);
+		this.players.remove(c.getPlayer().getUUID().toString());
 		System.out.println("Removed " + c);
 	}
 	
