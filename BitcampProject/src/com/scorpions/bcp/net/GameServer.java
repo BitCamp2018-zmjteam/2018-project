@@ -8,10 +8,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import java.util.UUID;
 
 import com.scorpions.bcp.Game;
-import com.scorpions.bcp.creature.Creature;
 import com.scorpions.bcp.creature.Player;
 import com.scorpions.bcp.event.PlayerMoveEvent;
 import com.scorpions.bcp.event.PostEventTask;
@@ -226,6 +224,10 @@ public class GameServer extends Thread {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public Set<ConnectedClient> getClients() {
+		return this.clients;
 	}
 	
 	protected void tick() {

@@ -9,9 +9,9 @@ import com.scorpions.bcp.event.Event;
 public class PlayerSentMessageEvent extends Event {
 	private static final long serialVersionUID = 1573914512647069099L;
 
-	String target;
-	String message;
-	Player origin;
+	private String target;
+	private final String message;
+	private final Player origin;
 	
 	public PlayerSentMessageEvent(String targetId, String message, Player origin) {
 		this.target = targetId;
@@ -25,10 +25,29 @@ public class PlayerSentMessageEvent extends Event {
 			Creature c = Creature.getCreature(target);
 			if(c != null) {
 				if(c instanceof NPC) {
-					
+					((NPC)c).sendMessage(message);
+				} else {
+					target = null;
 				}
+			} else {
+				target = null;
 			}
 		}
+		
 	}
+	
+	public Player getSender() {
+		return this.origin;
+	}
+	
+	public String getMessage() {
+		return this.message;
+	}
+	
+	public String getTargetId() {
+		return this.target;
+	}
+	
+	
 
 }
