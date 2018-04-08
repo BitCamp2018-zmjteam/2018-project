@@ -7,6 +7,7 @@ import java.util.Scanner;
 
 import com.scorpions.bcp.creature.Player;
 import com.scorpions.bcp.event.Event;
+import com.scorpions.bcp.event.interact.PlayerMessageEvent;
 
 /**
  * The dialog tree that players can interact with
@@ -52,7 +53,7 @@ public class DialogTree implements Serializable{
 		return new DMIterator();
 	}
 	/**
-	 * Start the conversation between the host NPC and the palyer p
+	 * Start the conversation between the host NPC and the player p
 	 * @author Morgan
 	 *
 	 */
@@ -60,16 +61,15 @@ public class DialogTree implements Serializable{
 		converser = p;
 		
 		SpeechItem s = base;
-		System.out.println(s.show());
+		wholeGame.queueEvent(new PlayerMessageEvent(converser,s.show()));
 		Scanner sc = new Scanner(System.in);
 		do {
 			int choice = sc.nextInt();
 			if (s.playerOptions.size() > choice) {
 				if (s.playerOptions.get(choice).getResponse(p) instanceof SpeechItem) {
 					s = (SpeechItem)(s.playerOptions.get(choice).getResponse(p));
-					System.out.println(s.show());
+					wholeGame.queueEvent(new PlayerMessageEvent(converser,s.show()));
 				} else {
-					System.out.println(s.playerOptions.get(choice));
 					wholeGame.queueEvent(s.playerOptions.get(choice).getResponse(p));
 					break;
 				}
@@ -253,7 +253,7 @@ public class DialogTree implements Serializable{
 		protected String show() {
 			for (Event e : trigger) {
 				if (e instanceof SpeechItem) {
-					System.out.println(((SpeechItem)e).show());
+					wholeGame.queueEvent(new PlayerMessageEvent(converser,((SpeechItem)e).show()));
 				} else {
 					wholeGame.queueEvent(e);
 				}

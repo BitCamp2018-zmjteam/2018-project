@@ -3,7 +3,10 @@ package com.scorpions.bcp.creature;
 import java.awt.Point;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.TreeMap;
+import java.util.UUID;
 
 import com.scorpions.bcp.items.Item;
 import com.scorpions.bcp.world.Interactable;
@@ -20,8 +23,11 @@ public abstract class Creature implements Interactable, Serializable {
 	private TreeMap<String, String> skillBase;
 	private ArrayList<Item> inventory;
 	private Point position;
+	private UUID id;
+	private static Map<String,Creature> creatures = new HashMap<>();
 	public Creature(int strength, int dexterity, int constitution,
 			int intelligence, int wisdom, int charisma, String name) {
+		id = UUID.randomUUID();
 		
 		gp = 0;
 		
@@ -35,6 +41,7 @@ public abstract class Creature implements Interactable, Serializable {
 		initMaps(strength, dexterity, constitution, intelligence, wisdom, charisma);
 		
 		position = new Point(-1, -1);
+		creatures.put(id.toString(), this);
 	}
 	
 	public void initMaps(int str, int dex, int con, int intel, int wis, int cha) {
@@ -139,5 +146,11 @@ public abstract class Creature implements Interactable, Serializable {
 	
 	public void setY(int y) {
 		position.setLocation(position.getX(), y);
+	}
+	public UUID getUUID() {
+		return id;
+	}
+	public static Creature getCreature(String id) {
+		return creatures.get(id);
 	}
 }

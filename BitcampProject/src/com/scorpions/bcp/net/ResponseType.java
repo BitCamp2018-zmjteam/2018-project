@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 public enum ResponseType implements Serializable {
 
-	PLAYER_ACCEPT(false), WORLD_INFO(false), PLAYER_MOVE(true),GAME_INFO(false),INTERACT_RESPONSE(false),PLAYER_KICK(false);
+	PLAYER_ACCEPT(false), WORLD_INFO(false), PLAYER_MOVE(true),GAME_INFO(false),INTERACT_RESPONSE(false),PLAYER_KICK(false),PLAYER_MESSAGE(false);
 
 	
 	private boolean showAll;
@@ -44,6 +44,10 @@ public enum ResponseType implements Serializable {
 	 *     success: true or false
 	 *     result: possible result, probably null
 	 *     
+	 * PLAYER_MESSAGE
+	 * 	 map:
+	 * 		uuid: sender
+	 * 		message: message to recieve
 	 */
 	
 }

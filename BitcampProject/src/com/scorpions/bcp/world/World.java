@@ -27,6 +27,11 @@ public class World implements Serializable {
 	public World(int width, int height) {
 		worldTiles = new Tile[width][height];
 		spawnPoints = new LinkedList<Point>();
+		for(int i = 0; i < width; i++) {
+			for(int k = 0; k < height; k++) {
+				worldTiles[i][k] = new Tile(true);
+			}
+		}
 	}
 	
 	public void addSpawnPoint(Point p) {
@@ -129,7 +134,7 @@ public class World implements Serializable {
 		try {
 			if(f.exists()) {
 				ObjectInputStream ois = new ObjectInputStream(new FileInputStream(f));
-				Object o = ois.read();
+				Object o = ois.readObject();
 				ois.close();
 				if(o instanceof World) {
 					return (World)o;
@@ -141,6 +146,8 @@ public class World implements Serializable {
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (ClassCastException e) {
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		}
 		return null;
