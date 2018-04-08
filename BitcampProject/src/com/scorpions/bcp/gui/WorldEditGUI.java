@@ -3,6 +3,7 @@ package com.scorpions.bcp.gui;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.util.TreeMap;
 
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
@@ -13,6 +14,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+import com.scorpions.bcp.creature.NPC;
 import com.scorpions.bcp.world.World;
 
 public class WorldEditGUI extends JFrame implements ActionListener {
@@ -23,7 +25,7 @@ public class WorldEditGUI extends JFrame implements ActionListener {
 	private JButton flipTile, addNPC, placeStruct, saveAsWorld, saveAsStruct, loadWorld, exit;
 	private JTextField xField, yField;
 	private JLabel xLabel, yLabel;
-
+	private TreeMap<String, NPC> npcs;
 	public WorldEditGUI(DMGUI dmGUI) {
 		super("World Edit");
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -103,13 +105,16 @@ public class WorldEditGUI extends JFrame implements ActionListener {
 		this.setVisible(false);
 	}
 
-	public void load(World world) {
+	public void load(World world, TreeMap<String, NPC> npcs) {
 		current = world;
+		this.npcs = npcs;
 		dmGUI.setVisible(false);
 		this.setVisible(true);
 	}
 
 	public void close() {
+		npcs = null;
+		current = null;
 		this.setVisible(false);
 		dmGUI.setVisible(true);
 	}
