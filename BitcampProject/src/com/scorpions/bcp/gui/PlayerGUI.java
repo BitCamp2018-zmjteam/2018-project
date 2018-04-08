@@ -100,56 +100,55 @@ public class PlayerGUI extends JFrame implements KeyListener {
 	}
 
 	public void parseInput(String input) {
-		if(client.getPlayer().getTarget() != null) {
+		if (client.getPlayer().getTarget() != null) {
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("target", client.getPlayer().getTarget().getUUID().toString());
 			map.put("message", input);
 			Request req = new Request(RequestType.MESSAGE_SENT, map);
 			client.sendRequest(req);
-		}
-		else {
-		String[] cmds = input.split(" ");
-		if (cmds.length < 1) {
-			updateLog("Invalid input");
-			return;
-		}
+		} else {
+			String[] cmds = input.split(" ");
+			if (cmds.length < 1) {
+				updateLog("Invalid input");
+				return;
+			}
 
-		String cmd = cmds[0].toLowerCase().trim();
-		if (cmd.equals("move")) {
-			if (cmds.length > 2) {
-				updateLog("Too many arguments");
-				return;
-			}
-			String dir = cmds[1].toLowerCase().trim();
-			if (!dir.equals("north") && !dir.equals("south") && !dir.equals("east") && !dir.equals("west")) {
-				updateLog("Invalid direction");
-				return;
-			} else {
-				Map<String, Object> dirMap = new HashMap<String, Object>();
-				dirMap.put("direction", TileDirection.fromString(dir));
-				dirMap.put("playerid", client.getPlayer().getUUID().toString());
-				client.sendRequest(new Request(RequestType.PLAYER_MOVE, dirMap));
-			}
-		} else if (cmd.equals("interact")) {
-			if (cmds.length > 2) {
-				updateLog("Too many arguments");
-				return;
-			} else {
-				Map<String, Object> targetMap = new HashMap<String, Object>();
-				targetMap.put("target", cmds[1]);
-				client.sendRequest(new Request(RequestType.PLAYER_INTERACT, targetMap));
-			}
-		} else if(cmd.equals("look")) {
-				if(cmds.length > 1) {
+			String cmd = cmds[0].toLowerCase().trim();
+			if (cmd.equals("move")) {
+				if (cmds.length > 2) {
+					updateLog("Too many arguments");
+					return;
+				}
+				String dir = cmds[1].toLowerCase().trim();
+				if (!dir.equals("north") && !dir.equals("south") && !dir.equals("east") && !dir.equals("west")) {
+					updateLog("Invalid direction");
+					return;
+				} else {
+					Map<String, Object> dirMap = new HashMap<String, Object>();
+					dirMap.put("direction", TileDirection.fromString(dir));
+					dirMap.put("playerid", client.getPlayer().getUUID().toString());
+					client.sendRequest(new Request(RequestType.PLAYER_MOVE, dirMap));
+				}
+			} else if (cmd.equals("interact")) {
+				if (cmds.length > 2) {
+					updateLog("Too many arguments");
+					return;
+				} else {
+					Map<String, Object> targetMap = new HashMap<String, Object>();
+					targetMap.put("target", cmds[1]);
+					client.sendRequest(new Request(RequestType.PLAYER_MOVE, targetMap));
+				}
+			} else if (cmd.equals("look")) {
+				if (cmds.length > 1) {
 					updateLog("Too many arguments");
 					return;
 				}
 				Map<String, Object> reqMap = new HashMap<String, Object>();
 				reqMap.put("position", client.getPlayer().getPos());
-				client.sendRequest(new Request(RequestType.WORLD_INFO, reqMap));
-		} else {
-			updateLog("Invalid input");
-			} 
+				client.sendRequest(new Request(RequestType.PLAYER_MOVE, reqMap));
+			} else {
+				updateLog("Invalid input");
+			}
 		}
 	}
 

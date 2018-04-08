@@ -37,17 +37,18 @@ public class DMGUI extends JFrame implements ActionListener {
 	private JTabbedPane panel;
 	private JPanel main, npcs, npcData, world, players, items, itemsData, playersData;
 	private JLabel ipAddr, iNameLabel, iBPLabel, iSPLabel, iDescLabel, playerTitle, 
-		playerStr, playerDex, playerCon, playerInt, playerWis, playerCha;
+		playerStr, playerDex, playerCon, playerInt, playerWis, playerCha, playerMoney,
+		npcStrL, npcDexL, npcConL, npcIntL, npcWisL, npcChaL, npcNameL;
 	private int width, height;
 	private GameServer server;
 	private String address;
-	private JButton start, loadWorld, saveWorld, addItem, newWorld;
+	private JButton start, loadWorld, addItem, newWorld;
 	private JScrollPane npcPane, itemsPane, playersPane;
 	private JList<String> npcList, itemsList; 
 	private JList<Player> playersList;
 	private DefaultListModel<String> npcModel, itemsModel;	
 	private DefaultListModel<Player> playersModel;
-	private JTextField itemName, itemBP, itemSP;
+	private JTextField itemName, itemBP, itemSP, npcStr, npcDex, npcCon, npcInt, npcWis, npcCha, npcName;
 	private JTextArea itemDesc;
 	private TreeMap<String,Item> itemsMap;
 	private TreeMap<String, Player> playersMap;
@@ -55,9 +56,12 @@ public class DMGUI extends JFrame implements ActionListener {
 	private TreeMap<String, NPC> npcMap;
 	private World worldEdit;
 	private Tile tileEdit;
+	private WorldEditGUI wEG;
 	public DMGUI(GameServer server) {
 		super("DM Screen");
 
+		wEG = new WorldEditGUI(this);
+		
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		try {
 			address = InetAddress.getLocalHost().getHostAddress();
@@ -85,7 +89,6 @@ public class DMGUI extends JFrame implements ActionListener {
 		ipAddr = new JLabel("IP: " + address);
 		start = new JButton("Start server");
 		loadWorld = new JButton("Load world");
-		saveWorld = new JButton("Save world");
 		addItem = new JButton("Add Item");
 		newWorld = new JButton("New World");
 		npcPane = new JScrollPane();
@@ -100,6 +103,13 @@ public class DMGUI extends JFrame implements ActionListener {
 		itemName = new JTextField();
 		itemBP = new JTextField();
 		itemSP = new JTextField();
+		npcStr = new JTextField();
+		npcDex = new JTextField();
+		npcCon = new JTextField();
+		npcInt = new JTextField();
+		npcWis = new JTextField();
+		npcCha = new JTextField();
+		npcName = new JTextField();
 		itemDesc = new JTextArea();
 		iNameLabel = new JLabel("Item Name:");
 		iBPLabel = new JLabel("Buy Price:");
@@ -112,6 +122,14 @@ public class DMGUI extends JFrame implements ActionListener {
 		playerInt = new JLabel("Intelligence: 0");
 		playerWis = new JLabel("Wisdom: 0");
 		playerCha = new JLabel("Charisma: 0");
+		playerMoney = new JLabel("GP: 0");
+		npcStrL = new JLabel("Strength:");
+		npcDexL = new JLabel("Dexterity:");
+		npcConL = new JLabel("Constitution:");
+		npcIntL = new JLabel("Intelligence:");
+		npcWisL = new JLabel("Wisdom:");
+		npcChaL = new JLabel("Charisma:");
+		npcNameL = new JLabel("Name:");
 		new JLabel("Width: ");
 		new JLabel("Height: ");
 		new JTextField();
@@ -126,8 +144,6 @@ public class DMGUI extends JFrame implements ActionListener {
 		start.addActionListener(this);
 		loadWorld.setActionCommand("Load");
 		loadWorld.addActionListener(this);
-		saveWorld.setActionCommand("Save");
-		saveWorld.addActionListener(this);
 		addItem.setActionCommand("Add Item");
 		addItem.addActionListener(this);
 		newWorld.setActionCommand("New World");
@@ -154,10 +170,52 @@ public class DMGUI extends JFrame implements ActionListener {
 		npcs.add(npcData);
 		npcPane.setViewportView(npcList);
 		npcPane.setSize(0, 0);
-		npcPane.setSize(200, this.height - 80);
+		npcPane.setSize(200, this.height - 60);
 		npcPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 		npcData.setLocation(200, 0);
-		npcData.setSize(this.width - 200, this.height - 80);
+		npcData.setSize(this.width - 200, this.height - 60);
+		npcData.add(npcNameL);
+		npcData.add(npcName);
+		npcData.add(npcStrL);
+		npcData.add(npcDexL);
+		npcData.add(npcConL);
+		npcData.add(npcIntL);
+		npcData.add(npcWisL);
+		npcData.add(npcChaL);
+		npcData.add(npcStr);
+		npcData.add(npcDex);
+		npcData.add(npcCon);
+		npcData.add(npcInt);
+		npcData.add(npcWis);
+		npcData.add(npcCha);
+		npcNameL.setLocation(10, 10);
+		npcNameL.setSize(140, 40);
+		npcName.setLocation(150, 10);
+		npcName.setSize(140, 40);
+		npcStrL.setLocation(10, 80);
+		npcStrL.setSize(140, 40);
+		npcStr.setLocation(150, 80);
+		npcStr.setSize(140, 40);
+		npcDexL.setLocation(10, 150);
+		npcDexL.setSize(140, 40);
+		npcDex.setLocation(150, 150);
+		npcDex.setSize(140, 40);
+		npcConL.setLocation(10, 220);
+		npcConL.setSize(140, 40);
+		npcCon.setLocation(150, 220);
+		npcCon.setSize(140, 40);
+		npcIntL.setLocation(10, 290);
+		npcIntL.setSize(140, 40);
+		npcInt.setLocation(150, 290);
+		npcInt.setSize(140, 40);
+		npcWisL.setLocation(10, 360);
+		npcWisL.setSize(140, 40);
+		npcWis.setLocation(150, 360);
+		npcWis.setSize(140, 40);
+		npcChaL.setLocation(10, 430);
+		npcChaL.setSize(140, 40);
+		npcCha.setLocation(150, 430);
+		npcCha.setSize(140, 40);
 
 		items.add(itemsPane);
 		items.add(itemsData);
@@ -172,10 +230,10 @@ public class DMGUI extends JFrame implements ActionListener {
 		itemsData.add(iDescLabel);
 		itemsPane.setViewportView(itemsList);
 		itemsPane.setSize(0, 0);
-		itemsPane.setSize(200, this.height - 80);
+		itemsPane.setSize(200, this.height - 60);
 		itemsPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 		itemsData.setLocation(200, 0);
-		itemsData.setSize(this.width - 200, this.height - 80);
+		itemsData.setSize(this.width - 200, this.height - 60);
 		addItem.setLocation(425, 500);
 		addItem.setSize(150, 40);
 		iNameLabel.setLocation(10, 10);
@@ -210,19 +268,20 @@ public class DMGUI extends JFrame implements ActionListener {
 		playersData.add(playerInt);
 		playersData.add(playerWis);
 		playersData.add(playerCha);
+		playersData.add(playerMoney);
 		playersPane.setViewportView(playersList);
 		playersPane.setSize(0, 0);
-		playersPane.setSize(200, this.height - 80);
+		playersPane.setSize(200, this.height - 60);
 		playersPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 		playersData.setLocation(200, 0);
-		playersData.setSize(this.width - 200, this.height - 80);
+		playersData.setSize(this.width - 200, this.height - 60);
 		playerTitle.setLocation(10, 10);
 		playerTitle.setSize(400, 40);
 		playerStr.setLocation(10, 80);
 		playerStr.setSize(200, 40);
 		playerDex.setLocation(10, 150);
 		playerDex.setSize(200, 40);
-		playerCon.setLocation(10, 210);
+		playerCon.setLocation(10, 220);
 		playerCon.setSize(200, 40);
 		playerInt.setLocation(10, 290);
 		playerInt.setSize(200, 40);
@@ -230,15 +289,14 @@ public class DMGUI extends JFrame implements ActionListener {
 		playerWis.setSize(200, 40);
 		playerCha.setLocation(10, 430);
 		playerCha.setSize(200, 40);
+		playerMoney.setLocation(10, 500);
+		playerMoney.setSize(200, 40);
 		
 		world.add(loadWorld);
-		world.add(saveWorld);
 		world.add(newWorld);
 		loadWorld.setLocation(415, 500);
 		loadWorld.setSize(150, 40);
-		saveWorld.setLocation(595, 500);
-		saveWorld.setSize(150, 40);
-		newWorld.setLocation(10, 10);
+		newWorld.setLocation(595, 500);
 		newWorld.setSize(150, 40);
 		
 		panel.addTab("Main", main);
@@ -259,7 +317,7 @@ public class DMGUI extends JFrame implements ActionListener {
 		if (event.getActionCommand().equals("Start")) {
 			start.setVisible(false);
 			loadWorld.setVisible(false);
-			saveWorld.setVisible(false);
+			newWorld.setVisible(false);
 			server.start();
 		} else if (event.getActionCommand().equals("Load")) {
 			File f;
@@ -271,9 +329,6 @@ public class DMGUI extends JFrame implements ActionListener {
 				f = fc.getSelectedFile();
 				World.fromFile(f);
 			}
-		} else if (event.getActionCommand().equals("Save")) {
-			
-			
 		}
 		else if(event.getActionCommand().equals("Add Item")) {
 			addItem();
@@ -289,7 +344,7 @@ public class DMGUI extends JFrame implements ActionListener {
 							JOptionPane.QUESTION_MESSAGE));
 				}
 				catch(NumberFormatException e) {
-					e.printStackTrace();
+					
 				}
 			}
 			while(worldHeight <= 0) {
@@ -298,7 +353,6 @@ public class DMGUI extends JFrame implements ActionListener {
 							JOptionPane.QUESTION_MESSAGE));
 				}
 				catch(NumberFormatException e) {
-					e.printStackTrace();
 				}
 			}
 			while(name.equals("")) {
@@ -306,6 +360,7 @@ public class DMGUI extends JFrame implements ActionListener {
 						JOptionPane.QUESTION_MESSAGE);
 			}
 			worldEdit = new World(worldHeight, worldHeight, name);
+			wEG.load(worldEdit);
 		}
 
 	}
@@ -377,6 +432,7 @@ public class DMGUI extends JFrame implements ActionListener {
 			playerInt.setText("Intelligence: " + p.getStat("INT"));
 			playerWis.setText("Wisdom: " + p.getStat("WIS"));
 			playerCha.setText("Charisma: " + p.getStat("CHA"));
+			playerMoney.setText("GP: " + p.getGP());
 		}
 		
 	}
