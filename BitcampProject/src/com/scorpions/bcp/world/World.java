@@ -1,7 +1,17 @@
 package com.scorpions.bcp.world;
 
+import java.awt.Point;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.util.LinkedList;
+import java.util.List;
+
+import com.scorpions.bcp.creature.NPC;
 
 public class World implements Serializable {
 
@@ -10,11 +20,30 @@ public class World implements Serializable {
 	 */
 	private static final long serialVersionUID = -4342858946362283595L;
 	private Tile[][] worldTiles;
+	private List<Point> spawnPoints;
+	
+	public static final String FILE_SUFFIX=".dtw";
 	
 	public World(int width, int height) {
 		worldTiles = new Tile[width][height];
+		spawnPoints = new LinkedList<Point>();
 	}
 	
+	public void addSpawnPoint(Point p) {
+		spawnPoints.add(p);
+	}
+	
+	public Point getRandomSpawn() {
+		if(spawnPoints.isEmpty()) {
+			return new Point(0,0);
+		} else {
+			return spawnPoints.get((int)(spawnPoints.size() * Math.random()));
+		}
+	}
+	
+	public List<Point> getSpawnPoints() {
+		return spawnPoints;
+	}
 	
 	public Tile getTile(int x, int y) {
 		return worldTiles[x][y];
@@ -97,10 +126,54 @@ public class World implements Serializable {
 	
 	
 	public static World fromFile(File f) {
+		try {
+			if(f.exists()) {
+				ObjectInputStream ois = new ObjectInputStream(new FileInputStream(f));
+				Object o = ois.read();
+				ois.close();
+				if(o instanceof World) {
+					return (World)o;
+				}
+				return null;
+			} else {
+				return null;
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (ClassCastException e) {
+			e.printStackTrace();
+		}
 		return null;
 	}
 	
 	public boolean exportWorld(File f) {
-		return true;
+		if(!f.getParentFile().exists()) {
+			f.mkdirs();
+		}
+		try {
+			if(!f.exists()) {
+				f.createNewFile();
+			}
+			ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(f));
+			oos.writeObject(this);
+			oos.flush();
+			oos.close();
+			return true;
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return false;
 	}
+	
+	public static File createDefaultWorld() {
+		World w = new World(10, 5);
+		w.addStructure(new MerchantStructure(new NPC(0, 0, 0, 0, 0, 0, null, null)), 0, 0);
+		w.addSpawnPoint(new Point(6,2));
+		File exportFile = new File(System.getProperty("user.home") + File.separator + "default_world" + World.FILE_SUFFIX);
+		if(w.exportWorld(exportFile)) {
+			return exportFile;
+		}
+		return null;
+	}
+	
 }

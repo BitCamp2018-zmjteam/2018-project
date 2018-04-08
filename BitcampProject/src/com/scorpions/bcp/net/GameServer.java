@@ -1,5 +1,6 @@
 package com.scorpions.bcp.net;
 
+import java.awt.Point;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -11,6 +12,9 @@ import java.util.UUID;
 
 import com.scorpions.bcp.Game;
 import com.scorpions.bcp.creature.Player;
+import com.scorpions.bcp.event.PlayerMoveEvent;
+import com.scorpions.bcp.event.PostEventTask;
+import com.scorpions.bcp.world.Tile;
 import com.scorpions.bcp.world.TileDirection;
 
 public class GameServer extends Thread {
@@ -102,7 +106,7 @@ public class GameServer extends Thread {
 		this.running = false;
 	}
 	
-	public Response playerMove(Map<String,Object> map) {
+	public void playerMove(Map<String,Object> map) {
 		TileDirection td = (TileDirection)map.get("direction");
 		String id = (String)map.get("playerid");
 		Player p = getPlayer(id);
@@ -112,21 +116,46 @@ public class GameServer extends Thread {
 		switch(td) {
 		case BOTTOM:
 			//y-1
-			
+			newY--;
 			break;
 		case LEFT:
 			//x-1
+			newX--;
 			break;
 		case RIGHT:
 			//x+1
+			newX++;
 			break;
 		case TOP:
 			//y+1
+			newY++;
 			break;
 		default:
 			break;
 		}
-		return null;
+		Tile destination = game.getWorld().getTile(newX, newY);
+		if(destination.isNavigable() && destination.getCreature() == null) {
+			//A ok move
+			PlayerMoveEvent pme = new PlayerMoveEvent(p,new Point(newX,newY));
+			pme.addPostCompleteTask(new PostEventTask(pme) {
+				@Override
+				public void run() {
+
+					Map<String,Object> moveMap = new HashMap<String,Object>();
+					moveMap.put("playerid", p.getUUID().toString());
+					moveMap.put("location", p.getPos());
+					Response r = new Response(ResponseType.PLAYER_MOVE, moveMap);
+					for(ConnectedClient cc : clients) {
+						try {
+							cc.send(r);
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+					}
+				}
+			});
+			game.queueEvent(pme);
+		}
 	}
 	
 	public void forceStop() {
