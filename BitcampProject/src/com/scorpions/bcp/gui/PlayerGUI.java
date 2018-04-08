@@ -101,7 +101,7 @@ public class PlayerGUI extends JFrame implements KeyListener {
 
 	public void parseInput(String input) {
 		String[] cmds = input.split(" ");
-		if (cmds.length <= 1) {
+		if (cmds.length < 1) {
 			updateLog("Invalid input");
 			return;
 		}

@@ -100,8 +100,8 @@ public class GameServer extends Thread {
 		if(maxX > game.getWorld().getWorldWidth()) {
 			maxX=game.getWorld().getWorldWidth();
 		}
-		if(maxY <= 0) {
-			maxY = 0;
+		if(minY <= 0) {
+			minY = 0;
 		}
 		if(maxY > game.getWorld().getWorldHeight()) {
 			maxY = game.getWorld().getWorldHeight();
