@@ -11,7 +11,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-import com.scorpions.bcp.creature.Creature;
 import com.scorpions.bcp.creature.Player;
 import com.scorpions.bcp.gui.PlayerGUI;
 import com.scorpions.bcp.world.Tile;
@@ -93,11 +92,16 @@ public class GameClientPlayer {
 	protected void evalResponse(Response r) {
 		switch (r.getType()) {
 		case PLAYER_ACCEPT:
-			System.out.println(((Point) r.getValues().get("location")).toString());
+			gui.updateLog(((Point) r.getValues().get("location")).toString());
 		case GAME_INFO:
 			Map<UUID,Player> playerMap = (Map<UUID,Player>)r.getValues().get("playerMap");
 			UUID selfID = (UUID)r.getValues().get("selfId");
 			p.setUUID(selfID);
+			gui.updateLog("You have UUID " + selfID);
+			gui.updateLog("Also in the world are:");
+			for (UUID u : playerMap.keySet()) {
+				gui.updateLog(playerMap.get(u) + " with UUID " + u);
+			}
 			break;
 		case INTERACT_RESPONSE:
 			boolean success = (Boolean)r.getValues().get("success");
@@ -105,17 +109,19 @@ public class GameClientPlayer {
 			System.out.print("Interaction ");
 			System.out.print(success?"succeeded":"failed");
 			if (result != null)
-				gui.updateLog(" ("+result.toString()+")");
+				gui.updateLog(" - "+result.toString());
 			else
 				gui.updateLog("");
 			break;
 		case PLAYER_KICK:
+			gui.updateLog("You were kicked from the server.");
 			break;
 		case PLAYER_MOVE:
 			UUID playerID = (UUID)r.getValues().get("playerId");
 			Point location = (Point)r.getValues().get("location");
 			gui.updateLog("You are now at ("+location.getX()+","+location.getY()+").");
-			//Set location of p using location
+			p.setX((int) location.getX());
+			p.setY((int) location.getY());
 			break;
 		case WORLD_INFO:
 			Tile[][] area = ((Tile[][])r.getValues().get("area"));
@@ -123,13 +129,15 @@ public class GameClientPlayer {
 			String update = "";
 			for (Tile[] row : area) {
 				for (Tile t : row) {
-					update += (t.getCreature()==null?t.isNavigable()?" ":"#":"@");
+					update += t.getCreature()==null?t.isNavigable()?" ":"#":"@";
 				}
 				update += "\n";
 			}
-			update += ("You are at ("+offset.getX()+","+offset.getY()+")");
+			update += "# is a barrier, @ is a creature\n";
+			update += "You are at ("+offset.getX()+","+offset.getY()+")";
 			gui.updateLog(update);
-			//Set location of p using offset
+			p.setX((int) offset.getX());
+			p.setY((int) offset.getY());
 			break;
 		default:
 			break;
