@@ -111,7 +111,7 @@ public class DMGUI extends JFrame implements ActionListener {
 		
 		itemsLSM = itemsList.getSelectionModel();
 	    itemsLSM.addListSelectionListener(new itemsListListener());
-	    playersLSM = itemsList.getSelectionModel();
+	    playersLSM = playersList.getSelectionModel();
 	    playersLSM.addListSelectionListener(new playerListListener());
 	    
 		start.setActionCommand("Start");
@@ -206,7 +206,7 @@ public class DMGUI extends JFrame implements ActionListener {
 		playersData.setLocation(200, 0);
 		playersData.setSize(this.width - 200, this.height - 80);
 		playerTitle.setLocation(10, 10);
-		playerTitle.setSize(200, 40);
+		playerTitle.setSize(400, 40);
 		playerStr.setLocation(10, 80);
 		playerStr.setSize(200, 40);
 		playerDex.setLocation(10, 150);
@@ -327,7 +327,7 @@ public class DMGUI extends JFrame implements ActionListener {
 
 		@Override
 		public void valueChanged(ListSelectionEvent arg0) {
-			Player p = playersMap.get(playersList.getSelectedValue());
+			Player p = playersMap.get(playersList.getSelectedValue().getUUID().toString());
 			playerTitle.setText(p.toString());
 			playerStr.setText("Strength: " + p.getStat("STR"));
 			playerDex.setText("Dexterity: " + p.getStat("DEX"));
