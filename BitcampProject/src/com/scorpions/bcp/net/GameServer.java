@@ -10,11 +10,16 @@ import java.util.Map;
 import java.util.Set;
 
 import com.scorpions.bcp.Game;
+import com.scorpions.bcp.creature.Creature;
 import com.scorpions.bcp.creature.Player;
+import com.scorpions.bcp.event.Event;
 import com.scorpions.bcp.event.PlayerMoveEvent;
 import com.scorpions.bcp.event.PostEventTask;
+import com.scorpions.bcp.event.interact.PlayerInteractCreatureEvent;
+import com.scorpions.bcp.event.interact.PlayerInteractEvent;
 import com.scorpions.bcp.event.interact.PlayerSentMessageEvent;
 import com.scorpions.bcp.gui.DMGUI;
+import com.scorpions.bcp.world.Interactable;
 import com.scorpions.bcp.world.Tile;
 import com.scorpions.bcp.world.TileDirection;
 
@@ -88,13 +93,21 @@ public class GameServer extends Thread {
 	
 	public Response worldInfo(ConnectedClient c) {
 		Player p = c.getPlayer();
+		Tile[][] areaTiles = retrieveTiles(p.getPos().x,p.getPos().y);
+		Map<String,Object> returnMap = new HashMap<String,Object>();
+		returnMap.put("area", areaTiles);
+		Response r = new Response(ResponseType.WORLD_INFO, returnMap);
+		return r;
+	}
+	
+	public Tile[][] retrieveTiles(int x, int y) {
 		int minX, minY, maxX, maxY;
 		int lookDistance = 12;
 		int lookRadius = lookDistance/2;
-		minX = p.getPos().x-lookRadius;
-		minY = p.getPos().y-lookRadius;
-		maxX = p.getPos().x+lookRadius;
-		maxY = p.getPos().y+lookRadius;
+		minX = x-lookRadius;
+		minY = y-lookRadius;
+		maxX = x+lookRadius;
+		maxY = y+lookRadius;
 		if(minX <= 0) {
 			minX = 0;
 		}
@@ -115,10 +128,7 @@ public class GameServer extends Thread {
 				areaTiles[i][k] = game.getWorld().getTile(i+minX, k+minY);
 			}
 		}
-		Map<String,Object> returnMap = new HashMap<String,Object>();
-		returnMap.put("area", areaTiles);
-		Response r = new Response(ResponseType.WORLD_INFO, returnMap);
-		return r;
+		return areaTiles;
 	}
 	
 	public Map<String,Object> infoRequest(Player p) {
@@ -218,7 +228,28 @@ public class GameServer extends Thread {
   }
   
 	public void playerInteract(Player interactor, String name) {
-		worldInfo();
+		Tile[][] around = retrieveTiles(interactor.getPos().x,interactor.getPos().y);
+		Map<String,Interactable> possibleTargets = new HashMap<>();
+		for (Tile[] row : around) {
+			for (Tile t : row) {
+				if (t instanceof Interactable) {
+					possibleTargets.put(((Interactable)t).getName(),(Interactable)t);
+				}
+				if (t.getCreature() != null) {
+					possibleTargets.put(((Interactable)t.getCreature()).getName(), t.getCreature());
+				}
+			}
+		}
+		Interactable interactableTarget = possibleTargets.get(name);
+		if (interactableTarget != null) {
+			Event e;
+			if (interactableTarget instanceof Tile) {
+				e = new PlayerInteractEvent(interactor,interactableTarget);
+			} else {
+				e = new PlayerInteractCreatureEvent(interactor,(Creature)interactableTarget);
+			}
+			getGame().queueEvent(e);
+		}
 	}
 	
 	public void forceStop() {

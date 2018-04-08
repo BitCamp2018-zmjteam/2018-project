@@ -116,9 +116,7 @@ public class ConnectedClient extends Thread {
 			String name = (String)r.getValues().get("name");
 			Point posit = (Point)r.getValues().get("interactedPos");
 			String interType = (String)r.getValues().get("interactType");
-			if (interType.equals("CREATURE")) { //Interact with NPC
-				gameServer.getGame().queueEvent(new PlayerInteractCreatureEvent(player, Creature.getCreature(name)));
-			}
+			gameServer.playerInteract(player, name);
 			break;
 		case PLAYER_JOIN:
 			player = (Player)r.getValues().get("player");
