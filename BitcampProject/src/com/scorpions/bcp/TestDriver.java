@@ -48,6 +48,7 @@ public class TestDriver {
 		Game game = new Game(World.fromFile(World.createDefaultWorld()));
 		GameServer server = new GameServer(game);
 		DMGUI dmGUI = new DMGUI(server);
+		server.setGUI(dmGUI);
 	}
 
 	public static void setGUI() {

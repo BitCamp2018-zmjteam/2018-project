@@ -92,7 +92,8 @@ public class GameClientPlayer {
 	protected void evalResponse(Response r) {
 		switch (r.getType()) {
 		case PLAYER_ACCEPT:
-			gui.updateLog(((Point) r.getValues().get("location")).toString());
+			gui.updateLog("Location: " + ((Point) (r.getValues().get("location"))).getX() + ", " + ((Point) (r.getValues().get("location"))).getY());
+			break;
 		case GAME_INFO:
 			Map<UUID,Player> playerMap = (Map<UUID,Player>)r.getValues().get("playerMap");
 			UUID selfID = (UUID)r.getValues().get("selfId");

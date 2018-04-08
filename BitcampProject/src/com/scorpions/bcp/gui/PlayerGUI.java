@@ -40,6 +40,7 @@ public class PlayerGUI extends JFrame implements KeyListener {
 			public void windowClosing(java.awt.event.WindowEvent windowEvent) {
 				client.disconnect();
 				windowEvent.getWindow().dispose();
+				System.exit(0);
 			}
 		});
 

@@ -14,6 +14,7 @@ import com.scorpions.bcp.Game;
 import com.scorpions.bcp.creature.Player;
 import com.scorpions.bcp.event.PlayerMoveEvent;
 import com.scorpions.bcp.event.PostEventTask;
+import com.scorpions.bcp.gui.DMGUI;
 import com.scorpions.bcp.world.Tile;
 import com.scorpions.bcp.world.TileDirection;
 
@@ -24,7 +25,8 @@ public class GameServer extends Thread {
 	private boolean running;
 	private Set<ConnectedClient> clients;
 	private Map<String, Player> players;
-
+	private DMGUI gui;
+	
 	public GameServer(Game g) {
 		this.game = g;
 		this.running = false;
@@ -196,6 +198,10 @@ public class GameServer extends Thread {
 	
 	public Game getGame() {
 		return this.game;
+	}
+
+	public void setGUI(DMGUI dmGUI) {
+		this.gui = dmGUI;
 	}
 
 }
