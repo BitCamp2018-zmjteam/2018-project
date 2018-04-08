@@ -93,14 +93,10 @@ public class GameClientPlayer {
 		System.out.println("eval Start "+r.getType());
 		switch (r.getType()) {
 		case PLAYER_ACCEPT:
-<<<<<<< HEAD
-			gui.updateLog("Location: " + ((Point) (r.getValues().get("location"))).getX() + ", " + ((Point) (r.getValues().get("location"))).getY());
-=======
 			Point point = (Point) r.getValues().get("location");
 			p.setX(point.x);
 			p.setY(point.y);
 			this.sendRequest(new Request(RequestType.GAME_INFO,null));
->>>>>>> refs/remotes/origin/master
 			break;
 		case GAME_INFO:
 			Map<String,Player> playerMap = (Map<String,Player>)r.getValues().get("playerMap");

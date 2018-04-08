@@ -259,6 +259,7 @@ public class DMGUI extends JFrame implements ActionListener {
 		}
 		else if(event.getActionCommand().equals("Add Item")) {
 			addItem();
+			itemsPane.getVerticalScrollBar().setValue(itemsPane.getVerticalScrollBar().getMaximum());
 		}
 
 	}
@@ -266,6 +267,7 @@ public class DMGUI extends JFrame implements ActionListener {
 	public void addPlayer(Player pl) {
 		playersModel.addElement(pl.getName());
 		playersMap.put(pl.getName(), pl);
+		playersPane.getVerticalScrollBar().setValue(playersPane.getVerticalScrollBar().getMaximum());
 	}
 	
 	public void addNPC(NPC npc) {
