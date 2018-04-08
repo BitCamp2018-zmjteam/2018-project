@@ -29,17 +29,19 @@ import com.scorpions.bcp.creature.NPC;
 import com.scorpions.bcp.creature.Player;
 import com.scorpions.bcp.items.Item;
 import com.scorpions.bcp.net.GameServer;
+import com.scorpions.bcp.world.Tile;
 import com.scorpions.bcp.world.World;
 
 public class DMGUI extends JFrame implements ActionListener {
 	private static final long serialVersionUID = -6156179537660121688L;
 	private JTabbedPane panel;
 	private JPanel main, npcs, npcData, world, players, items, itemsData, playersData;
-	private JLabel ipAddr, iNameLabel, iBPLabel, iSPLabel, iDescLabel, playerTitle, playerStr, playerDex, playerCon, playerInt, playerWis, playerCha;
+	private JLabel ipAddr, iNameLabel, iBPLabel, iSPLabel, iDescLabel, playerTitle, 
+		playerStr, playerDex, playerCon, playerInt, playerWis, playerCha;
 	private int width, height;
 	private GameServer server;
 	private String address;
-	private JButton start, loadWorld, saveWorld, addItem;
+	private JButton start, loadWorld, saveWorld, addItem, newWorld;
 	private JScrollPane npcPane, itemsPane, playersPane;
 	private JList<String> npcList, itemsList; 
 	private JList<Player> playersList;
@@ -51,7 +53,8 @@ public class DMGUI extends JFrame implements ActionListener {
 	private TreeMap<String, Player> playersMap;
 	private ListSelectionModel itemsLSM, playersLSM;
 	private TreeMap<String, NPC> npcMap;
-	
+	private World worldEdit;
+	private Tile tileEdit;
 	public DMGUI(GameServer server) {
 		super("DM Screen");
 
@@ -84,6 +87,7 @@ public class DMGUI extends JFrame implements ActionListener {
 		loadWorld = new JButton("Load world");
 		saveWorld = new JButton("Save world");
 		addItem = new JButton("Add Item");
+		newWorld = new JButton("New World");
 		npcPane = new JScrollPane();
 		npcModel = new DefaultListModel<String>();
 		npcList = new JList<String>(npcModel);
@@ -108,6 +112,10 @@ public class DMGUI extends JFrame implements ActionListener {
 		playerInt = new JLabel("Intelligence: 0");
 		playerWis = new JLabel("Wisdom: 0");
 		playerCha = new JLabel("Charisma: 0");
+		new JLabel("Width: ");
+		new JLabel("Height: ");
+		new JTextField();
+		new JTextField();
 		
 		itemsLSM = itemsList.getSelectionModel();
 	    itemsLSM.addListSelectionListener(new itemsListListener());
@@ -122,7 +130,10 @@ public class DMGUI extends JFrame implements ActionListener {
 		saveWorld.addActionListener(this);
 		addItem.setActionCommand("Add Item");
 		addItem.addActionListener(this);
+		newWorld.setActionCommand("New World");
+		newWorld.addActionListener(this);		
 
+		
 		main.setLayout(null);
 		npcs.setLayout(null);
 		world.setLayout(null);
@@ -222,11 +233,14 @@ public class DMGUI extends JFrame implements ActionListener {
 		
 		world.add(loadWorld);
 		world.add(saveWorld);
+		world.add(newWorld);
 		loadWorld.setLocation(415, 500);
 		loadWorld.setSize(150, 40);
 		saveWorld.setLocation(595, 500);
 		saveWorld.setSize(150, 40);
-
+		newWorld.setLocation(10, 10);
+		newWorld.setSize(150, 40);
+		
 		panel.addTab("Main", main);
 		panel.addTab("NPCs", npcs);
 		panel.addTab("World", world);
@@ -264,6 +278,34 @@ public class DMGUI extends JFrame implements ActionListener {
 		else if(event.getActionCommand().equals("Add Item")) {
 			addItem();
 			itemsPane.getVerticalScrollBar().setValue(itemsPane.getVerticalScrollBar().getMaximum());
+		}
+		else if(event.getActionCommand().equals("New World")) {
+			int worldWidth = 0;
+			int worldHeight = 0;
+			String name = "";
+			while(worldWidth <= 0) {
+				try {
+					worldWidth = Integer.parseInt(JOptionPane.showInputDialog(null, "Enter the world width:", "Create world",
+							JOptionPane.QUESTION_MESSAGE));
+				}
+				catch(NumberFormatException e) {
+					e.printStackTrace();
+				}
+			}
+			while(worldHeight <= 0) {
+				try {
+					worldHeight = Integer.parseInt(JOptionPane.showInputDialog(null, "Enter the world height:", "Create world",
+							JOptionPane.QUESTION_MESSAGE));
+				}
+				catch(NumberFormatException e) {
+					e.printStackTrace();
+				}
+			}
+			while(name.equals("")) {
+				name = JOptionPane.showInputDialog(null, "Enter the world name:", "Create world",
+						JOptionPane.QUESTION_MESSAGE);
+			}
+			worldEdit = new World(worldHeight, worldHeight, name);
 		}
 
 	}
