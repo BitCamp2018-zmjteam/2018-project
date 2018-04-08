@@ -117,7 +117,7 @@ public class GameClientPlayer {
 			gui.updateLog("You were kicked from the server.");
 			break;
 		case PLAYER_MOVE:
-			UUID playerID = (UUID)r.getValues().get("playerId");
+			UUID playerID = (UUID)r.getValues().get("playerid");
 			Point location = (Point)r.getValues().get("location");
 			gui.updateLog("You are now at ("+location.getX()+","+location.getY()+").");
 			p.setX((int) location.getX());
