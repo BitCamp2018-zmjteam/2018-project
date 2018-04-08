@@ -23,7 +23,7 @@ public class World implements Serializable, Structure {
 	private Tile[][] worldTiles;
 	private List<Point> spawnPoints;
 	private final String name;
-	public static final String FILE_SUFFIX=".dtw";
+	public static final String FILE_SUFFIX="dtw";
 	
 	public World(int width, int height, String worldName) {
 		worldTiles = new Tile[width][height];
@@ -166,6 +166,7 @@ public class World implements Serializable, Structure {
 		if(!f.getParentFile().exists()) {
 			f.mkdirs();
 		}
+		f = new File(f.getAbsolutePath() + ".dtw");
 		try {
 			if(!f.exists()) {
 				f.createNewFile();
@@ -185,7 +186,7 @@ public class World implements Serializable, Structure {
 		World w = new World(10, 5, "default");
 		w.addStructure(new MerchantStructure(new NPC(0, 0, 0, 0, 0, 0, null, null)), 0, 0);
 		w.addSpawnPoint(new Point(6,2));
-		File exportFile = new File(System.getProperty("user.home") + File.separator + "default_world" + World.FILE_SUFFIX);
+		File exportFile = new File(System.getProperty("user.home") + File.separator + "default_world." + World.FILE_SUFFIX);
 		if(w.exportWorld(exportFile)) {
 			return exportFile;
 		}
@@ -199,7 +200,7 @@ public class World implements Serializable, Structure {
 
 	@Override
 	public String getName() {
-		return "WORLD_ " + name;
+		return name;
 	}
 	
 }

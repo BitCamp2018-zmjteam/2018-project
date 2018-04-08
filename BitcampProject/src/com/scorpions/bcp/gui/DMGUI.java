@@ -265,12 +265,16 @@ public class DMGUI extends JFrame implements ActionListener {
 		} else if (event.getActionCommand().equals("Load")) {
 			File f;
 			JFileChooser fc = new JFileChooser();
-			FileNameExtensionFilter filter = new FileNameExtensionFilter("World files", ".dtw");
+			FileNameExtensionFilter filter = new FileNameExtensionFilter("World files", World.FILE_SUFFIX);
 			fc.setFileFilter(filter);
 			int check = fc.showOpenDialog(new JFrame());
 			if (check == JFileChooser.APPROVE_OPTION) {
 				f = fc.getSelectedFile();
-				World.fromFile(f);
+				World w = World.fromFile(f);
+				if(w != null) {
+					worldEdit = w;
+					wEG.load(worldEdit);
+				}
 			}
 		}
 		else if(event.getActionCommand().equals("Add Item")) {
@@ -302,7 +306,7 @@ public class DMGUI extends JFrame implements ActionListener {
 				name = JOptionPane.showInputDialog(null, "Enter the world name:", "Create world",
 						JOptionPane.QUESTION_MESSAGE);
 			}
-			worldEdit = new World(worldHeight, worldHeight, name);
+			worldEdit = new World(worldWidth, worldHeight, name);
 			wEG.load(worldEdit);
 		}
 
