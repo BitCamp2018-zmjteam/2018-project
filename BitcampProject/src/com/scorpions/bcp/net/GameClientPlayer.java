@@ -90,18 +90,25 @@ public class GameClientPlayer {
 	}
 
 	protected void evalResponse(Response r) {
+		System.out.println("eval Start "+r.getType());
 		switch (r.getType()) {
 		case PLAYER_ACCEPT:
-			gui.updateLog(((Point) r.getValues().get("location")).toString());
+			Point point = (Point) r.getValues().get("location");
+			p.setX(point.x);
+			p.setY(point.y);
+			this.sendRequest(new Request(RequestType.GAME_INFO,null));
+			break;
 		case GAME_INFO:
-			Map<UUID,Player> playerMap = (Map<UUID,Player>)r.getValues().get("playerMap");
-			UUID selfID = (UUID)r.getValues().get("selfId");
+			Map<String,Player> playerMap = (Map<String,Player>)r.getValues().get("playerMap");
+			System.out.println(r.getValues());
+			UUID selfID = UUID.fromString((String)r.getValues().get("selfId"));
 			p.setUUID(selfID);
 			gui.updateLog("You have UUID " + selfID);
 			gui.updateLog("Also in the world are:");
-			for (UUID u : playerMap.keySet()) {
+			for (String u : playerMap.keySet()) {
 				gui.updateLog(playerMap.get(u) + " with UUID " + u);
 			}
+			//this.sendRequest(new Request(RequestType.WORLD_INFO,smth));
 			break;
 		case INTERACT_RESPONSE:
 			boolean success = (Boolean)r.getValues().get("success");
@@ -117,8 +124,10 @@ public class GameClientPlayer {
 			gui.updateLog("You were kicked from the server.");
 			break;
 		case PLAYER_MOVE:
-			UUID playerID = (UUID)r.getValues().get("playerId");
+			String playerID = (String)r.getValues().get("playerid");
+			assert(playerID.equals(p.getUUID().toString()));
 			Point location = (Point)r.getValues().get("location");
+			System.out.println(r);
 			gui.updateLog("You are now at ("+location.getX()+","+location.getY()+").");
 			p.setX((int) location.getX());
 			p.setY((int) location.getY());

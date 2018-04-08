@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 public enum RequestType implements Serializable {
 
-	PLAYER_JOIN,PLAYER_LEAVE,WORLD_INFO,PLAYER_MOVE,PLAYER_INTERACT, GAME_INFO;
+	PLAYER_JOIN,PLAYER_LEAVE,WORLD_INFO,PLAYER_MOVE,PLAYER_INTERACT, GAME_INFO, MESSAGE_SENT;
 	
 	/*
 	 * PLAYER_JOIN:
@@ -40,6 +40,12 @@ public enum RequestType implements Serializable {
 	 *     - interactType: TILE, CREATURE
 	 *   response type:
 	 *     - INTERACT_RESPONSE
+	 *   MESSAGE_SENT
+	 *   request map:
+	 *   	- target
+	 *   	- message
+	 *   response type:
+	 *   	- PLAYER_MESSAGE
 	 *   
 	 */
 	
