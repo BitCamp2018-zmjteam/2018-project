@@ -7,9 +7,11 @@ import java.net.Socket;
 import java.net.SocketException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.TimeoutException;
 
 import com.scorpions.bcp.creature.Player;
+import com.scorpions.bcp.event.interact.PlayerSentMessageEvent;
 
 public class ConnectedClient extends Thread {
 
@@ -143,7 +145,7 @@ public class ConnectedClient extends Thread {
 			String target = (String)r.values.get("target");
 			String message = (String)r.values.get("message");
 			Player origin = player;
-			
+			gameServer.getGame().queueEvent(new PlayerSentMessageEvent(UUID.fromString(target),message,origin));
 		default:
 			break;
 		
